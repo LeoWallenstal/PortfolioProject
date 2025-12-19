@@ -39,6 +39,7 @@ namespace PortfolioProject
                 pattern: "{controller=Home}/{action=Index}/{id?}"
             );
 
+            SeedData.SeedAsync(app.Services);
             app.Run();
         }
     }

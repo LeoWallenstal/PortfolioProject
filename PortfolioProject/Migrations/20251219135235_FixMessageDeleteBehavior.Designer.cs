@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioProject.Data;
 
@@ -11,9 +12,10 @@ using PortfolioProject.Data;
 namespace PortfolioProject.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20251219135235_FixMessageDeleteBehavior")]
+    partial class FixMessageDeleteBehavior
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,6 +85,13 @@ namespace PortfolioProject.Migrations
                         .IsUnique();
 
                     b.ToTable("Cvs");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("b5a93a46-0783-45d7-8e3e-ad57a6c9d405"),
+                            UserId = "USER_ID_1"
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Education", b =>
@@ -108,6 +117,16 @@ namespace PortfolioProject.Migrations
                     b.HasKey("EducationId");
 
                     b.ToTable("Educations");
+
+                    b.HasData(
+                        new
+                        {
+                            EducationId = new Guid("d4cb6f22-9aff-41aa-8649-b4ba4c926d77"),
+                            Degree = "Systemvetenskap",
+                            EndYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            School = "Örebro University",
+                            StartYear = new DateTime(2022, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Experience", b =>
@@ -133,6 +152,16 @@ namespace PortfolioProject.Migrations
                     b.HasKey("ExperienceId");
 
                     b.ToTable("Experiences");
+
+                    b.HasData(
+                        new
+                        {
+                            ExperienceId = new Guid("94f72b64-e06e-4168-8b23-6c5d81aa46eb"),
+                            Company = "Tech AB",
+                            EndYear = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Role = "Junior Developer",
+                            StartYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Message", b =>
@@ -164,6 +193,17 @@ namespace PortfolioProject.Migrations
                     b.HasIndex("ToUserId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            MessageId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Body = "Welcome to the platform!",
+                            FromUserId = "USER_ID_1",
+                            IsRead = false,
+                            SentAt = new DateTime(2025, 12, 19, 13, 52, 35, 226, DateTimeKind.Utc).AddTicks(9927),
+                            ToUserId = "USER_ID_2"
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Project", b =>
@@ -183,6 +223,20 @@ namespace PortfolioProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2f889ac5-74e6-4ffa-a0d8-b7873516bfc2"),
+                            Description = "MVC + EF Core",
+                            Title = "Portfolio Website"
+                        },
+                        new
+                        {
+                            Id = new Guid("3618ea92-6d09-4738-8d67-51db88047668"),
+                            Description = "User-to-user chat",
+                            Title = "Messaging System"
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Skill", b =>
@@ -198,6 +252,23 @@ namespace PortfolioProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("bf765436-b7c0-4c9b-9503-9432d36440b8"),
+                            Name = "C#"
+                        },
+                        new
+                        {
+                            Id = new Guid("b8d2b92c-a1fb-489f-b658-1aee8633c457"),
+                            Name = "SQL"
+                        },
+                        new
+                        {
+                            Id = new Guid("90b2e727-2409-4141-9545-48f7dbcac5d8"),
+                            Name = "ASP.NET Core"
+                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.User", b =>

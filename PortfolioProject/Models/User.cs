@@ -11,14 +11,14 @@ namespace PortfolioProject.Models
         [Required]
         public string LastName { get; set; }
         //public string Adress { get; set; }
-        public bool isPrivate { get; set; } = false;
-        public bool isActive { get; set; } = true;
+        public bool IsPrivate { get; set; } = false;
+        public bool IsActive { get; set; } = true;
         //public string ProfileImageUrl { get; set; }
 
-        /*public virtual int CvId { get; set; }
+        public virtual Cv? Cv { get; set; } 
+        public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 
-        [ForeignKey(nameof(CvId))]
-        public virtual Cv Cv { get; set; }*/
-
+        public virtual ICollection<Message> SentMessages { get; set; } = new List<Message>();
+        public virtual ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();
     }
 }

@@ -7,9 +7,6 @@ namespace PortfolioProject.Models
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Title { get; set; }
         public string Description { get; set; }
-        public virtual List<Guid> UserIds { get; set; } = new List<Guid>();
-        [ForeignKey("UserIds")]
-        public virtual List<User> Users { get; set; } = new List<User>();
-
+        public virtual ICollection<User> Users { get; set; } = new List<User>();
     }
 }
