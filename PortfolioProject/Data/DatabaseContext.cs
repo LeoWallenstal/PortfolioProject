@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PortfolioProject.Models;
 
 namespace PortfolioProject.Data
 {
-    public class DatabaseContext : DbContext
+    public class DatabaseContext : IdentityDbContext<User>
     {
         public DatabaseContext(DbContextOptions<DatabaseContext> options) 
             : base(options){}
@@ -11,7 +12,7 @@ namespace PortfolioProject.Data
         public DbSet<Project> Projects { get; set; }
         public DbSet<Cv> Cvs { get; set; }
         public DbSet<Message> Messages { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Education> Educations { get; set; }
         public DbSet<Experience> Experiences { get; set; }
@@ -32,7 +33,8 @@ namespace PortfolioProject.Data
             modelBuilder.Entity<Message>()
                 .HasOne<User>(m => m.ToUser)
                 .WithMany(u => u.ReceivedMessages)
-                .HasForeignKey(m => m.ToUserId);
+                .HasForeignKey(m => m.ToUserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

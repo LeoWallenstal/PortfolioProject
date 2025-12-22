@@ -12,8 +12,8 @@ using PortfolioProject.Data;
 namespace PortfolioProject.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20251219135235_FixMessageDeleteBehavior")]
-    partial class FixMessageDeleteBehavior
+    [Migration("20251222081241_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -69,6 +69,139 @@ namespace PortfolioProject.Migrations
                     b.ToTable("CvSkill");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("PortfolioProject.Models.Cv", b =>
                 {
                     b.Property<Guid>("Id")
@@ -85,13 +218,6 @@ namespace PortfolioProject.Migrations
                         .IsUnique();
 
                     b.ToTable("Cvs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("b5a93a46-0783-45d7-8e3e-ad57a6c9d405"),
-                            UserId = "USER_ID_1"
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Education", b =>
@@ -117,16 +243,6 @@ namespace PortfolioProject.Migrations
                     b.HasKey("EducationId");
 
                     b.ToTable("Educations");
-
-                    b.HasData(
-                        new
-                        {
-                            EducationId = new Guid("d4cb6f22-9aff-41aa-8649-b4ba4c926d77"),
-                            Degree = "Systemvetenskap",
-                            EndYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            School = "Örebro University",
-                            StartYear = new DateTime(2022, 1, 5, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Experience", b =>
@@ -152,16 +268,6 @@ namespace PortfolioProject.Migrations
                     b.HasKey("ExperienceId");
 
                     b.ToTable("Experiences");
-
-                    b.HasData(
-                        new
-                        {
-                            ExperienceId = new Guid("94f72b64-e06e-4168-8b23-6c5d81aa46eb"),
-                            Company = "Tech AB",
-                            EndYear = new DateTime(2025, 12, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Role = "Junior Developer",
-                            StartYear = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Message", b =>
@@ -193,17 +299,6 @@ namespace PortfolioProject.Migrations
                     b.HasIndex("ToUserId");
 
                     b.ToTable("Messages");
-
-                    b.HasData(
-                        new
-                        {
-                            MessageId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Body = "Welcome to the platform!",
-                            FromUserId = "USER_ID_1",
-                            IsRead = false,
-                            SentAt = new DateTime(2025, 12, 19, 13, 52, 35, 226, DateTimeKind.Utc).AddTicks(9927),
-                            ToUserId = "USER_ID_2"
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Project", b =>
@@ -223,20 +318,6 @@ namespace PortfolioProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("2f889ac5-74e6-4ffa-a0d8-b7873516bfc2"),
-                            Description = "MVC + EF Core",
-                            Title = "Portfolio Website"
-                        },
-                        new
-                        {
-                            Id = new Guid("3618ea92-6d09-4738-8d67-51db88047668"),
-                            Description = "User-to-user chat",
-                            Title = "Messaging System"
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Skill", b =>
@@ -252,23 +333,6 @@ namespace PortfolioProject.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Skills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bf765436-b7c0-4c9b-9503-9432d36440b8"),
-                            Name = "C#"
-                        },
-                        new
-                        {
-                            Id = new Guid("b8d2b92c-a1fb-489f-b658-1aee8633c457"),
-                            Name = "SQL"
-                        },
-                        new
-                        {
-                            Id = new Guid("90b2e727-2409-4141-9545-48f7dbcac5d8"),
-                            Name = "ASP.NET Core"
-                        });
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.User", b =>
@@ -280,10 +344,12 @@ namespace PortfolioProject.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
@@ -309,10 +375,12 @@ namespace PortfolioProject.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -330,11 +398,20 @@ namespace PortfolioProject.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
@@ -397,6 +474,57 @@ namespace PortfolioProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("PortfolioProject.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("PortfolioProject.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PortfolioProject.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("PortfolioProject.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("PortfolioProject.Models.Cv", b =>
                 {
                     b.HasOne("PortfolioProject.Models.User", "User")
@@ -417,7 +545,8 @@ namespace PortfolioProject.Migrations
 
                     b.HasOne("PortfolioProject.Models.User", "ToUser")
                         .WithMany("ReceivedMessages")
-                        .HasForeignKey("ToUserId");
+                        .HasForeignKey("ToUserId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("FromUser");
 

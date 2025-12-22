@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PortfolioProject.Data;
+using PortfolioProject.Models;
 
 namespace PortfolioProject
 {
@@ -16,6 +18,11 @@ namespace PortfolioProject
                 options.UseLazyLoadingProxies()
                 .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            builder.Services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<DatabaseContext>()
+            .AddDefaultTokenProviders();
+
 
             var app = builder.Build();
 
