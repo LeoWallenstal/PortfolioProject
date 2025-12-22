@@ -1,22 +1,42 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using PortfolioProject.Data;
 using PortfolioProject.Models;
 
 namespace PortfolioProject.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly DatabaseContext _dbContext;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DatabaseContext dbContext)
         {
-            _logger = logger;
+            _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var cvList = new List<Cv>();
+            if (!User.Identity.IsAuthenticated) {
+                //lägg till att ej visa dekativerade kontons cv
+                cvList = await _dbContext.Cvs.Where(cv =>cv.User.IsPrivate == false).ToListAsync();
+            }
+            else
+            {
+                cvList = await _dbContext.Cvs.ToListAsync();
+            }
+
+            //hämta senaste projekt
+
+            var mv = new HomeViewModel
+            {
+                Cvs = cvList
+                //spara senaste projekten
+            };
+
+                return View(mv);
         }
 
         public IActionResult Privacy()
