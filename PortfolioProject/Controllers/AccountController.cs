@@ -84,7 +84,7 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LogOut()
+        public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");

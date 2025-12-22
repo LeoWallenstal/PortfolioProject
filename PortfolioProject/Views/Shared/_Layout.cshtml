@@ -20,11 +20,39 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Hem</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Projekt</a>
                         </li>
+
+                        @*
+                            Kontrollerar om användaren är inloggad eller inte för att visa olika menyval
+                            If-satsen är om man inte är inloggad medans else-satsen är om man är inloggad. 
+                        *@
+                        @if (!User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Logga in</a>
+                            </li>
+                        }
+                        else
+                        {
+                            //ändra till rätt controller & action
+                            <li class="nav-item ms-auto">
+                                <a class="nav-link text-dark" asp-controller="Message" asp-action="Index">Meddelanden</a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
+                                <button type="submit">Logga ut</button>
+                                </form>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Profile" asp-action="Index">Profil</a>
+                            </li>
+                            
+                        }
                     </ul>
                 </div>
             </div>

@@ -8,6 +8,7 @@ namespace PortfolioProject.Models
 
         public string UserId { get; set; }
         public virtual User User { get; set; }
+        public int ViewCount { get; set; }
 
         public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
