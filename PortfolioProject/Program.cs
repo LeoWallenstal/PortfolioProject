@@ -39,6 +39,7 @@ namespace PortfolioProject
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

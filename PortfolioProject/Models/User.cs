@@ -6,14 +6,12 @@ namespace PortfolioProject.Models
 {
     public class User : IdentityUser
     {
-        [Required]
-        public string FirstName { get; set; }
-        [Required]
-        public string LastName { get; set; }
-        //public string Adress { get; set; }
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public string? Adress { get; set; }
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
-        //public string ProfileImageUrl { get; set; }
+        public string? ProfileImageUrl { get; set; }
 
         public virtual Cv? Cv { get; set; } 
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
