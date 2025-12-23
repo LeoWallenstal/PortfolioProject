@@ -59,10 +59,69 @@ namespace PortfolioProject
                 return;
 
             // --- CVs (FK to users) ---
-            var adminCv = new Cv { UserId = admin.Id };
-            var leoCv = new Cv { UserId = leo.Id };
+            var adminCv = new Cv { UserId = admin.Id , ViewCount = 0};
+            var leoCv = new Cv { UserId = leo.Id, ViewCount = 0};
 
             db.Cvs.AddRange(adminCv, leoCv);
+
+            // --- EDUCATIONS ---
+            var edu1 = new Education
+            {
+                School = "Linnéuniversitetet",
+                Degree = "BSc Computer Science",
+                StartYear = new DateTime(2020, 1, 1),
+                EndYear = new DateTime(2023, 1, 1)
+            };
+
+            var edu2 = new Education
+            {
+                School = "Yrgo",
+                Degree = "Frontend Developer",
+                StartYear = new DateTime(2021, 1, 1),
+                EndYear = new DateTime(2023, 1, 1)
+            };
+
+            edu1.Cvs.Add(adminCv);
+            edu2.Cvs.Add(leoCv);
+
+            // --- EXPERIENCES ---
+            var exp1 = new Experience
+            {
+                Company = "Spotify",
+                Role = "Backend Developer",
+                StartYear = new DateTime(2023, 1, 1),
+                EndYear = DateTime.UtcNow
+            };
+
+            var exp2 = new Experience
+            {
+                Company = "Volvo",
+                Role = "Frontend Developer",
+                StartYear = new DateTime(2022, 1, 1),
+                EndYear = new DateTime(2024, 1, 1)
+            };
+
+            exp1.Cvs.Add(adminCv);
+            exp2.Cvs.Add(leoCv);
+
+            // --- SKILLS ---
+            var skill1 = new Skill { Name = "C#" };
+            var skill2 = new Skill { Name = "ASP.NET Core" };
+            var skill3 = new Skill { Name = "JavaScript" };
+            var skill4 = new Skill { Name = "React" };
+
+            skill1.Cvs.Add(adminCv);
+            skill2.Cvs.Add(adminCv);
+
+            skill3.Cvs.Add(leoCv);
+            skill4.Cvs.Add(leoCv);
+
+            // --- SAVE ALL ---
+            db.Educations.AddRange(edu1, edu2);
+            db.Experiences.AddRange(exp1, exp2);
+            db.Skills.AddRange(skill1, skill2, skill3, skill4);
+
+            await db.SaveChangesAsync();
 
             // --- Projects ---
             var p1 = new Project { Title = "Portfolio Website", Description = "MVC + EF Core" };

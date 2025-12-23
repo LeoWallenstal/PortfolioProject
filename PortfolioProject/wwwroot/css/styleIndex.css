@@ -1,0 +1,25 @@
+﻿.cv-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    margin:0;
+    padding:0;
+}
+
+    .cv-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08);
+    }
+
+.cv-card-body {
+    font-size: 0.5rem;
+    line-height:1.3;
+    background-color: lightblue;
+    padding: 1rem;
+    max-height: 200px;
+    min-height:200px;
+}
+.cv-card-body p{
+    margin:0.5rem;
+}
+
+
+
