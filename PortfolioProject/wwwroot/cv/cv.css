@@ -1,0 +1,71 @@
+﻿.intro {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    background: #f3f3f3;
+    padding: 2rem;
+    border-radius: 25px;
+    align-self: flex-start;
+    text-align: left;
+    margin-left: 0;
+    margin-right: auto;
+    margin-inline: 0 auto;
+}
+
+
+.profile-pic {
+    width: 250px;
+    height: 250px;
+    font-size: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    border: 5px solid;
+    overflow: hidden;
+    background-color: black; /* Fixar konstig whitepace mellan bild och border*/
+    flex-shrink: 0;
+}
+
+/* IMAGE VERSION */
+.avatar-img {
+    width: 100%;
+    height: 100%;
+}
+
+.avatar-icon::before{
+    display: block;             /* Fixar så att ikonen hamnar i center */
+}
+
+.socials {
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    justify-content: center;
+    background: 
+}
+
+    .socials img {
+        width: 32px;
+        height: 32px;
+        display: block;
+    }
+
+    .socials a,
+    .socials a:visited,
+    .socials a:hover,
+    .socials a:active {
+        color: inherit;
+        text-decoration: none;
+    }
+
+
+
+@media (max-width: 768px) {
+    .intro {
+        flex-direction: column;
+        text-align: center;
+    }
+}

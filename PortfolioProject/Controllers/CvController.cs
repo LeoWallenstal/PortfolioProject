@@ -53,7 +53,7 @@ namespace PortfolioProject.Controllers
             {
                 UserName = user.UserName,
                 FullName = (user.FirstName + " " + user.LastName).Trim(),
-                ProfileImagePath = user.ProfileImageUrl,
+                ProfileImagePath = "/cv/images/hero.png",
                 IsPrivate = user.IsPrivate
             };
 
