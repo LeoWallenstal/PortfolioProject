@@ -1,29 +1,80 @@
-﻿.intro {
-    display: flex;
-    align-items: center;
-    gap: 4rem;
-    background: #f3f3f3;
-    padding: 2rem;
-    border-radius: 25px;
-    align-self: flex-start;
-    text-align: left;
-    margin-left: 0;
-    margin-right: auto;
-    margin-inline: 0 auto;
+﻿h1 {
+    font-size: 2.23rem;
 }
 
+h2 {
+    font-size: 1.8rem;
+}
+
+h3 {
+    font-size: 1.3rem;
+}
+
+h4 {
+    font-size: 1.15rem;
+}
+
+p {
+    font-size: 1rem;
+}
+
+.custom-card {
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    gap: 4rem;
+    padding: 2rem;
+}
+
+.intro {
+    display: block;
+    align-items: center;
+
+}
+
+.personal {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.skill-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.35rem 0.75rem;
+    background-color: #eef2ff; /* indigo-50 */
+    color: #3d3d3d;
+    border-radius: 999px;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.skill-icon {
+    width: 1rem;
+    height: 1rem;
+    display: block;
+}
 
 .profile-pic {
     width: 250px;
     height: 250px;
     font-size: 250px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    border-radius: 50%;
-    border: 5px solid;
     overflow: hidden;
-    background-color: black; /* Fixar konstig whitepace mellan bild och border*/
     flex-shrink: 0;
 }
 
@@ -31,10 +82,13 @@
 .avatar-img {
     width: 100%;
     height: 100%;
+    border-radius: 50%;
+    border: 5px solid black;
+    background-color: black;
 }
 
-.avatar-icon::before{
-    display: block;             /* Fixar så att ikonen hamnar i center */
+.avatar-icon::before {
+    display: block; /* Fixar så att ikonen hamnar i center */
 }
 
 .socials {
@@ -44,7 +98,6 @@
     margin: 0;
     list-style: none;
     justify-content: center;
-    background: 
 }
 
     .socials img {
@@ -61,11 +114,34 @@
         text-decoration: none;
     }
 
+.cv-content {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
+}
+
+
+.education p, .experience p {
+    margin: 0;
+    padding: 0;
+}
+
 
 
 @media (max-width: 768px) {
     .intro {
         flex-direction: column;
         text-align: center;
+    }
+
+    .cv-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .skills {
+        grid-row: auto;
     }
 }

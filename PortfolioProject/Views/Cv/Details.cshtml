@@ -1,88 +1,121 @@
 ﻿@model CvDetailsViewModel
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="/cv/cv.css" rel="stylesheet" />
 
-<div class="intro">
-	<div class="pic-and-socials">
-		<div class="profile-pic">
-			@if (Model.ProfileImagePath != null)
+<div class="intro custom-card">
+	<div class="personal">
+		<div class="pic-and-socials">
+			<div class="profile-pic">
+				@if (Model.ProfileImagePath != null)
+				{
+					<img src="@Model.ProfileImagePath"
+						 alt="Profile picture"
+						 class="avatar-img" />
+				}
+				else
+				{
+					<i class="bi bi-person-circle avatar-icon" aria-hidden="true"></i>
+				}
+			</div>
+
+			<ul class="socials">
+				<li>
+					<a href="https://github.com/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="GitHub profile">
+						<i class="bi bi-github"></i>
+					</a>
+				</li>
+
+				<li>
+					<a href="https://linkedin.com/in/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="LinkedIn profile">
+						<i class="bi bi-linkedin"></i>
+					</a>
+				</li>
+
+				<li>
+					<a href="mailto:you@email.com"
+					   aria-label="Send email">
+						<i class="bi bi-envelope"></i>
+					</a>
+				</li>
+			</ul>
+
+		</div>
+
+		<div class="personal-info">
+			@*Lägga till null-check på namn eller göra namn required?*@
+			<h1>@Model.FullName</h1>
+			@if (Model.Title != null)
 			{
-				<img src="@Model.ProfileImagePath"
-					 alt="Profile picture"
-					 class="avatar-img" />
+				<h4 class="text-muted">@Model.Title</h4>
 			}
-			else
+			@if (Model.Summary != null)
 			{
-				<i class="bi bi-person-circle avatar-icon" aria-hidden="true"></i>
+				<p>@Model.Summary</p>
 			}
 		</div>
-		<ul class="socials">
-			<li>
-				<a href="https://github.com/yourusername"
-				   target="_blank"
-				   rel="noopener noreferrer"
-				   aria-label="GitHub profile">
-					<i class="bi bi-github"></i>
-				</a>
-			</li>
-
-			<li>
-				<a href="https://linkedin.com/in/yourusername"
-				   target="_blank"
-				   rel="noopener noreferrer"
-				   aria-label="LinkedIn profile">
-					<i class="bi bi-linkedin"></i>
-				</a>
-			</li>
-
-			<li>
-				<a href="mailto:you@email.com"
-				   aria-label="Send email">
-					<i class="bi bi-envelope"></i>
-				</a>
-			</li>
-		</ul>
-
 	</div>
 
-	<div class="personal-info">
-		<h2>@Model.FullName</h2>
-		<p class="text-muted">Systemvetenskap student</p>
-		<p>
-			I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.
-			My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.
-		</p>
-	</div>
+	<h4 class="text-muted">Färdigheter</h4>
+	<section class="skills">
+		@foreach (var skill in Model.Skills)
+		{
+			<span class="skill-pill">
+				@* Checka om skillen har en bild och sätt den här *@
+				<img src="/cv/images/React-icon.svg" alt="" class="skill-icon" />
+				<span>@skill.Name</span>
+			</span>
+		}
+	</section>
+
 </div>
 
 
 
+<div class="cv-content">
 
+	<section class="educations">
+		<h2>Utbildning</h2>
+		@foreach (var education in Model.Educations)
+		{
+			<div class="education custom-card">
+				<div style="display: flex; gap: 0.5rem;">
+					<h3 style="font-weight: 400;">@education.Degree</h3>
+					<h3>@education.School</h3>
+				</div>
+				<p>
+					@education.StartYear.ToString("yyyy")-@education.EndYear.ToString("yyyy")
+				</p>
+			</div>
+		}
+	</section>
 
+	<section class="experiences">
+		<h2>Erfarenhet</h2>
+		@foreach (var experience in Model.Experiences)
+		{
+			<div class="experience custom-card">
+				<div style="display: flex; gap: 0.5rem;">
+					<h3 style="font-weight: 400;">@experience.Role</h3>
+					<h3>@experience.Company</h3>
+				</div>
+				
+				
+				<p>
+					@experience.StartYear.ToString("yyyy")-@experience.EndYear.ToString("yyyy")
+				</p>
+			</div>
+		}
+	</section>
+</div>
 
-
-
-
-@*<div class="skills">
-	<div class="skill-1">
-		<img src="/cv/images/React-icon.svg" alt="Alternate Text" height="32" />
-		<span>React</span>
-	</div>
-	<div class="skill-2">
-		<img src="/cv/images/JavaScript-logo.png" alt="Alternate Text" height="32" />
-		<span>JavaScript</span>
-	</div>
-</div>*@
-
-
-
-@*<div class="cv-details">
-	<h2>Kontaktinformation</h2>
-	<p><strong>Email:</strong> @Model.Email</p>
-	<p><strong>Telefon:</strong> @Model.PhoneNumber</p>
-	<p><strong>Adress:</strong> @Model.Address</p>
-</div>*@
 
 
 

@@ -45,6 +45,7 @@ namespace PortfolioProject
                     Email = "leo@demo.local",
                     FirstName = "Leo",
                     LastName = "Student",
+                    ProfileImageUrl = "/cv/images/hero.png",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -60,7 +61,14 @@ namespace PortfolioProject
 
             // --- CVs (FK to users) ---
             var adminCv = new Cv { UserId = admin.Id , ViewCount = 0};
-            var leoCv = new Cv { UserId = leo.Id, ViewCount = 0};
+            var leoCv = new Cv 
+            { UserId = leo.Id, 
+                ViewCount = 0,
+                Title = "Systemvetenskap Student",
+                Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
+                "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
+                "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
+            };
 
             db.Cvs.AddRange(adminCv, leoCv);
 
