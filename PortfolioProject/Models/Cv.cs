@@ -11,6 +11,9 @@ namespace PortfolioProject.Models
         public int ViewCount { get; set; } = 0;
         public string? Title { get; set; }
         public string? Summary { get; set; }
+        public string? GitHubUrl { get; set; }
+        public string? LinkedInUrl { get; set; }
+        public string? XUrl { get; set; }
 
         public virtual ICollection<Skill> Skills { get; set; } = new List<Skill>();
 
