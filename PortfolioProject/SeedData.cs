@@ -113,10 +113,10 @@ namespace PortfolioProject
             exp2.Cvs.Add(leoCv);
 
             // --- SKILLS ---
-            var skill1 = new Skill { Name = "C#" };
-            var skill2 = new Skill { Name = "ASP.NET Core" };
-            var skill3 = new Skill { Name = "JavaScript" };
-            var skill4 = new Skill { Name = "React" };
+            var skill1 = new Skill { Name = "C#", ImageUrl = "/cv/images/Logo_C_sharp.svg" };
+            var skill2 = new Skill { Name = "ASP.NET Core", ImageUrl = "/cv/images/NET_Core_Logo.svg" };
+            var skill3 = new Skill { Name = "JavaScript", ImageUrl = "/cv/images/Unofficial_JavaScript_logo_2.svg" };
+            var skill4 = new Skill { Name = "React", ImageUrl = "/cv/images/React-icon.svg" };
 
             skill1.Cvs.Add(adminCv);
             skill2.Cvs.Add(adminCv);

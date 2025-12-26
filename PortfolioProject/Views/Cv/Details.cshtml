@@ -5,6 +5,21 @@
 <link href="/cv/cv.css" rel="stylesheet" />
 
 <div class="intro custom-card">
+
+	<a class="btn btn-outline-primary btn-sm send-message-btn">
+		<i class="bi bi-envelope"></i>
+		Skicka meddelande
+	</a>
+
+	@if (Model.IsPrivate)
+	{
+		<i class="bi bi-lock-fill lock" title="Privat profil"></i>
+	}
+	else
+	{
+		<i class="bi bi-unlock-fill lock" title="Offentlig profil"></i>
+	}
+
 	<div class="personal">
 		<div class="pic-and-socials">
 			<div class="profile-pic">
@@ -20,13 +35,15 @@
 				}
 			</div>
 
+			
+
 			<ul class="socials">
 				<li>
 					<a href="https://github.com/yourusername"
 					   target="_blank"
 					   rel="noopener noreferrer"
 					   aria-label="GitHub profile">
-						<i class="bi bi-github"></i>
+						<img src="/cv/images/github.svg">
 					</a>
 				</li>
 
@@ -35,14 +52,16 @@
 					   target="_blank"
 					   rel="noopener noreferrer"
 					   aria-label="LinkedIn profile">
-						<i class="bi bi-linkedin"></i>
+						<img src="/cv/images/linkedin.svg">
 					</a>
 				</li>
 
 				<li>
-					<a href="mailto:you@email.com"
-					   aria-label="Send email">
-						<i class="bi bi-envelope"></i>
+					<a href="https://x.com/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="X profile">
+						<img src="/cv/images/X.svg">
 					</a>
 				</li>
 			</ul>
@@ -68,8 +87,10 @@
 		@foreach (var skill in Model.Skills)
 		{
 			<span class="skill-pill">
-				@* Checka om skillen har en bild och sätt den här *@
-				<img src="/cv/images/React-icon.svg" alt="" class="skill-icon" />
+				@if (skill.ImageUrl != null)
+				{
+					<img src="@skill.ImageUrl" alt="" class="skill-icon" />
+				}
 				<span>@skill.Name</span>
 			</span>
 		}
@@ -106,8 +127,8 @@
 					<h3 style="font-weight: 400;">@experience.Role</h3>
 					<h3>@experience.Company</h3>
 				</div>
-				
-				
+
+
 				<p>
 					@experience.StartYear.ToString("yyyy")-@experience.EndYear.ToString("yyyy")
 				</p>

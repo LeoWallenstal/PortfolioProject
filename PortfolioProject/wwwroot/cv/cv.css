@@ -1,5 +1,5 @@
 ﻿h1 {
-    font-size: 2.23rem;
+    font-size: 2.2rem;
 }
 
 h2 {
@@ -7,11 +7,11 @@ h2 {
 }
 
 h3 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 
 h4 {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
 }
 
 p {
@@ -28,7 +28,13 @@ p {
 .intro {
     display: block;
     align-items: center;
+    position: relative;
+}
 
+.btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
 }
 
 .personal {
@@ -38,10 +44,23 @@ p {
     margin-bottom: 2rem;
 }
 
+.pic-and-socials{
+    position: relative;
+}
+
+.lock {
+    color: #495057;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.5rem;
+}
+
 .skills {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
+    justify-content: flex-start; /* center the whole row; use flex-start if you prefer left */
     margin-top: 1rem;
 }
 
@@ -49,20 +68,20 @@ p {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-
     padding: 0.35rem 0.75rem;
-    background-color: #eef2ff; /* indigo-50 */
+    background-color: #eef2ff;
     color: #3d3d3d;
-    border-radius: 999px;
-    font-size: 0.875rem; /* text-sm */
+    border-radius: 10px;
+    border: thin solid #b5b5b5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     font-weight: 500;
     white-space: nowrap;
-    text-align: center;
 }
 
+
 .skill-icon {
-    width: 1rem;
-    height: 1rem;
+    width: 2rem;
+    height: 2rem;
     display: block;
 }
 
@@ -93,16 +112,17 @@ p {
 
 .socials {
     display: flex;
-    gap: 1rem;
+    gap: 1.2rem;
     padding: 0;
-    margin: 0;
+    margin: 1rem;
     list-style: none;
     justify-content: center;
+    align-items: center;
 }
 
     .socials img {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: auto;
         display: block;
     }
 
