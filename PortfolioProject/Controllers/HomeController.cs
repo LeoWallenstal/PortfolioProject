@@ -19,24 +19,29 @@ namespace PortfolioProject.Controllers
         public async Task<IActionResult> Index()
         {
             var cvList = new List<Cv>();
-            if (!User.Identity.IsAuthenticated) {
-                //lägg till att ej visa dekativerade kontons cv
-                cvList = await _dbContext.Cvs.Where(cv =>cv.User.IsPrivate == false).ToListAsync();
+            var projectList = new List<Project>();
+            var skills = new List<Skill>();
+
+            if (User.Identity.IsAuthenticated) {
+                cvList = await _dbContext.Cvs.ToListAsync();
             }
             else
             {
-                cvList = await _dbContext.Cvs.ToListAsync();
+                //lägg till att ej visa dekativerade kontons cv
+                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsPrivate == false).ToListAsync();
             }
 
-            //hämta senaste projekt
+            projectList = await _dbContext.Projects.OrderByDescending(p => p.CreatedDate).ToListAsync();
+            skills = await _dbContext.Skills.ToListAsync();
 
             var mv = new HomeViewModel
             {
-                Cvs = cvList
-                //spara senaste projekten
+                Cvs = cvList,
+                Projects = projectList,
+                Skills = skills
             };
 
-                return View(mv);
+            return View(mv);
         }
 
         public IActionResult Privacy()
