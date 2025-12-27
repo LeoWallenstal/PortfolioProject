@@ -1,0 +1,167 @@
+﻿h1 {
+    font-size: 2.2rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+p {
+    font-size: 1rem;
+}
+
+.custom-card {
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    gap: 4rem;
+    padding: 2rem;
+}
+
+.intro {
+    display: block;
+    align-items: center;
+    position: relative;
+}
+
+.btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+}
+
+.personal {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pic-and-socials{
+    position: relative;
+}
+
+.lock {
+    color: #495057;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-size: 1.5rem;
+}
+
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: flex-start; /* center the whole row; use flex-start if you prefer left */
+    margin-top: 1rem;
+}
+
+.skill-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    background-color: #eef2ff;
+    color: #3d3d3d;
+    border-radius: 10px;
+    border: thin solid #b5b5b5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+
+.skill-icon {
+    width: 2rem;
+    height: 2rem;
+    display: block;
+}
+
+.profile-pic {
+    width: 250px;
+    height: 250px;
+    font-size: 250px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* IMAGE VERSION */
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid black;
+    background-color: black;
+}
+
+.avatar-icon::before {
+    display: block; /* Fixar så att ikonen hamnar i center */
+}
+
+.socials {
+    display: flex;
+    gap: 1.2rem;
+    padding: 0;
+    margin: 1rem;
+    list-style: none;
+    justify-content: center;
+    align-items: center;
+}
+
+    .socials img {
+        width: 28px;
+        height: auto;
+        display: block;
+    }
+
+    .socials a,
+    .socials a:visited,
+    .socials a:hover,
+    .socials a:active {
+        color: inherit;
+        text-decoration: none;
+    }
+
+.cv-content {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
+}
+
+
+.education p, .experience p {
+    margin: 0;
+    padding: 0;
+}
+
+
+
+@media (max-width: 768px) {
+    .intro {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .cv-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .skills {
+        grid-row: auto;
+    }
+}

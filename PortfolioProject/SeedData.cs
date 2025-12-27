@@ -45,6 +45,7 @@ namespace PortfolioProject
                     Email = "leo@demo.local",
                     FirstName = "Leo",
                     LastName = "Student",
+                    ProfileImageUrl = "/cv/images/hero.png",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -60,7 +61,14 @@ namespace PortfolioProject
 
             // --- CVs (FK to users) ---
             var adminCv = new Cv { UserId = admin.Id , ViewCount = 0};
-            var leoCv = new Cv { UserId = leo.Id, ViewCount = 0};
+            var leoCv = new Cv 
+            { UserId = leo.Id, 
+                ViewCount = 0,
+                Title = "Systemvetenskap Student",
+                Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
+                "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
+                "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
+            };
 
             db.Cvs.AddRange(adminCv, leoCv);
 
@@ -105,10 +113,10 @@ namespace PortfolioProject
             exp2.Cvs.Add(leoCv);
 
             // --- SKILLS ---
-            var skill1 = new Skill { Name = "C#" };
-            var skill2 = new Skill { Name = "ASP.NET Core" };
-            var skill3 = new Skill { Name = "JavaScript" };
-            var skill4 = new Skill { Name = "React" };
+            var skill1 = new Skill { Name = "C#", ImageUrl = "/cv/images/Logo_C_sharp.svg" };
+            var skill2 = new Skill { Name = "ASP.NET Core", ImageUrl = "/cv/images/NET_Core_Logo.svg" };
+            var skill3 = new Skill { Name = "JavaScript", ImageUrl = "/cv/images/Unofficial_JavaScript_logo_2.svg" };
+            var skill4 = new Skill { Name = "React", ImageUrl = "/cv/images/React-icon.svg" };
 
             skill1.Cvs.Add(adminCv);
             skill2.Cvs.Add(adminCv);

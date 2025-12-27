@@ -51,10 +51,17 @@ namespace PortfolioProject.Controllers
 
             CvDetailsViewModel cvVm = new CvDetailsViewModel
             {
-                UserName = user.UserName,
                 FullName = (user.FirstName + " " + user.LastName).Trim(),
                 ProfileImagePath = user.ProfileImageUrl,
-                IsPrivate = user.IsPrivate
+                IsPrivate = user.IsPrivate,
+
+                ViewCount = cv.ViewCount,
+                Title = cv.Title,
+                Summary = cv.Summary,
+                Skills = cv.Skills,
+                Educations = cv.Educations,
+                Experiences = cv.Experiences
+
             };
 
 

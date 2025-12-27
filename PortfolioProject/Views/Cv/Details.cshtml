@@ -1,3 +1,144 @@
 ﻿@model CvDetailsViewModel
 
-<h1>@Model.FullName</h1>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="/cv/cv.css" rel="stylesheet" />
+
+<div class="intro custom-card">
+
+	<a class="btn btn-outline-primary btn-sm send-message-btn">
+		<i class="bi bi-envelope"></i>
+		Skicka meddelande
+	</a>
+
+	@if (Model.IsPrivate)
+	{
+		<i class="bi bi-lock-fill lock" title="Privat profil"></i>
+	}
+	else
+	{
+		<i class="bi bi-unlock-fill lock" title="Offentlig profil"></i>
+	}
+
+	<div class="personal">
+		<div class="pic-and-socials">
+			<div class="profile-pic">
+				@if (Model.ProfileImagePath != null)
+				{
+					<img src="@Model.ProfileImagePath"
+						 alt="Profile picture"
+						 class="avatar-img" />
+				}
+				else
+				{
+					<i class="bi bi-person-circle avatar-icon" aria-hidden="true"></i>
+				}
+			</div>
+
+			
+
+			<ul class="socials">
+				<li>
+					<a href="https://github.com/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="GitHub profile">
+						<img src="/cv/images/github.svg">
+					</a>
+				</li>
+
+				<li>
+					<a href="https://linkedin.com/in/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="LinkedIn profile">
+						<img src="/cv/images/linkedin.svg">
+					</a>
+				</li>
+
+				<li>
+					<a href="https://x.com/yourusername"
+					   target="_blank"
+					   rel="noopener noreferrer"
+					   aria-label="X profile">
+						<img src="/cv/images/X.svg">
+					</a>
+				</li>
+			</ul>
+
+		</div>
+
+		<div class="personal-info">
+			@*Lägga till null-check på namn eller göra namn required?*@
+			<h1>@Model.FullName</h1>
+			@if (Model.Title != null)
+			{
+				<h4 class="text-muted">@Model.Title</h4>
+			}
+			@if (Model.Summary != null)
+			{
+				<p>@Model.Summary</p>
+			}
+		</div>
+	</div>
+
+	<h4 class="text-muted">Färdigheter</h4>
+	<section class="skills">
+		@foreach (var skill in Model.Skills)
+		{
+			<span class="skill-pill">
+				@if (skill.ImageUrl != null)
+				{
+					<img src="@skill.ImageUrl" alt="" class="skill-icon" />
+				}
+				<span>@skill.Name</span>
+			</span>
+		}
+	</section>
+
+</div>
+
+
+
+<div class="cv-content">
+
+	<section class="educations">
+		<h2>Utbildning</h2>
+		@foreach (var education in Model.Educations)
+		{
+			<div class="education custom-card">
+				<div style="display: flex; gap: 0.5rem;">
+					<h3 style="font-weight: 400;">@education.Degree</h3>
+					<h3>@education.School</h3>
+				</div>
+				<p>
+					@education.StartYear.ToString("yyyy")-@education.EndYear.ToString("yyyy")
+				</p>
+			</div>
+		}
+	</section>
+
+	<section class="experiences">
+		<h2>Erfarenhet</h2>
+		@foreach (var experience in Model.Experiences)
+		{
+			<div class="experience custom-card">
+				<div style="display: flex; gap: 0.5rem;">
+					<h3 style="font-weight: 400;">@experience.Role</h3>
+					<h3>@experience.Company</h3>
+				</div>
+
+
+				<p>
+					@experience.StartYear.ToString("yyyy")-@experience.EndYear.ToString("yyyy")
+				</p>
+			</div>
+		}
+	</section>
+</div>
+
+
+
+
+
+
