@@ -46,11 +46,3 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
-
-.cv-card {
-    background-color: lightblue;
-}
-
-.cv-card-body {
-    font-size: 0.5rem;
-}
