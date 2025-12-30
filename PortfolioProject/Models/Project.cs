@@ -9,5 +9,8 @@ namespace PortfolioProject.Models
         public string Description { get; set; }
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+        //public string OwnerId { get; set; }
+        //public virtual User Owner { get; set; }
     }
 }
