@@ -1,56 +1,212 @@
-﻿@using Microsoft.AspNet.Identity
-
-@model List<ConversationListItemViewModel>
+﻿@model InboxViewModel
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link rel="stylesheet" href="/css/messages.css" />
+<link rel="stylesheet" href="/css/inbox.css" />
 
-<h2>Conversations</h2>
+<div class="messaging-page">
+	<aside class="thread-list">
+		<partial name="_ConversationList" model="Model.ConversationList" />
+	</aside>
 
-<ul>
-	@foreach (var c in Model)
-	{
-		<li class="conversation-item"
-			data-url="@Url.Action("Conversation", "Message", new { username = c.OtherUsername })">
-
-			<div class="profile-pic">
-				@if (c.OtherUsersProfileImageUrl != null)
-				{
-					<img src="@c.OtherUsersProfileImageUrl"
-						 alt="Profile picture"
-						 class="avatar-img" />
-				}
-				else
-				{
-					<i class="bi bi-person-circle avatar-icon" aria-hidden="true"></i>
-				}
+	<main class="thread-view">
+		@if (Model.Conversation is null)
+		{
+			<div class="empty-thread">
+				<p class="text-muted">Välj en konversation till vänster</p>
 			</div>
+		}
+		else
+		{
+			<partial name="_ConversationThread" model="Model.Conversation" />
+		}
+	</main>
+</div>
 
-			<div>
-				<a asp-controller="Cv" asp-action="Details" asp-route-username="@c.OtherUsername" class="profile-link">
-					<strong>@c.OtherUsersFullName</strong>
-				</a>
 
-				<div class="conversation-preview">
-					<small>@c.LastSentAt</small>
-					<p> @(c.LastMessageIsMine ? "Du: " : "")@c.Preview</p>
-				</div>
-			</div>
-
-		</li>
-	}
-</ul>
-
+@*===============================================*@
+@*======== Scripts för _ConversationList ========*@
+@*===============================================*@
 
 
 <script>
-	document.addEventListener("DOMContentLoaded", () => {
-		document.querySelectorAll(".conversation-item").forEach(item => {
-			item.addEventListener("click", () => {
-				window.location.href = item.dataset.url;
+	(() => {
+		document.addEventListener("DOMContentLoaded", () => {
+			document.querySelectorAll(".conversation-item").forEach(item => {
+				item.addEventListener("click", () => {
+					window.location.href = item.dataset.url;
+				});
 			});
 		});
-	});
+	})();
+</script>
+
+@*===============================================*@
+@*======= Scripts för _ConversationThread =======*@
+@*===============================================*@
+
+
+@*Importerar en färdig emoji picker*@
+<script type="module"
+		src="https://unpkg.com/emoji-picker-element">
 </script>
 
 
+@*Ser till att man skrollar ner till dem senaste meddelandena när man kommer in på sidan.*@
+<script>
+	(() => {
+	  const m = document.querySelector('.messages');
+	  if (!m) return;
+
+	  m.style.visibility = 'hidden';
+	  const scroll = () => { m.scrollTop = m.scrollHeight; };
+
+	  scroll();
+	  requestAnimationFrame(() => {
+		scroll();
+		m.style.visibility = '';
+	  });
+	})();
+</script>
+
+
+
+
+@*
+	Låter fokuset stanna kvar i textarea när man öppnar emoji pickern,
+	Hanterar stängning av emoji pickern,
+	Hanterar val/input av emojis.
+*@
+<script type="module">
+	(() => {
+		const root = document.querySelector('.thread-view');
+		const btn = root?.querySelector('.emoji');
+		const picker = root?.querySelector('.emoji-picker');
+		const textarea = root?.querySelector('.text-box textarea');
+
+		if (!btn || !picker || !textarea) return;
+
+		btn.addEventListener('mousedown', e => e.preventDefault());
+		picker.addEventListener('mousedown', e => e.preventDefault());
+
+		btn.addEventListener('click', (e) => {
+		  e.stopPropagation();
+		  picker.hidden = !picker.hidden;
+		});
+
+		document.addEventListener('click', (e) => {
+		  if (!e.target.closest('.emoji-picker') &&
+			 !e.target.closest('.input-box')) picker.hidden = true;
+		});
+
+		document.addEventListener('keydown', (e) => {
+		  if (e.key === 'Escape') picker.hidden = true;
+		});
+
+
+		picker.addEventListener('emoji-click', e => {
+			const emoji = e.detail.unicode;
+			const start = textarea.selectionStart;
+			const end = textarea.selectionEnd;
+
+			textarea.value =
+			  textarea.value.slice(0, start) +
+			  emoji +
+			  textarea.value.slice(end);
+
+			const pos = start + emoji.length;
+			textarea.setSelectionRange(pos, pos);
+			textarea.focus();
+
+			textarea.dispatchEvent(new Event('input', { bubbles: true }));
+		});
+	})();
+</script>
+
+@*
+	!OBS! 
+	Just nu räknas vissa emojis som flera chars, hanterar heller inte nådd maxgräns.
+	Se över hur det ska hanteras.  
+	!OBS!
+*@
+@*Kontrollerar längden på meddelande*@
+<script>
+	(() => {
+		const root = document.querySelector('.thread-view');
+		const textarea = root?.querySelector('.text-box textarea');
+		const counter = document.getElementById('counter');
+		if (!textarea || !counter) return;
+
+		textarea.addEventListener('input', () => {
+		  counter.textContent = `${textarea.value.length}/3500`;
+		});
+	})();
+</script>
+
+
+@*Sköter växandet av input rutan vid radbrytning.*@
+<script>
+	(() => {
+		const root = document.querySelector('.thread-view');
+		const textarea = root?.querySelector('.text-box textarea');
+		const wrapper  = root?.querySelector('.text-box');
+		if (!textarea || !wrapper) return;
+
+		const base = textarea.scrollHeight;
+
+		function getMaxH() {
+		  const mh = getComputedStyle(textarea).maxHeight;
+		  return mh === 'none' ? Infinity : parseFloat(mh);
+		}
+
+		function resize() {
+		  const maxH = getMaxH();
+
+		  textarea.style.height = '0px';
+		  const needed = Math.max(base, textarea.scrollHeight);
+		  const height = Math.min(needed, maxH);
+
+		  textarea.style.height = height + 'px';
+		  wrapper.style.height  = height + 'px';
+		  textarea.style.overflowY = needed > maxH ? 'auto' : 'hidden';
+		}
+
+		textarea.addEventListener('input', resize);
+		window.addEventListener('resize', resize);
+		resize();
+	})();
+</script>
+
+@*Gör så att användare skicka meddelande med enter men låter shift+enter skapa ny rad.*@
+<script>
+	(() => {
+		  const root = document.querySelector('.thread-view');
+		const textarea = root?.querySelector('.text-box textarea');
+		const sendBtn = root?.querySelector('.send-btn');
+		if (!textarea || !sendBtn) return;
+
+
+		textarea.addEventListener('keydown', (e) => {
+
+			if (e.key === 'Enter' && !e.shiftKey) {
+			  e.preventDefault();
+			  sendBtn.click();
+			}
+		});
+	})();
+</script>
+
+@*Clearar errors*@
+<script>
+	(() => {
+		const textarea = document.querySelector('.input-box');
+		const error = document.getElementById('send-error');
+
+		if (textarea && error) {
+			textarea.addEventListener('input', () => {
+				if (error?.isConnected) 
+					error.remove();
+			});
+		}
+	})();
+</script>

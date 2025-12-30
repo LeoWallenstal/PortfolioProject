@@ -1,0 +1,35 @@
+﻿.container {
+    max-width: 100% !important;
+}
+
+.messaging-page {
+    display: flex;
+}
+
+.thread-list {
+    flex: 0 0 40%;
+    min-width: 0;
+}
+
+.thread-view {
+    flex: 1 1 60%;
+    min-width: 0;
+}
+
+
+/*Göra listan med conversationer till en gömpar sidopanel?*/
+@media (max-width: 768px) {
+    .messaging-page {
+        flex-direction: column;
+    }
+
+    .thread-list {
+        flex: 0 0 auto;
+        max-width: none;
+        min-width: 0;
+    }
+
+    .thread-view {
+        flex: 1 1 100%;
+    }
+}

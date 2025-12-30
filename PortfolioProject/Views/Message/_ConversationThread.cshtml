@@ -1,0 +1,58 @@
+﻿@using PortfolioProject.Models
+@model ConversationViewModel
+
+<div class="conversation-content">
+	<div class="messages">
+		@foreach (var msg in Model.Messages)
+		{
+			@if (!msg.IsMine)
+			{
+				<div class="received-row">
+					<img src="@Model.OtherUsersProfileImageUrl" />
+
+					<div class="received">
+						<small>@msg.SentAt</small>
+						<p>@msg.Body</p>
+					</div>
+				</div>
+			}
+			else
+			{
+				<div class="sent">
+					<small class="timestamp">@msg.SentAt</small>
+					<p>@msg.Body</p>
+					<small class="read-status">
+						@(msg.IsRead ? "Läst" : "Skickat")
+					</small>
+				</div>
+			}
+
+
+
+		}
+	</div>
+	<div class="send-area">
+		<form asp-action="Send" asp-route-username="@Model.OtherUsername" method="post" style="display: contents;">
+			<div class="text-box">
+				<small id="counter">0/3500</small>
+				@if (TempData["SendError"] is string error)
+				{
+					<div id="send-error" class="text-danger">@error</div>
+				}
+
+				<emoji-picker class="emoji-picker light" hidden></emoji-picker>
+				<i class="bi bi-emoji-smile-fill emoji"></i>
+				<textarea maxlength="3500" name="Body" class="input-box"></textarea>
+
+				<button class="send-btn" type="submit">
+					<i class="bi bi-send"></i>
+				</button>
+
+			</div>
+
+		</form>
+	</div>
+</div>
+
+
+
