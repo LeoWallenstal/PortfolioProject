@@ -1,0 +1,80 @@
+﻿@using PortfolioProject.Models
+@model ConversationViewModel
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/messages.css" />
+
+<div class="conversation-content">
+	<div class="messages">
+		@foreach (var msg in Model.Messages)
+		{
+			@if (!msg.IsMine)
+			{
+				<div class="received-row">
+					<img src="@Model.OtherUsersProfileImageUrl" />
+
+					<div class="received">
+						<small>@msg.SentAt</small>
+						<p>@msg.Body</p>
+					</div>
+				</div>
+			}
+			else
+			{
+				<div class="sent">
+					<small>@msg.SentAt</small>
+					<p>@msg.Body</p>
+				</div>
+			}
+
+
+
+		}
+	</div>
+	<div class="send-area">
+		<emoji-picker class="emoji-picker"></emoji-picker>
+		<div class="text-box">
+			<i class="bi bi-emoji-smile-fill emoji"></i>
+			<textarea type="type" name="name" value="" class="input-box"></textarea>
+		</div>
+	</div>
+</div>
+
+<script type="module"
+		src="https://unpkg.com/emoji-picker-element"></script>
+
+
+
+
+<script>
+	const textarea = document.querySelector('.text-box textarea');
+	const wrapper  = document.querySelector('.text-box');
+
+	const base = textarea.scrollHeight;
+
+	function getMaxH() {
+	  const mh = getComputedStyle(textarea).maxHeight;
+	  return mh === 'none' ? Infinity : parseFloat(mh);
+	}
+
+	function resize() {
+	  const maxH = getMaxH();
+
+	  textarea.style.height = '0px';
+	  const needed = Math.max(base, textarea.scrollHeight);
+	  const height = Math.min(needed, maxH);
+
+	  textarea.style.height = height + 'px';
+	  wrapper.style.height  = height + 'px';
+	  textarea.style.overflowY = needed > maxH ? 'auto' : 'hidden';
+	}
+
+	textarea.addEventListener('input', resize);
+	window.addEventListener('resize', resize);
+	resize();
+</script>
+
+
+
+
+

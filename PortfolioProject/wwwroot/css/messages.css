@@ -1,0 +1,140 @@
+﻿/* ==== Lista med konversationer ==== */
+.conversation-item {
+    display: flex;
+    padding: 12px;
+    margin: 12px;
+    gap: 12px;
+    border-radius: 25px;
+    border: thin solid #b5b5b5;
+    cursor: pointer;
+    background-color: #eef2ff;
+    list-style: none;
+    align-items: center;
+}
+
+    .conversation-item:hover {
+        background-color: #e0e7ff;
+    }
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    font-size: 150px;    
+}
+
+.avatar-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.avatar-icon::before {
+    display: block;
+}
+
+.profile-link {
+    color: black;
+    font-size: 36px;
+    text-decoration: none;
+}
+
+/* ==== Individuell konversation ==== */
+.conversation-content{
+    height: 800px;
+
+}
+.messages {
+    display: flex;
+    flex-direction: column;
+    height: 70%;
+    border-radius: 25px;
+    border: thin solid #808080;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.sent, .received {
+    min-width: 200px;
+    padding: 8px;
+    border-radius: 25px;
+    border: thin solid #808080;
+}
+.sent {
+    align-self: flex-end;
+    margin: 12px;
+    background-color: aliceblue;
+    border-bottom-right-radius: 0;
+}
+.received-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px;
+}
+    .received-row img {
+        width: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-top: auto;
+        margin-bottom: -16px;
+    }
+.received {
+    align-self: flex-start;
+    background-color: lightblue;
+    border-bottom-left-radius: 0;
+}
+
+.send-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-radius: 25px;
+    border: 1px solid #808080;
+    border-top: 0;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.text-box {
+    position: relative;
+    border-radius: 25px;
+    border: thin solid #808080;
+    height: 36px;
+    width: 90%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+    .text-box textarea {
+        border: none;
+        outline: none;
+        resize: none;
+        background: transparent;
+        height: 100%;
+        width: 100%;
+        margin: 0 16px;
+        line-height: 30px;
+        max-height: clamp(90px, 18vh, 150px);
+        overflow-y: hidden;
+    }
+
+.emoji {
+    position: absolute;
+    right: 8px;
+    z-index: 2; /* ensures it's above the textarea */
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.emoji-picker{
+
+}
+
+
+
+
+
+

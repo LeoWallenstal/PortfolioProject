@@ -55,6 +55,24 @@ namespace PortfolioProject
                     throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
             }
 
+            var anna = await userManager.FindByNameAsync("anna");
+            if (anna == null)
+            {
+                anna = new User
+                {
+                    UserName = "anna",
+                    Email = "anna@demo.local",
+                    FirstName = "Anna",
+                    LastName = "Student",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(anna, "Anna12345!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
             // Prevent duplicating seed data
             if (await db.Cvs.AnyAsync() || await db.Messages.AnyAsync())
                 return;
@@ -157,6 +175,14 @@ namespace PortfolioProject
                     FromUserId = leo.Id,
                     ToUserId = admin.Id,
                     Body = "Thanks!",
+                    SentAt = DateTime.UtcNow.AddMinutes(2),
+                    IsRead = false
+                },
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = anna.Id,
+                    Body = "Hello!",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
                 }

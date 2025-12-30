@@ -1,7 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using Microsoft.AspNet.Identity
 
-<h2>Messages.</h2>
+@model List<ConversationListItemViewModel>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/messages.css" />
+
+<h2>Conversations</h2>
+
+<ul>
+	@foreach (var c in Model)
+	{
+		<li class="conversation-item"
+			data-url="@Url.Action("Conversation", "Message", new { username = c.OtherUsername })">
+
+			<div class="profile-pic">
+				@if (c.OtherUsersProfileImageUrl != null)
+				{
+					<img src="@c.OtherUsersProfileImageUrl"
+						 alt="Profile picture"
+						 class="avatar-img" />
+				}
+				else
+				{
+					<i class="bi bi-person-circle avatar-icon" aria-hidden="true"></i>
+				}
+			</div>
+
+			<div>
+				<a asp-controller="Cv" asp-action="Details" asp-route-username="@c.OtherUsername" class="profile-link">
+					<strong>@c.OtherUsersFullName</strong>
+				</a>
+
+				<div class="conversation-preview">
+					<small>@c.LastSentAt</small>
+					<p> @(c.LastMessageIsMine ? "Du: " : "")@c.Preview</p>
+				</div>
+			</div>
+
+		</li>
+	}
+</ul>
+
+
+
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		document.querySelectorAll(".conversation-item").forEach(item => {
+			item.addEventListener("click", () => {
+				window.location.href = item.dataset.url;
+			});
+		});
+	});
+</script>
+
+
