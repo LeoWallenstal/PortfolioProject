@@ -1,4 +1,5 @@
-﻿@model HomeViewModel
+﻿@using System.Security.Claims
+@model HomeViewModel
 
 <section class="search-section">
 
@@ -75,7 +76,7 @@
 
 									<div class="profile-img">
 										<img src="@(string.IsNullOrEmpty(cv.User.ProfileImageUrl)
-															 			  ? Url.Content("~/images/default-profile.png")
+															 			  ? Url.Content("~/images/default-profile2.png")
 															 			  : cv.User.ProfileImageUrl)"
 										 alt="" />
 								</div>
@@ -102,19 +103,37 @@
 			@foreach (var project in Model.Projects)
 			{
 				<div class="col">
-					<div class="card">
-						<div class="card-header">
+					<div class="card text-center">
+						<div class="card-header align-items-center">
 							<p>@project.Title</p>
 						</div>
 						<div class="card-body">
 							<p>Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
 							<p>@project.Description</p>
+							<p>Antal deltagare: @project.Users.Count </p>
 						</div>
 						@if (User.Identity.IsAuthenticated)
 						{
+							@*Jämför användarens ID hämtat från inloggnings-claims med ID:n på användare 
+							som är kopplade till projektet. Inloggnings-claims är information om den inloggade 
+							användaren som systemet sparar och gör tillgänglig under hela sessionen.
+							FindFirstValue innebär gå igenom alla claims och hitta den som har Id och ge dess värde*@
+							var isParticipant = project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 							<div class="card-footer">
-								<button class="border-0"> Delta </button>
+
+							@if(!isParticipant)
+							{
+								<form asp-action="JoinProject" asp-controller="Home" method="post">
+									<input type="hidden" name="pid" value="@project.Id" />
+									<button class="border-0"> Delta </button>
+								</form>
+							}
+							else
+							{
+									<button disabled class="border-0"> Deltar ✔ </button>
+							}
 							</div>
+
 						}
 
 					</div>
