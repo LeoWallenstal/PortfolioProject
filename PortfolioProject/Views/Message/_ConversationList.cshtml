@@ -2,34 +2,42 @@
 
 @model List<ConversationListItemViewModel>
 
-<h2>Conversations</h2>
 
-<ul>
-	@foreach (var c in Model)
-	{
-		<li class="conversation-item"
-			data-url="@Url.Action("Index", "Message", new { username = c.OtherUsername })">
+<div class="conversation-list">
+	<h1>Chattar</h1>
+	<ul class="item-list">
+		@foreach (var c in Model)
+		{
+			<li class="conversation-item"
+				data-url="@Url.Action("Index", "Message", new { username = c.OtherUsername })">
 
-			<div class="profile-pic">
-				<img src="@c.OtherUsersProfileImageUrl"
-					 alt="Profile picture"
-					 class="avatar-img" />
-			</div>
-
-			<div>
-				<a asp-controller="Cv" asp-action="Details" asp-route-username="@c.OtherUsername" class="profile-link">
-					<strong>@c.OtherUsersFullName</strong>
-				</a>
-
-				<div class="conversation-preview">
-					<small>@c.LastSentAt</small>
-					<p> @(c.LastMessageIsMine ? "Du: " : "")@c.Preview</p>
+				<div class="profile-pic">
+					<img src="@c.OtherUsersProfileImageUrl"
+						 alt="Profile picture"
+						 class="avatar-img" />
 				</div>
+
+				<div class="conversation-text">
+					<a asp-controller="Cv" asp-action="Details" asp-route-username="@c.OtherUsername" class="profile-link">
+						<strong>@c.OtherUsersFullName</strong>
+					</a>
+
+					<div class="conversation-preview">
+						<span> @(c.LastMessageIsMine ? "Du: " : "")@c.Preview</span>
+					</div>
+				</div>
+
+				<div class="conversation-date">
+					@(c.LastSentAt.Date == DateTime.Today
+									? c.LastSentAt.ToString("HH:mm")
+									: c.LastSentAt.ToString("yyyy-MM-dd"))
 			</div>
 
-		</li>
-	}
-</ul>
+
+			</li>
+		}
+	</ul>
+</div>
 
 
 

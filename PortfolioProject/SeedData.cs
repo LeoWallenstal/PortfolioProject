@@ -73,14 +73,92 @@ namespace PortfolioProject
                     throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
             }
 
+            // ===== Alice =====
+            var alice = await userManager.FindByNameAsync("alice");
+            if (alice == null)
+            {
+                alice = new User
+                {
+                    UserName = "alice",
+                    Email = "alice@demo.local",
+                    FirstName = "Alice",
+                    LastName = "Andersson",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(alice, "Alice123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Bob =====
+            var bob = await userManager.FindByNameAsync("bob");
+            if (bob == null)
+            {
+                bob = new User
+                {
+                    UserName = "bob",
+                    Email = "bob@demo.local",
+                    FirstName = "Bob",
+                    LastName = "Berg",
+                    IsActive = true,
+                    IsPrivate = true   // private profile example
+                };
+
+                var result = await userManager.CreateAsync(bob, "Bob123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Clara =====
+            var clara = await userManager.FindByNameAsync("clara");
+            if (clara == null)
+            {
+                clara = new User
+                {
+                    UserName = "clara",
+                    Email = "clara@demo.local",
+                    FirstName = "Clara",
+                    LastName = "Carlsson",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(clara, "Clara123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== David =====
+            var david = await userManager.FindByNameAsync("david");
+            if (david == null)
+            {
+                david = new User
+                {
+                    UserName = "david",
+                    Email = "david@demo.local",
+                    FirstName = "David",
+                    LastName = "Dahl",
+                    IsActive = false,   // inactive account example
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(david, "David123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
             // Prevent duplicating seed data
             if (await db.Cvs.AnyAsync() || await db.Messages.AnyAsync())
                 return;
 
             // --- CVs (FK to users) ---
-            var adminCv = new Cv { UserId = admin.Id , ViewCount = 0};
-            var leoCv = new Cv 
-            { UserId = leo.Id, 
+            var adminCv = new Cv { UserId = admin.Id, ViewCount = 0 };
+
+            var leoCv = new Cv
+            {
+                UserId = leo.Id,
                 ViewCount = 0,
                 Title = "Systemvetenskap Student",
                 Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
@@ -88,7 +166,28 @@ namespace PortfolioProject
                 "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
             };
 
-            db.Cvs.AddRange(adminCv, leoCv);
+            // Same-ish CV template for all demo users (you can tweak later)
+            Cv MakeCv(User u)
+            {
+                return new Cv
+                {
+                    UserId = u.Id,
+                    ViewCount = 0,
+                    Title = "Exemepel på titel",
+                    Summary =
+                        "I'm a frontend web developer dedicated to turning ideas into creative solutions. " +
+                        "I specialize in creating seamless and intuitive user experiences. " +
+                        "My approach focuses on performance, accessibility, and responsiveness."
+                };
+            }
+
+            var aliceCv = MakeCv(alice);
+            var bobCv = MakeCv(bob);
+            var claraCv = MakeCv(clara);
+            var davidCv = MakeCv(david);
+
+
+            db.Cvs.AddRange(adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv);
 
             // --- EDUCATIONS ---
             var edu1 = new Education
@@ -108,6 +207,10 @@ namespace PortfolioProject
             };
 
             edu1.Cvs.Add(adminCv);
+            edu1.Cvs.Add(aliceCv);
+            edu1.Cvs.Add(bobCv);
+            edu2.Cvs.Add(claraCv);
+            edu2.Cvs.Add(davidCv);
             edu2.Cvs.Add(leoCv);
 
             // --- EXPERIENCES ---
@@ -128,6 +231,10 @@ namespace PortfolioProject
             };
 
             exp1.Cvs.Add(adminCv);
+            exp2.Cvs.Add(aliceCv);
+            exp2.Cvs.Add(bobCv);
+            exp1.Cvs.Add(claraCv);
+            exp1.Cvs.Add(davidCv);
             exp2.Cvs.Add(leoCv);
 
             // --- SKILLS ---
@@ -141,6 +248,18 @@ namespace PortfolioProject
 
             skill3.Cvs.Add(leoCv);
             skill4.Cvs.Add(leoCv);
+
+            skill3.Cvs.Add(aliceCv);
+            skill4.Cvs.Add(aliceCv);
+
+            skill2.Cvs.Add(bobCv);
+            skill4.Cvs.Add(bobCv);
+
+            skill1.Cvs.Add(claraCv);
+            skill2.Cvs.Add(claraCv);
+
+            skill2.Cvs.Add(davidCv);
+            skill3.Cvs.Add(davidCv);
 
             // --- SAVE ALL ---
             db.Educations.AddRange(edu1, edu2);
@@ -159,6 +278,10 @@ namespace PortfolioProject
             p2.Users.Add(admin);
 
             db.Projects.AddRange(p1, p2);
+
+
+            // Use a single base time to keep ordering stable
+            var t0 = DateTime.UtcNow.AddMinutes(-30);
 
             // --- Messages ---
             db.Messages.AddRange(
@@ -185,8 +308,87 @@ namespace PortfolioProject
                     Body = "Hello!",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
+                },
+                // ===== Conversation: DAVID <-> ADMIN (requested) =====
+                new Message
+                {
+                    FromUserId = david.Id,
+                    ToUserId = admin.Id,
+                    Body = "Hey admin, I think my profile is marked inactive by mistake. Can you check?",
+                    SentAt = t0.AddMinutes(0),
+                    IsRead = true
+                },
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = david.Id,
+                    Body = "Hi David! I can see your account is inactive in the demo seed. Want me to activate it?",
+                    SentAt = t0.AddMinutes(2),
+                    IsRead = false
+                },
+                new Message
+                {
+                    FromUserId = david.Id,
+                    ToUserId = admin.Id,
+                    Body = "Yes please — also, does being private affect messaging?",
+                    SentAt = t0.AddMinutes(4),
+                    IsRead = false
+                },
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = david.Id,
+                    Body = "Private affects profile visibility, not direct messages (in our demo rules).",
+                    SentAt = t0.AddMinutes(6),
+                    IsRead = false
+                },
+
+                // ===== Conversation: ALICE <-> ADMIN =====
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = alice.Id,
+                    Body = "Welcome Alice! Try sending a message back to test the inbox.",
+                    SentAt = t0.AddMinutes(10),
+                    IsRead = true
+                },
+                new Message
+                {
+                    FromUserId = alice.Id,
+                    ToUserId = admin.Id,
+                    Body = "Thanks! This UI is super clean 👌",
+                    SentAt = t0.AddMinutes(12),
+                    IsRead = false
+                },
+
+                // ===== Conversation: BOB <-> ADMIN =====
+                new Message
+                {
+                    FromUserId = bob.Id,
+                    ToUserId = admin.Id,
+                    Body = "Hi! My profile is private — can you still see my CV?",
+                    SentAt = t0.AddMinutes(14),
+                    IsRead = false
+                },
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = bob.Id,
+                    Body = "As admin I can, but other users might be blocked depending on your privacy logic.",
+                    SentAt = t0.AddMinutes(15),
+                    IsRead = false
+                },
+
+                // ===== Conversation: CLARA <-> ADMIN =====
+                new Message
+                {
+                    FromUserId = admin.Id,
+                    ToUserId = clara.Id,
+                    Body = "Hi Clara! Reminder: update your summary and add a project.",
+                    SentAt = t0.AddMinutes(18),
+                    IsRead = false
                 }
-            );
+                );
 
             await db.SaveChangesAsync();
         }

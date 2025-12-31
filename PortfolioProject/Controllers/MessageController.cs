@@ -67,7 +67,7 @@ namespace PortfolioProject.Controllers
                                    OtherUsersProfileImageUrl = u.ProfileImageUrl,
                                    LastSentAt = lm.SentAt,
                                    LastMessageIsMine = lm.IsMine,
-                                   Preview = lm.Body.Length > 50 ? lm.Body.Substring(0, 50) + "…" : lm.Body
+                                   Preview = lm.Body.Length > 50 ? lm.Body.Substring(0, 50).Trim() + "…" : lm.Body
                                })
                               .AsNoTracking()
                               .ToListAsync();
@@ -125,6 +125,17 @@ namespace PortfolioProject.Controllers
                 ConversationList = items,
                 Conversation = active
             };
+
+
+            var isFetch = Request.Headers["X-Requested-With"] == "fetch";
+
+            if (isFetch)
+            {          
+                if (vm.Conversation is null)
+                    return PartialView("_ConversationThreadEmpty");
+
+                return PartialView("_ConversationThread", vm.Conversation);
+            }
 
             return View(vm);
         }

@@ -7,12 +7,12 @@
 }
 
 .thread-list {
-    flex: 0 0 40%;
-    min-width: 0;
+    flex: 0 0 auto; /* do NOT grow or shrink */
 }
 
+
 .thread-view {
-    flex: 1 1 60%;
+    flex: 1;
     min-width: 0;
 }
 
