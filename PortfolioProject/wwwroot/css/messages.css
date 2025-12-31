@@ -4,7 +4,7 @@
     display: inline-flex;
     flex-direction: column;
     align-items: flex-start;
-    width: max-content;
+    width: 350px;
     height: 85vh;
     overflow-y: auto;
     border: thin solid #808080;
@@ -19,6 +19,7 @@
 
 .item-list {
     padding: 0;
+    width: 100%;
 }
 
 .conversation-item {
@@ -34,7 +35,7 @@
 }
 
     .conversation-item:hover {
-        background-color: #e9ecef;
+        background-color: #dee2e6;
     }
 
     .conversation-item strong {
@@ -42,12 +43,13 @@
     }
 
 .is-active {
-    background-color: #e9ecef;
+    background-color: #dee2e6;
     cursor: default;
 }
 
 .conversation-preview {
     opacity: 0.75;
+    font-size: 14px;
 }
 
 .conversation-date {
@@ -78,7 +80,9 @@
 }
 
 
-/* ==== Individuell konversation ==== */
+
+
+/* ==== CSS för _ConversationThread ==== */
 .conversation-content {
     display: flex;
     flex-direction: column;
@@ -253,3 +257,7 @@
     .send-btn:hover {
         color: rgba(0, 0, 0, 0.7);
     }
+
+@media (max-width: 768px) {
+   
+}

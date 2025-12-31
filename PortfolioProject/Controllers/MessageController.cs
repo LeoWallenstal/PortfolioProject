@@ -67,7 +67,7 @@ namespace PortfolioProject.Controllers
                                    OtherUsersProfileImageUrl = u.ProfileImageUrl,
                                    LastSentAt = lm.SentAt,
                                    LastMessageIsMine = lm.IsMine,
-                                   Preview = lm.Body.Length > 50 ? lm.Body.Substring(0, 50).Trim() + "…" : lm.Body
+                                   Preview = lm.Body.Length > 25 ? lm.Body.Substring(0, 25).Trim() + "…" : lm.Body
                                })
                               .AsNoTracking()
                               .ToListAsync();
