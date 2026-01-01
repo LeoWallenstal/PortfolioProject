@@ -97,17 +97,12 @@ p {
     flex-shrink: 0;
 }
 
-/* IMAGE VERSION */
 .avatar-img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 5px solid black;
-    background-color: black;
-}
-
-.avatar-icon::before {
-    display: block; /* Fixar så att ikonen hamnar i center */
+    background-color: white;
+    border: 2px solid lightgrey;
 }
 
 .socials {

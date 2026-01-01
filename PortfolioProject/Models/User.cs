@@ -11,7 +11,7 @@ namespace PortfolioProject.Models
         public string? Adress { get; set; }
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
-        public string? ProfileImageUrl { get; set; }
+        public string ProfileImageUrl { get; set; } = "/images/default-profile2.png";
 
         public virtual Cv? Cv { get; set; } 
         public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
