@@ -19,17 +19,13 @@
 
 /*Göra listan med conversationer till en gömpar sidopanel?*/
 @media (max-width: 768px) {
-    .messaging-page {
-        flex-direction: column;
+    .messaging-page.is-list .thread-view {
+        display: none;
     }
 
-    .thread-list {
-        flex: 0 0 auto;
-        max-width: none;
-        min-width: 0;
-    }
-
-    .thread-view {
-        flex: 1 1 100%;
+    .messaging-page.is-thread .thread-list {
+        display: none;
     }
 }
+
+
