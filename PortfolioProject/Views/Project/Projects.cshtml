@@ -1,7 +1,12 @@
-﻿@model IEnumerable<ProjectViewModel>
+﻿@using System.Security.Claims
+@model IEnumerable<ProjectViewModel>
 
-<section class="search-section">
-	<h3 class="text-center my-2">Projekt</h3>
+<section class="search-section text-center my-2">
+	<h3>Projekt</h3>
+	@if (User.Identity.IsAuthenticated)
+	{
+		<a asp-controller="Project" asp-action="Create" class="text-black" style="text-decoration: none">Skapa nytt projekt</a>
+	}
 </section>
 
 <section>
@@ -9,18 +14,50 @@
 		@foreach (var projectVM in Model)
 		{
 			<div class="col">
-				<div class="card cv-card">
+				<div class="card cv-card mt-2">
+					<a asp-controller="Project" asp-action="Details" asp-route-id="@projectVM.Project.Id" class="text-decoration-none text-reset">
 					<div class="card-header">
 						<h5>@projectVM.Project.Title</h5>
 					</div>
 					<div class="card-body">
 						<p>Skapat: @projectVM.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
 						<p>@projectVM.Project.Description</p>
+
+						<p><strong>Deltagare (@projectVM.Project.Users.Count):</strong></p>
+						@if (projectVM.VisibleUsers != null && projectVM.VisibleUsers.Any())
+						{
+							<div class="row g-2">
+							@foreach (var user in projectVM.VisibleUsers)
+							{
+									<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+									<img src="@(string.IsNullOrEmpty(user.ProfileImageUrl)
+																? Url.Content("~/images/default-profile2.png")
+																: user.ProfileImageUrl)"
+									alt=""/>
+								</div>
+							}
+							</div>
+						}
 					</div>
+					</a>
 					@if (User.Identity.IsAuthenticated)
 					{
+						bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 						<div class="card-footer">
-							<button class="border-0">Delta</button>
+
+							@if (!isParticipant)
+							{
+								<form asp-action="JoinProject" asp-controller="Project" method="post">
+									<input type="hidden" name="pid" value="@projectVM.Project.Id" />
+									@* skickar med url för sidan användaren är på *@
+									<input type="hidden" name="returnUrl" value="@Context.Request.Path" /> 
+									<button class="border-0"> Delta </button>
+								</form>
+							}
+							else
+							{
+								<button disabled class="border-0"> Deltar ✔ </button>
+							}
 						</div>
 					}
 				</div>

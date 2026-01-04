@@ -35,6 +35,12 @@ namespace PortfolioProject.Data
                 .WithMany(u => u.ReceivedMessages)
                 .HasForeignKey(m => m.ToUserId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Project>()
+                .HasOne<User>(p => p.Owner)
+                .WithMany()
+                .HasForeignKey(p => p.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

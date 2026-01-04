@@ -1,0 +1,55 @@
+﻿@using System.Security.Claims
+@model ProjectViewModel
+
+<section class="search-section d-flex align-items-center position-relative my-2">
+	<h3 class="mx-auto">@Model.Project.Title</h3>
+	
+	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId)
+	{
+		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-3">
+			<i class="bi bi-pencil"></i>
+		</a>
+	}
+</section>
+
+<div class="container">
+	<div class="row mx-auto">
+		<div class="col-md-8">
+			<div class="card mt-2">
+				<div class="card-body">
+					<p>Skapat: @Model.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
+					<p>@Model.Project.Description</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="card mt-2">
+				<div class="card-body">
+					<p><strong>Deltagare (@Model.Project.Users.Count):</strong></p>
+					@if (Model.VisibleUsers != null && Model.VisibleUsers.Any())
+					{
+						<div class="list-group">
+							@foreach (var user in Model.VisibleUsers)
+							{
+								<div class="d-flex align-items-center mb-2">
+									<img src="@(string.IsNullOrEmpty(user.ProfileImageUrl)
+																	? Url.Content("~/images/default-profile2.png")
+																	: user.ProfileImageUrl)"
+									alt=""
+									class="rounded-circle me-2"
+									style="width:40px; height:40px;"/>
+									<span class="ms-1">@user.FirstName @user.LastName 
+										@if(@user.Id == Model.Project.OwnerId)
+										{
+											<span class="badge bg-primary ms-2">Ägare</span>
+										}
+									</span>
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
