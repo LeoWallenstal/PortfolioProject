@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Cv>
+
+@{
+	var cvs = Model.ToList();
+	int itemsPerSlide = 5;
+	int cvCount = cvs.Count();
+	
+	//beräkna hur många slides som behövs för alla cvn genom att dela antal cvn med antal cvn per slide
+	//Math.Ceiling används för att avrunda uppåt till närmaste heltal
+	int slideCount = (int)Math.Ceiling((double)cvs.Count / itemsPerSlide);
+}
+
+<div class="carousel-inner" data-slide-count="@slideCount">
+	
+	@if (cvCount == 0){
+	
+		<div class="carousel-item active">
+			<div class="text-center py-5">
+				<h5>Inga CVn hittades!</h5>
+			</div>
+		</div>
+	}
+	else{
+	@for (int i = 0; i < slideCount; i++)
+	{
+		//hämtar cvn som ska finnas på sliden genom att hoppa över de som redan visats på tdigare slides
+			//är i 0, tar den 0 * 5 = 0, tar de första 5
+			//är i 1, tar den 1 * 5 = 5, hoppar över de första 5, tar nästa 5
+			//begränsat till max 5 per slide, finns mindre tar den dem
+		var slideCvs = cvs.Skip(i * itemsPerSlide)
+		.Take(itemsPerSlide);
+
+		//skapar ett carousel-item för varje slide
+		//om i är 0 är det den första sliden, då lägger vi till klassen active för att visa den först
+		<div class="carousel-item @(i == 0 ? "active" : "")">
+
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+				
+				@*laddar in cvcards via partiell vy som kan ändras dynamiskt*@
+				@await Html.PartialAsync("CvCards.cshtml", slideCvs)
+
+			</div>
+		</div>
+	}
+	}
+	
+</div>

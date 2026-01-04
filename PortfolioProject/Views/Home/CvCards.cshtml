@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Cv>
+
+@foreach (var cv in Model)
+{
+	<div class="col">
+
+		<a asp-controller="Cv"
+		   asp-action="Details"
+		   asp-route-username="@cv.User.UserName"
+		   class="text-decoration-none text-dark">
+
+			<div class="card cv-card text-center">
+				<div class="cv-card-inner">
+					<div class="card-body cv-card-body">
+						@if (cv.Educations.Any())
+						{
+							<p><strong>Utbildning:</strong></p>
+							@foreach (var education in cv.Educations)
+							{
+								<p>@education.School  - @education.Degree - @education.StartYear.ToString("yyyy-MM-dd") - @education.EndYear.ToString("yyyy-MM-dd")</p>
+							}
+						}
+
+						@if (cv.Experiences.Any())
+						{
+							<p>Erfarenhet:</p>
+							@foreach (var experience in cv.Experiences)
+							{
+								<p>@experience.Company - @experience.Role  - @experience.StartYear.ToString("yyyy-MM-dd") - @experience.EndYear.ToString("yyyy-MM-dd")</p>
+							}
+						}
+
+						@if (cv.Skills.Any())
+						{
+							<p><strong>Skills:</strong></p>
+							@foreach (var skill in cv.Skills)
+							{
+								<p>@skill.Name</p>
+							}
+						}
+
+
+					</div>
+					<div class="card-footer cv-card-footer">
+						<div class="d-flex align-items-center gap-2">
+
+							<div class="profile-img">
+								<img src="@(string.IsNullOrEmpty(cv.User.ProfileImageUrl)
+														? Url.Content("~/images/default-profile2.png")
+														: cv.User.ProfileImageUrl)"
+								 alt="bild" />
+						</div>
+						<div class="col">@cv.User.FirstName @cv.User.LastName</div>
+					</div>
+				</div>
+
+				</div>
+			</div>
+		</a>
+
+
+	</div>
+}
