@@ -150,7 +150,7 @@ namespace PortfolioProject
             }
 
             // Prevent duplicating seed data
-            if (await db.Cvs.AnyAsync() || await db.Messages.AnyAsync())
+            if (await db.Cvs.AnyAsync() || await db.Conversations.AnyAsync() || await db.Messages.AnyAsync())
                 return;
 
             // --- CVs (FK to users) ---
@@ -162,8 +162,8 @@ namespace PortfolioProject
                 ViewCount = 0,
                 Title = "Systemvetenskap Student",
                 Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
-                "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
-                "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
+                          "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
+                          "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
             };
 
             // Same-ish CV template for all demo users (you can tweak later)
@@ -185,7 +185,6 @@ namespace PortfolioProject
             var bobCv = MakeCv(bob);
             var claraCv = MakeCv(clara);
             var davidCv = MakeCv(david);
-
 
             db.Cvs.AddRange(adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv);
 
@@ -261,7 +260,7 @@ namespace PortfolioProject
             skill2.Cvs.Add(davidCv);
             skill3.Cvs.Add(davidCv);
 
-            // --- SAVE ALL ---
+            // --- SAVE ALL (CV-related) ---
             db.Educations.AddRange(edu1, edu2);
             db.Experiences.AddRange(exp1, exp2);
             db.Skills.AddRange(skill1, skill2, skill3, skill4);
@@ -279,14 +278,49 @@ namespace PortfolioProject
 
             db.Projects.AddRange(p1, p2);
 
-
             // Use a single base time to keep ordering stable
             var t0 = DateTime.UtcNow.AddMinutes(-30);
+
+            // Helper: stable ordering so (A,B) and (B,A) become the same conversation
+            static (string a, string b) OrderPair(string u1, string u2)
+                => string.CompareOrdinal(u1, u2) < 0 ? (u1, u2) : (u2, u1);
+
+            // Helper: get or create a conversation for two users
+            async Task<Conversation> GetOrCreateConversationAsync(string user1Id, string user2Id)
+            {
+                var (a, b) = OrderPair(user1Id, user2Id);
+
+                var convo = await db.Conversations
+                    .FirstOrDefaultAsync(c => c.UserAId == a && c.UserBId == b);
+
+                if (convo != null) return convo;
+
+                convo = new Conversation
+                {
+                    // If your Conversation model already has: Guid Id {get;set;} = Guid.NewGuid();
+                    // you can remove the next line.
+                    Id = Guid.NewGuid(),
+                    UserAId = a,
+                    UserBId = b
+                };
+
+                db.Conversations.Add(convo);
+                return convo;
+            }
+
+            // --- Conversations ---
+            var convoAdminLeo = await GetOrCreateConversationAsync(admin.Id, leo.Id);
+            var convoAdminAnna = await GetOrCreateConversationAsync(admin.Id, anna.Id);
+            var convoAdminDavid = await GetOrCreateConversationAsync(admin.Id, david.Id);
+            var convoAdminAlice = await GetOrCreateConversationAsync(admin.Id, alice.Id);
+            var convoAdminBob = await GetOrCreateConversationAsync(admin.Id, bob.Id);
+            var convoAdminClara = await GetOrCreateConversationAsync(admin.Id, clara.Id);
 
             // --- Messages ---
             db.Messages.AddRange(
                 new Message
                 {
+                    ConversationId = convoAdminLeo.Id,
                     FromUserId = admin.Id,
                     ToUserId = leo.Id,
                     Body = "Welcome to the platform!",
@@ -295,6 +329,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminLeo.Id,
                     FromUserId = leo.Id,
                     ToUserId = admin.Id,
                     Body = "Thanks!",
@@ -303,15 +338,18 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminAnna.Id,
                     FromUserId = admin.Id,
                     ToUserId = anna.Id,
                     Body = "Hello!",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
                 },
+
                 // ===== Conversation: DAVID <-> ADMIN (requested) =====
                 new Message
                 {
+                    ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
                     ToUserId = admin.Id,
                     Body = "Hey admin, I think my profile is marked inactive by mistake. Can you check?",
@@ -320,6 +358,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminDavid.Id,
                     FromUserId = admin.Id,
                     ToUserId = david.Id,
                     Body = "Hi David! I can see your account is inactive in the demo seed. Want me to activate it?",
@@ -328,6 +367,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
                     ToUserId = admin.Id,
                     Body = "Yes please — also, does being private affect messaging?",
@@ -336,6 +376,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminDavid.Id,
                     FromUserId = admin.Id,
                     ToUserId = david.Id,
                     Body = "Private affects profile visibility, not direct messages (in our demo rules).",
@@ -346,6 +387,7 @@ namespace PortfolioProject
                 // ===== Conversation: ALICE <-> ADMIN =====
                 new Message
                 {
+                    ConversationId = convoAdminAlice.Id,
                     FromUserId = admin.Id,
                     ToUserId = alice.Id,
                     Body = "Welcome Alice! Try sending a message back to test the inbox.",
@@ -354,6 +396,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminAlice.Id,
                     FromUserId = alice.Id,
                     ToUserId = admin.Id,
                     Body = "Thanks! This UI is super clean 👌",
@@ -364,6 +407,7 @@ namespace PortfolioProject
                 // ===== Conversation: BOB <-> ADMIN =====
                 new Message
                 {
+                    ConversationId = convoAdminBob.Id,
                     FromUserId = bob.Id,
                     ToUserId = admin.Id,
                     Body = "Hi! My profile is private — can you still see my CV?",
@@ -372,6 +416,7 @@ namespace PortfolioProject
                 },
                 new Message
                 {
+                    ConversationId = convoAdminBob.Id,
                     FromUserId = admin.Id,
                     ToUserId = bob.Id,
                     Body = "As admin I can, but other users might be blocked depending on your privacy logic.",
@@ -382,16 +427,20 @@ namespace PortfolioProject
                 // ===== Conversation: CLARA <-> ADMIN =====
                 new Message
                 {
+                    ConversationId = convoAdminClara.Id,
                     FromUserId = admin.Id,
                     ToUserId = clara.Id,
                     Body = "Hi Clara! Reminder: update your summary and add a project.",
                     SentAt = t0.AddMinutes(18),
                     IsRead = false
                 }
-                );
+            );
 
             await db.SaveChangesAsync();
+
+            // NOTE:
+            // This seed assumes Conversation.Id and Message.ConversationId are the SAME type (Guid recommended).
+            // If your Message.ConversationId is still int, change it to Guid (or change Conversation.Id to int).
         }
     }
-
 }

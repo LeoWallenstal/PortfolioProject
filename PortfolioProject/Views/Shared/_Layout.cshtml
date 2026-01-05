@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNet.Identity
+@using PortfolioProject.Data
+@inject IMessagesService MessagesService
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -21,7 +25,7 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="navbar-nav flex-grow-1">
+					<ul class="navbar-nav flex-grow-1 align-items-center">
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Hem</a>
 						</li>
@@ -36,23 +40,48 @@
 						@if (!User.Identity?.IsAuthenticated ?? false)
 						{
 							<li class="nav-item ms-auto">
-								<a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Logga in</a>
+								<a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
+									Logga in
+									<i class="bi bi-box-arrow-in-right fs-5"></i>
+								</a>
 							</li>
 						}
 						else
 						{
-							//ändra till rätt controller & action
 							<li class="nav-item ms-auto">
-								<a class="nav-link text-dark" asp-controller="Message" asp-action="Index">Meddelanden</a>
-							</li>
-							<li class="nav-item">
-								<form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
-									<button type="submit">Logga ut</button>
-								</form>
+								<a class="nav-link text-dark" asp-controller="Message" asp-action="Index">
+									Meddelanden
+									<i class="bi bi-chat-dots fs-5 icon-with-badge">
+										@{
+											int unread = 0;
+											var userId = User.Identity?.GetUserId();
+											unread = await MessagesService.GetTotalUnreadAsync(userId!);
+
+											if (unread > 0)
+											{
+												string n = (unread > 99) ? "99+" : $"{unread}";
+												<span id="totalUnread" class="notification-dot">@n</span>
+											}
+										}									
+									</i>
+
+								</a>
 							</li>
 
 							<li class="nav-item">
-								<a class="nav-link text-dark" asp-controller="Profile" asp-action="Index">Profil</a>
+								<a class="nav-link text-dark" asp-controller="Profile" asp-action="Index">
+									Profil
+									<i class="bi bi-person-circle fs-5"></i>
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
+									<button class="nav-link btn btn-link text-dark d-flex align-items-center gap-1" type="submit">
+										Logga ut
+										<i class="bi bi-box-arrow-right fs-5 text-danger"></i>
+									</button>
+								</form>
 							</li>
 
 						}
@@ -69,19 +98,6 @@
 
 	<footer class="border-top footer bg-white text-dark text-center py-1">
 		<div class="container small">
-
-			@* @if (User.Identity?.IsAuthenticated ?? false)
-			{
-				<div>
-					Inloggad som @User.Identity.Name!
-				</div>
-			}
-			else
-			{
-				<div>
-					Ej inloggad!
-				</div>
-			} *@
 			&copy; 2025 - PortfolioProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 
 		</div>
