@@ -204,12 +204,39 @@
         const threadView = document.getElementById("threadView");
         if (!listRoot || !threadView) return;
 
+        function applyReadUi(item) {
+            const dot = item.querySelector(".notification-dot");
+            if (!dot) return;
+
+            const unreadHere = parseInt(dot.textContent, 10) || 0;
+            if (!unreadHere) return;
+
+            dot.remove();
+
+            const totalDot = document.getElementById("totalUnread");
+            if (!totalDot) return;
+
+            const total = parseInt(totalDot.textContent, 10) || 0;
+            const next = Math.max(0, total - unreadHere);
+
+            if (next <= 0) {
+                totalDot.remove();
+            } else if (next >= 100) {
+                totalDot.textContent = '99+';
+            }else {
+                totalDot.textContent = next;
+            }
+        }
+
+
         function setActive(item) {
             listRoot.querySelectorAll(".conversation-item.is-active")
                 .forEach(el => el.classList.remove("is-active"))
 
             item.classList.add("is-active");
             scrollActiveIntoView(listRoot);
+
+            applyReadUi(item);
         }
 
         function updateActiveFromUrl() {

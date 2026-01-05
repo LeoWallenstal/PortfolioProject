@@ -3,6 +3,9 @@ namespace PortfolioProject.Models
     public class Message{
         public Guid MessageId {get;set;} = Guid.NewGuid();
 
+        public Guid ConversationId { get; set; }
+        public virtual Conversation Conversation { get; set; } = null!;
+
         public string? FromUserId {get; set; }
         public virtual User? FromUser {get; set;} 
 

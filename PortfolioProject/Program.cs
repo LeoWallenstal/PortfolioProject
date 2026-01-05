@@ -23,6 +23,8 @@ namespace PortfolioProject
             .AddEntityFrameworkStores<DatabaseContext>()
             .AddDefaultTokenProviders();
 
+            builder.Services.AddScoped<IMessagesService, MessagesService>();
+
 
             var app = builder.Build();
 

@@ -1,22 +1,64 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+
+/* === CSS För navbar ===*/
+.icon-with-badge {
+    position: relative;
+    display: inline-block;
+}
+
+    .icon-with-badge .notification-dot {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        transform: translate(45%, -20%);
+        width: 20px;
+        height: 20px;
+        background-color: red;
+        border-radius: 50%;
+        pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        color: white;
+        font-weight: 600
+    }
+
+
+
+@media (max-width: 768px) {
+    .navbar-nav {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+        .navbar-nav .nav-item {
+            width: 100%;
+        }
+
+        .navbar-nav .nav-link {
+            justify-content: flex-start;
+        }
 }

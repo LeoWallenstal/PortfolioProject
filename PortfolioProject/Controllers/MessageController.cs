@@ -13,13 +13,13 @@ namespace PortfolioProject.Controllers
     public class MessageController : Controller
     {
         private readonly UserManager<User> _userManager;
-        private readonly DatabaseContext _db;
+        private readonly IMessagesService _messages;
 
 
-        public MessageController(UserManager<User> userManager, DatabaseContext db)
+        public MessageController(UserManager<User> userManager, IMessagesService messages)
         {
             _userManager = userManager;
-            _db = db;
+            _messages = messages;
         }
 
         [HttpGet("")]
@@ -27,50 +27,8 @@ namespace PortfolioProject.Controllers
         {
             var currentUserId = _userManager.GetUserId(User);
 
-            // === VÄNSTER: Samma som Index() ===
-            // 1) All messages involving me
-            var baseQuery = _db.Messages
-                .Where(m => m.FromUserId == currentUserId || m.ToUserId == currentUserId)
-                .Select(m => new
-                {
-                    OtherUserId = m.FromUserId == currentUserId ? m.ToUserId : m.FromUserId,
-                    m.SentAt,
-                    m.Body,
-                    IsMine = m.FromUserId == currentUserId
-                });
+            var items = await _messages.GetInboxAsync(currentUserId);
 
-            // 2) Latest timestamp per conversation
-            var latestPerUser = baseQuery
-                .GroupBy(x => x.OtherUserId)
-                .Select(g => new
-                {
-                    OtherUserId = g.Key,
-                    LastSentAt = g.Max(x => x.SentAt)
-                });
-
-            // 3) Get the actual latest message row (tie-safe with SentAt, then body/from)
-            var latestMessages = from x in baseQuery
-                                 join l in latestPerUser
-                                   on new { x.OtherUserId, x.SentAt }
-                                   equals new { l.OtherUserId, SentAt = l.LastSentAt }
-                                 select x;
-
-            // 4) Join to users and shape the inbox list
-            var items = await (from lm in latestMessages
-                               join u in _db.Users on lm.OtherUserId equals u.Id
-                               orderby lm.SentAt descending
-                               select new ConversationListItemViewModel
-                               {
-                                   OtherUsersId = u.Id,
-                                   OtherUsersFullName = $"{u.FirstName}  {u.LastName}",
-                                   OtherUsername = u.UserName,
-                                   OtherUsersProfileImageUrl = u.ProfileImageUrl,
-                                   LastSentAt = lm.SentAt,
-                                   LastMessageIsMine = lm.IsMine,
-                                   Preview = lm.Body.Length > 25 ? lm.Body.Substring(0, 25).Trim() + "…" : lm.Body
-                               })
-                              .AsNoTracking()
-                              .ToListAsync();
             ConversationViewModel? active = null;
 
             // === HÖGER: Om username är vald, bygg samma som Conversation() ===
@@ -80,45 +38,22 @@ namespace PortfolioProject.Controllers
                 if (otherUser == null) return NotFound();
                 if (otherUser.Id == currentUserId) return Forbid();
 
-                var unread = await _db.Messages
-                    .Where(m =>
-                        !m.IsRead &&
-                        m.ToUserId == currentUserId &&
-                        m.FromUserId == otherUser.Id)
-                    .ToListAsync();
+                active = await _messages.GetConversationViewModelAsync(otherUser.Id, currentUserId!);
 
-                if (unread.Any())
+                if (active is null)
                 {
-                    foreach (var msg in unread)
-                        msg.IsRead = true;
-
-                    await _db.SaveChangesAsync();
+                    active = new ConversationViewModel
+                    {
+                        OtherUsersId = otherUser.Id,
+                        OtherUsersFullName = $"{otherUser.FirstName} {otherUser.LastName}",
+                        OtherUsername = otherUser.UserName,
+                        OtherUsersProfileImageUrl = otherUser.ProfileImageUrl,
+                        Messages = new List<MessageViewModel>()
+                    };
                 }
 
-                var messages = await _db.Messages
-                    .Where(m =>
-                        (m.FromUserId == currentUserId && m.ToUserId == otherUser.Id) ||
-                        (m.FromUserId == otherUser.Id && m.ToUserId == currentUserId))
-                    .OrderBy(m => m.SentAt)
-                    .AsNoTracking()
-                    .Select(m => new MessageViewModel
-                    {
-                        IsMine = m.FromUserId == currentUserId,
-                        SentAt = m.SentAt,
-                        Body = m.Body,
-                        IsRead = m.IsRead
-                    })
-                    .ToListAsync();
-
-                active = new ConversationViewModel
-                {
-                    OtherUsersId = otherUser.Id,
-                    OtherUsersFullName = $"{otherUser.FirstName}  {otherUser.LastName}",
-                    OtherUsername = otherUser.UserName,
-                    OtherUsersProfileImageUrl = otherUser.ProfileImageUrl,
-                    Messages = messages
-                };
             }
+
 
             var vm = new InboxViewModel
             {
@@ -126,11 +61,9 @@ namespace PortfolioProject.Controllers
                 Conversation = active
             };
 
-
             var isFetch = Request.Headers["X-Requested-With"] == "fetch";
-
             if (isFetch)
-            {          
+            {
                 if (vm.Conversation is null)
                     return PartialView("_ConversationThreadEmpty");
 
@@ -161,19 +94,23 @@ namespace PortfolioProject.Controllers
                 return RedirectToAction(nameof(Index), new { username });
             }
 
-            _db.Messages.Add(new Message
+
+            var convo = await _messages.EnsureConversationForSendAsync(otherUser.Id, currentUserId);
+            if (convo != null)
             {
-                FromUserId = currentUserId,
-                ToUserId = otherUser.Id,
-                SentAt = DateTime.UtcNow,
-                Body = body
-            });
-
-            await _db.SaveChangesAsync();
-
+                await _messages.InsertMessage(new Message
+                {
+                    ConversationId = convo.Id,
+                    FromUserId = currentUserId,
+                    ToUserId = otherUser.Id,
+                    SentAt = DateTime.UtcNow,
+                    Body = body
+                });
+            }
             return RedirectToAction(nameof(Index), new { username });
 
-        }
 
+
+        }
     }
 }

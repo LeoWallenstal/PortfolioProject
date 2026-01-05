@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNet.Identity
+@using PortfolioProject.Data
+@inject IMessagesService MessagesService
 
 @model List<ConversationListItemViewModel>
 
@@ -11,10 +13,20 @@
 			<li class="conversation-item"
 				data-url="@Url.Action("Index", "Message", new { username = c.OtherUsername })">
 
-				<div class="profile-pic">
+				<div class="profile-pic icon-with-badge">
 					<img src="@c.OtherUsersProfileImageUrl"
 						 alt="Profile picture"
 						 class="avatar-img" />
+
+					@{
+						int unread = c.UnreadCount;
+
+						if (unread > 0)
+						{
+							string n = (unread > 99) ? "99+" : $"{unread}";
+							<span class="notification-dot">@n</span>
+						}
+					}
 				</div>
 
 				<div class="conversation-text">
