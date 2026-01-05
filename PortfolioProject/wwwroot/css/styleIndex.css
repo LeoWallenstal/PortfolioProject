@@ -113,16 +113,3 @@
 
 
 }
-
-.participant-img {
-    border-radius: 50%;
-    background-color: white;
-    margin: 0px 3px;
-}
-    .participant-img img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        object-fit: contain;
-    }
-}

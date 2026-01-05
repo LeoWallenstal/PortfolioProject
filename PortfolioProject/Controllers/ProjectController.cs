@@ -106,6 +106,39 @@ namespace PortfolioProject.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> LeaveProject(Guid pid, string? returnUrl)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            User? user = await _context.Users
+                .Include(u => u.Projects)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            Project? project = await _context.Projects
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.Id == pid);
+
+            if (user == null || project == null)
+                return NotFound();
+
+            if(userId == project.OwnerId)
+                return Forbid();
+
+            if (user.Projects.Any(p => p.Id == pid))
+            {
+                user.Projects.Remove(project);
+                project.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
+
+            if (!string.IsNullOrEmpty(returnUrl))
+                return LocalRedirect(returnUrl);
+
+            return RedirectToAction("Projects");
+        }
+
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -147,7 +180,7 @@ namespace PortfolioProject.Controllers
             project.Description = projectVM.Project.Description;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Projects");
+            return RedirectToAction("Details", new { id = project.Id});
         }
 
         public async Task<IActionResult> Details(Guid id)

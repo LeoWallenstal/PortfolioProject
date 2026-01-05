@@ -6,7 +6,7 @@
 	
 	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId)
 	{
-		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-3">
+		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4">
 			<i class="bi bi-pencil"></i>
 		</a>
 	}
@@ -50,6 +50,23 @@
 					}
 				</div>
 			</div>
+
+			@{
+				bool isParticipant = Model.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+				bool isOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId;
+
+				if(User.Identity.IsAuthenticated && isParticipant && !isOwner)
+				{
+					<div class="text-center mt-2">
+						<form asp-action="LeaveProject" method="post">
+							<input type="hidden" name="pid" value="@Model.Project.Id" />
+							<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+							<button class="btn btn-sm btn-outline-danger">Lämna projekt</button>
+						</form>
+					</div>
+				}
+			}
+
 		</div>
 	</div>
 </div>

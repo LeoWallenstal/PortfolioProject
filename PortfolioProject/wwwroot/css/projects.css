@@ -1,0 +1,34 @@
+﻿.participant-img {
+    border-radius: 50%;
+    background-color: white;
+    margin: 0px 3px;
+}
+
+    .participant-img img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+.project-card2 {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .project-card2:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+    }
+
+
+@media (max-width: 576px) {
+    .participant-img img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .all-projects {
+        margin: 0 1.5rem 2rem 1.5rem;
+    }
+}
