@@ -23,7 +23,7 @@
 						<img src="@Model.OtherUsersProfileImageUrl" />
 					</a>
 					<div class="received">
-						<small class="timestamp">@msg.SentAt</small>
+						<small class="timestamp">@msg.SentAt.ToString("g")</small>
 						<p>@msg.Body</p>
 					</div>
 				</div>
@@ -31,7 +31,7 @@
 			else
 			{
 				<div class="sent">
-					<small class="timestamp">@msg.SentAt</small>
+					<small class="timestamp">@msg.SentAt.ToString("g")</small>
 					<p>@msg.Body</p>
 					<small class="read-status">
 						@(msg.IsRead ? "Läst" : "Skickat")
