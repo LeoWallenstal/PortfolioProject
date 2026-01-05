@@ -5,7 +5,10 @@ function init() {
     name.addEventListener("input", searchCvs)
     skill.addEventListener("change", searchCvs)
 
+    window.addEventListener("scroll", onScrollEventProjects);
+
     toggleButtons();
+
 }
 
 function searchCvs() {
@@ -23,22 +26,44 @@ function searchCvs() {
             const inner = carousel.querySelector(".carousel-inner");
             inner.innerHTML = html;
 
+            //skapar en js kontroll för att kunna styra carouselen som skapas med bootstrap-klasser
+            //stänger av intervall som byter slide automatiskt
             const carouselInstance = new bootstrap.Carousel(carousel, {
                 interval: false
             });
-
+            //visar slide 0 (första sliden)
             carouselInstance.to(0);
+
             toggleButtons();
         });
 }
-//function animateCvCards() {
-//    const cards = document.querySelectorAll(".cv-card");
-//    cards.forEach(card => {
-//        setTimeout(() => {
-//            card.classList.add("show");
-//        }, 30);
-//    });
-//}
+function animateProjectCards() {
+
+    const cards = document.querySelectorAll(".project-card");
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add("show");
+        }, index * 1000);
+    });
+}
+
+let projectsAnimated = false;
+function onScrollEventProjects() {
+    if (projectsAnimated) {
+        return;
+    }
+    const projectsection = document.getElementById("recentProjects");
+    const rect = projectsection.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    //event triggas när sektionen är 30% synlig.
+    const triggerPoint = windowHeight * 0.7;
+    if (rect.top < triggerPoint) {
+        animateProjectCards();
+        projectsAnimated = true;
+        window.removeEventListener("scroll", onScrollAnimateProjects);
+    }
+}
 
 
 function toggleButtons() {
