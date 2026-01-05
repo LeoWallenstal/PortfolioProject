@@ -1,20 +1,22 @@
 ﻿@using System.Security.Claims
 @model IEnumerable<ProjectViewModel>
 
-<section class="search-section text-center my-2">
-	<h3>Projekt</h3>
+<section class="search-section d-flex align-items-center position-relative my-2">
+	<h3 class="mx-auto">Projekt</h3>
 	@if (User.Identity.IsAuthenticated)
 	{
-		<a asp-controller="Project" asp-action="Create" class="text-black" style="text-decoration: none">Skapa nytt projekt</a>
+		<a asp-controller="Project" asp-action="Create" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4" style="text-decoration: none">
+			<i class="bi bi-plus-lg"></i>
+		</a>
 	}
 </section>
 
 <section>
-	<div class="row row-cols-1 row-cols-3 g-3">
+	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 all-projects">
 		@foreach (var projectVM in Model)
 		{
 			<div class="col">
-				<div class="card cv-card mt-2">
+				<div class="card project-card2 mt-2">
 					<a asp-controller="Project" asp-action="Details" asp-route-id="@projectVM.Project.Id" class="text-decoration-none text-reset">
 					<div class="card-header">
 						<h5>@projectVM.Project.Title</h5>
@@ -43,7 +45,7 @@
 					@if (User.Identity.IsAuthenticated)
 					{
 						bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-						<div class="card-footer">
+						<div class="card-footer text-center">
 
 							@if (!isParticipant)
 							{
