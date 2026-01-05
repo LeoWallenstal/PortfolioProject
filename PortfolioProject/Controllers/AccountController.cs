@@ -39,6 +39,9 @@ namespace PortfolioProject.Controllers
                 
                 User user = new User();
                 user.UserName = registerViewModel.UserName;
+                user.FirstName = registerViewModel.FirstName;
+                user.LastName = registerViewModel.LastName;
+                user.Email = registerViewModel.Email;
 
                 var result = await _userManager.CreateAsync(user, registerViewModel.Password);
 

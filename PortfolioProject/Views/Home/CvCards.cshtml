@@ -14,7 +14,7 @@
 					<div class="card-body cv-card-body">
 						@if (cv.Educations.Any())
 						{
-							<p><strong>Utbildning:</strong></p>
+							<p><strong>Utbildning</strong></p>
 							@foreach (var education in cv.Educations)
 							{
 								<p>@education.School  - @education.Degree - @education.StartYear.ToString("yyyy-MM-dd") - @education.EndYear.ToString("yyyy-MM-dd")</p>
@@ -23,7 +23,7 @@
 
 						@if (cv.Experiences.Any())
 						{
-							<p>Erfarenhet:</p>
+							<p><strong>Erfarenhet</strong></p>
 							@foreach (var experience in cv.Experiences)
 							{
 								<p>@experience.Company - @experience.Role  - @experience.StartYear.ToString("yyyy-MM-dd") - @experience.EndYear.ToString("yyyy-MM-dd")</p>
@@ -32,7 +32,7 @@
 
 						@if (cv.Skills.Any())
 						{
-							<p><strong>Skills:</strong></p>
+							<p><strong>Skills</strong></p>
 							@foreach (var skill in cv.Skills)
 							{
 								<p>@skill.Name</p>

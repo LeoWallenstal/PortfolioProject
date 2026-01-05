@@ -33,7 +33,7 @@ namespace PortfolioProject.Controllers
                 cvList = await _dbContext.Cvs.Where(cv => cv.User.IsPrivate == false && cv.User.IsActive == true).ToListAsync();
             }
 
-            projectList = await _dbContext.Projects.Include(p => p.Users).OrderByDescending(p => p.CreatedDate).ToListAsync();
+            projectList = await _dbContext.Projects.Include(p => p.Users).OrderByDescending(p => p.CreatedDate).Take(3).ToListAsync();
             skills = await _dbContext.Skills.ToListAsync();
 
             var mv = new HomeViewModel
@@ -77,7 +77,7 @@ namespace PortfolioProject.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> JoinProject(Guid pid)
+        public async Task<IActionResult> JoinProject(Guid pid, string returnUrl)
         {
             var userId = _userManager.GetUserId(User);
 
@@ -98,6 +98,11 @@ namespace PortfolioProject.Controllers
             {
                 user.Projects.Add(project);
                 await _dbContext.SaveChangesAsync();
+            }
+
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
             }
 
             return RedirectToAction("Index");

@@ -1,37 +1,58 @@
 ﻿@model LoginViewModel
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
 
-<form method="post" asp-action="Login">
-	<div asp-validation-summary="All" class="text-danger"></div>
-	<div class="form-group row">
-		<div class="col-sm-2">
-			<label>Användarnamn: </label>
-		</div>
-		<div class="col-sm-4">
-			<input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-		</div>
-	</div>
-	<div class="form-group row">
-		<div class="col-sm-2">
-			<label>Lösenord: </label>
-		</div>
-		<div class="col-sm-4">
-			<input asp-for="Password" type="password" class="form-control" />
-			<span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-	</div>
-	<div class="form-group row">
-		<div class="offset-sm-2 col-sm-4">
-			<input type="checkbox" title="Kom ihåg" asp-for="RememberMe" class="form-check"/>
-            <label>Kom ihåg mig</label>
-		</div>
-	</div>
-	<div class="form-group row">
-		<div class="offset-2 col-sm-4">
-            <button type="submit" class="btn btn-primary">Logga in</button>
-        </div>
-    </div>
-	<label>Har du inget konto?</label>
-    <a asp-controller="Account" asp-action="Register">Registrera dig här</a>
+			<form method="post" asp-action="Login">
+				<h2 class="text-center m-3">Logga in</h2>
+				<div asp-validation-summary="All" class="text-danger"></div>
 
-</form>
+				<div class="form-group row mb-4 align-items-center">
+					<div class="col-12 col-md-3">
+						<label>Användarnamn: </label>
+					</div>
+					<div class="col-12 col-md-6">
+						<input asp-for="UserName" class="form-control" />
+					</div>
+					<div class="col-12 col-md-3">
+						<span asp-validation-for="UserName" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="form-group row mb-4 align-items-center">
+					<div class="col-12 col-md-3">
+						<label>Lösenord: </label>
+					</div>
+					<div class="col-12 col-md-6">
+						<input asp-for="Password" type="password" class="form-control" />
+					</div>
+					<div class ="col-12 col-md-3">
+						<span asp-validation-for="Password" class="text-danger"></span>
+					</div>
+				</div>
+
+				<div class="form-group row mb-4 justify-content-center">
+					<div class="col-auto d-flex align-items-center gap-2">
+						<input asp-for="RememberMe" class="form-check-input" />
+						<label asp-for="RememberMe" class="mb-0">Kom ihåg mig</label>
+					</div>
+				</div>
+
+				<div class="form-group row mb-4 justify-content-center">
+					<div class="col-auto">
+						<button type="submit" class="btn btn-primary px-4">
+							Logga in
+						</button>
+					</div>
+				</div>
+				<div class="text-center">
+					<label class="d-block">Har du inget konto?</label>
+					<a asp-controller="Account" asp-action="Register">
+						Registrera dig här
+					</a>
+				</div>
+
+			</form>
+		</div>
+	</div>
+</div>

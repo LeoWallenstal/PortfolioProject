@@ -1,7 +1,7 @@
 ﻿@using System.Security.Claims
 @model HomeViewModel
 @section Scripts {
-	<script src="~/js/homepage.js"></script>
+	<script src="~/js/homepage.js" defer></script>
 }
 
 <section class="search-section">
@@ -56,23 +56,39 @@
 	</div>
 </section>
 
-<section class="project-section">
-	<h3 class="text-center my-4">Projekt: </h3>
+<section class="project-section" id="recentProjects">
+	<h3 class="text-center my-4">Nyligen tillagda projekt</h3>
 	@* vill vi ha fler projekt eller bara senaste? 
 	ska man kunna klicka på projekt och se mer, 
 	typ vilka som är med, skapat av vem osv*@
 	<div>
-		<div class="col g-3">
+		<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
 			@foreach (var project in Model.Projects)
 			{
 					<div class="card text-center project-card">
 						<div class="card-header align-items-center">
-							<p>@project.Title</p>
+						<a asp-controller="Project"
+						   asp-action="Details"
+						   asp-route-id="@project.Id" class="text-decoration-none text-dark">
+						   <p>@project.Title</p>
+					   </a>
 						</div>
 						<div class="card-body">
-							<p>Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
+							<p class="project-meta">Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
 							<p>@project.Description</p>
-							<p>Antal deltagare: @project.Users.Count </p>
+
+						<div class="d-flex justify-content-center mt-2">
+							@foreach (var user in project.Users.Take(5))
+							{
+								<div class="participant-img">
+									<img src="@user.ProfileImageUrl" />
+								</div>
+							}
+							@if (project.Users.Count > 5)
+							{
+								<span class="ms-2 small text-muted">+@(@project.Users.Count - 5)</span>
+							}
+						</div>
 						</div>
 						@if (User.Identity.IsAuthenticated)
 						{
@@ -87,6 +103,7 @@
 							{
 								<form asp-action="JoinProject" asp-controller="Home" method="post">
 									<input type="hidden" name="pid" value="@project.Id" />
+									<input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString + "#recentProjects")"/>
 									<button class="border-0"> Delta </button>
 								</form>
 							}
@@ -97,7 +114,6 @@
 							</div>
 
 						}
-
 					</div>
 			}
 		</div>
