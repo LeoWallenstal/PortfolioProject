@@ -1,9 +1,10 @@
 ﻿@using System.Security.Claims
 @model HomeViewModel
+@section Scripts {
+	<script src="~/js/homepage.js"></script>
+}
 
 <section class="search-section">
-
-	<h3 class="text-center my-4 ">Utforska cvn:</h3>
 	
 	<div class="row m-3 align-items-center">
 
@@ -12,7 +13,7 @@
 		</div>
 
 		<div class="col-md-3">
-			<input class="form-control" placeholder="Namn" />
+			<input class="form-control" placeholder="Namn" id="nameSearch"/>
 		</div>
 
 		<div class="col-auto">
@@ -20,7 +21,7 @@
 		</div>
 
 		<div class="col-md-3">
-			<select class="form-select">
+			<select class="form-select" id="skillSearch">
 				<option value="">Välj kompetens</option>
 				@foreach (var skill in Model.Skills)
 				{
@@ -32,64 +33,26 @@
 </section>
 
 <section class="cv-section">
-	<div class="container">
-		<div class="row row-cols-1 row-cols-5 g-3">
+	<div class="container" id="cvSection">
+		<div id="cvCarousel"
+			 class="carousel slide"
+			 data-bs-interval="false">
 
-			@foreach (var cv in Model.Cvs)
-			{
-				<div class="col">
+				@await Html.PartialAsync("CvCarouselPartial", Model.Cvs)
+			
+			<button class="carousel-control-prev"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</button>
 
-					<a asp-controller="Cv" asp-action="Details" asp-route-username="@cv.User.UserName" class="text-decoration-none text-dark">
-						<div class="card cv-card">
-							<div class="card-body cv-card-body">
-								@if (cv.Educations.Count > 0)
-								{
-									<p>Utbildning:</p>
-								}
-								@foreach (var education in cv.Educations)
-								{
-									<p>@education.School  - @education.Degree - @education.StartYear.ToString("yyyy-MM-dd") - @education.EndYear.ToString("yyyy-MM-dd")</p>
-								}
-								@if (cv.Experiences.Count > 0)
-								{
-									<p>Erfarenhet:</p>
-								}
-								@foreach (var experience in cv.Experiences)
-								{
-									<p>@experience.Company - @experience.Role  - @experience.StartYear.ToString("yyyy-MM-dd") - @experience.EndYear.ToString("yyyy-MM-dd")</p>
-								}
-								@if (cv.Skills.Count > 0)
-								{
-									<p>Skills:</p>
-
-								}
-								<ul>
-									@foreach (var skill in cv.Skills)
-									{
-										<li>@skill.Name</li>
-									}
-								</ul>
-
-							</div>
-							<div class="card-footer cv-card-footer">
-								<div class="d-flex align-items-center gap-2">
-
-									<div class="profile-img">
-										<img src="@(string.IsNullOrEmpty(cv.User.ProfileImageUrl)
-															 			  ? Url.Content("~/images/default-profile2.png")
-															 			  : cv.User.ProfileImageUrl)"
-										 alt="" />
-								</div>
-								<div class="col">@cv.User.FirstName @cv.User.LastName</div>
-							</div>
-						</div>
-					</div>
-				</a>
-
-
-				</div>
-						}
-		</div>
+			<button class="carousel-control-next"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</button>
 	</div>
 </section>
 
@@ -99,11 +62,10 @@
 	ska man kunna klicka på projekt och se mer, 
 	typ vilka som är med, skapat av vem osv*@
 	<div>
-		<div class="row row-cols-1 row-cols-5 g-3">
+		<div class="col g-3">
 			@foreach (var project in Model.Projects)
 			{
-				<div class="col">
-					<div class="card text-center">
+					<div class="card text-center project-card">
 						<div class="card-header align-items-center">
 							<p>@project.Title</p>
 						</div>
@@ -137,8 +99,6 @@
 						}
 
 					</div>
-
-				</div>
 			}
 		</div>
 	</div>

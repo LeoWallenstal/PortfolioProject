@@ -26,12 +26,11 @@ namespace PortfolioProject.Controllers
             var skills = new List<Skill>();
 
             if (User.Identity.IsAuthenticated) {
-                cvList = await _dbContext.Cvs.ToListAsync();
+                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsActive == true).ToListAsync();
             }
             else
             {
-                //lägg till att ej visa dekativerade kontons cv
-                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsPrivate == false).ToListAsync();
+                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsPrivate == false && cv.User.IsActive == true).ToListAsync();
             }
 
             projectList = await _dbContext.Projects.Include(p => p.Users).OrderByDescending(p => p.CreatedDate).ToListAsync();
@@ -46,6 +45,36 @@ namespace PortfolioProject.Controllers
 
             return View(mv);
         }
+
+        [HttpGet]
+        public IActionResult Search(string name, string skill)
+        {
+            var query = _dbContext.Cvs.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query = query.Where(cv => cv.User.FirstName.ToLower().StartsWith(name));
+            }
+            if (!string.IsNullOrWhiteSpace(skill))
+            {
+                query = query.Where(cv => cv.Skills.Any(s => s.Name.Equals(skill)));
+            }
+            
+
+            if (User.Identity.IsAuthenticated)
+            {
+                query = query.Where(cv => cv.User.IsActive == true);
+            }
+            else
+            {
+                query = query.Where(cv => cv.User.IsPrivate == false && cv.User.IsActive == true);
+            }
+            
+            var result = query.ToList();
+
+            return PartialView("CvCarouselPartial", result);
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> JoinProject(Guid pid)
@@ -74,15 +103,5 @@ namespace PortfolioProject.Controllers
             return RedirectToAction("Index");
         } 
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
