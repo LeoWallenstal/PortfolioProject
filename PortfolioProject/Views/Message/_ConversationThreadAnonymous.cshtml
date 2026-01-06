@@ -43,14 +43,8 @@
 
 		}
 	</div>
-
-	@{
-		var url = Model.OtherUsersId == null
-		? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
-		: Url.Action("Send", "Message", new { username = Model.OtherUsername });
-	}
 	<div class="send-area">
-		<form action="@url" method="post" style="display: contents;">
+		<form asp-action="SendAnonymous" asp-route-publicId="@Model.PublicId" method="post" style="display: contents;">
 			<div class="text-box">
 				<small id="counter">0/3500</small>
 				@if (TempData["SendError"] is string error)

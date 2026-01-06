@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PortfolioProject.Models
+namespace PortfolioProject.Models.InputModels
 {
     public class SendMessageInputModel
     {
