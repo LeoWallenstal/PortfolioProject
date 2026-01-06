@@ -50,10 +50,25 @@ namespace PortfolioProject.Controllers
                     await _signInManager.SignInAsync(user, isPersistent: true);
                     return RedirectToAction("Index", "Home");
                 }
-
-                foreach (var error in result.Errors)
+                else
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in result.Errors)
+                    {
+                        if (error.Code.StartsWith("Password"))
+                        {
+                            ModelState.AddModelError(
+                                nameof(RegisterViewModel.Password),
+                                error.Description
+                            );
+                        }
+                        else if (error.Code == "DuplicateUserName")
+                        {
+                            ModelState.AddModelError(
+                                nameof(RegisterViewModel.UserName),
+                                error.Description
+                            );
+                        }
+                    }
                 }
             }
             return View(registerViewModel);
@@ -80,7 +95,7 @@ namespace PortfolioProject.Controllers
                     ModelState.AddModelError("", "Two-factor authentication is required.");
 
                 else
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    ModelState.AddModelError("", "Ogiltigt användarnamn eller lösenord.");
             }
 
             return View(logInViewModel);
