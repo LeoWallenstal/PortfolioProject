@@ -11,9 +11,9 @@ namespace PortfolioProject.Data
 
         public DbSet<Project> Projects { get; set; }
         public DbSet<Cv> Cvs { get; set; }
+        public DbSet<CvVisit> CvVisits { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
-
         public DbSet<Skill> Skills { get; set; }
         public DbSet<Education> Educations { get; set; }
         public DbSet<Experience> Experiences { get; set; }
@@ -24,7 +24,24 @@ namespace PortfolioProject.Data
             base.OnModelCreating(modelBuilder);
             // Configure your entity mappings here if needed
 
-            modelBuilder.Entity<Message>()
+            modelBuilder.Entity<CvVisit>()
+                .HasIndex(v => new { v.CvId, v.VisitorId })
+                .IsUnique();
+
+            modelBuilder.Entity<CvVisit>()
+                .HasOne(v => v.Cv)
+                .WithMany()
+                .HasForeignKey(v => v.CvId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CvVisit>()
+                .HasOne(v => v.Visitor)
+                .WithMany()
+                .HasForeignKey(v => v.VisitorId)
+                .OnDelete(DeleteBehavior.NoAction);
+        
+
+        modelBuilder.Entity<Message>()
                 .HasOne(m => m.Conversation)
                 .WithMany(c => c.Messages)
                 .HasForeignKey(m => m.ConversationId);
