@@ -11,10 +11,12 @@ namespace PortfolioProject.Controllers
     public class CvController : Controller
     {
         private readonly DatabaseContext _db;
+        private readonly UserManager<User> _userManager;
 
-        public CvController(DatabaseContext db)
+        public CvController(DatabaseContext db, UserManager<User> userManager)
         {
             _db = db;
+            _userManager = userManager;
         }
         public IActionResult Index()
         {
@@ -25,15 +27,16 @@ namespace PortfolioProject.Controllers
         public async Task<IActionResult> Details(string username)
         {
             var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+            var viewerId = _userManager.GetUserId(User);
 
-            var user = await _db.Users.AsNoTracking()
+            var cvUser = await _db.Users.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.UserName == username);
-            if (user == null)
+            if (cvUser == null)
             {
                 return NotFound();
             }
 
-            if (user.IsPrivate && !isLoggedIn)
+            if (cvUser.IsPrivate && !isLoggedIn)
             {
                 return View("Private");
             }
@@ -42,7 +45,7 @@ namespace PortfolioProject.Controllers
                 .Include(c => c.Skills)
                 .Include(c => c.Educations)
                 .Include(c => c.Experiences)
-                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+                .FirstOrDefaultAsync(c => c.UserId == cvUser.Id);
 
             if (cv == null)
             {
@@ -51,10 +54,10 @@ namespace PortfolioProject.Controllers
 
             CvDetailsViewModel cvVm = new CvDetailsViewModel
             {
-                UserName = user.UserName,
-                FullName = (user.FirstName + " " + user.LastName).Trim(),
-                ProfileImagePath = user.ProfileImageUrl,
-                IsPrivate = user.IsPrivate,
+                UserName = cvUser.UserName,
+                FullName = (cvUser.FirstName + " " + cvUser.LastName).Trim(),
+                ProfileImagePath = cvUser.ProfileImageUrl,
+                IsPrivate = cvUser.IsPrivate,
 
                 ViewCount = cv.ViewCount,
                 Title = cv.Title,
@@ -65,8 +68,31 @@ namespace PortfolioProject.Controllers
 
             };
 
+            if (isLoggedIn && viewerId != cvUser.Id)
+            {
+                var existingViewer = await _db.CvVisits
+                    .AnyAsync(v => v.CvId == cv.Id && v.VisitorId == viewerId);
+
+                if (!existingViewer)
+                {
+                    _db.CvVisits.Add(new CvVisit
+                    {
+                        CvId = cv.Id,
+                        VisitorId = viewerId
+                    });
+                    await _db.SaveChangesAsync();
+                }
+
+            }
+
+
+            //Jag lämnar detta här som exempel på hur man tar fram antalet visningar.
+            /*var viewercount = await _db.CvVisits
+                .Where(v => v.CvId == cv.Id)
+                .CountAsync();*/
 
             return View("Details", cvVm);
         }
     }
 }
+
