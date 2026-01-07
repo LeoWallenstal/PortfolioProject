@@ -1,4 +1,9 @@
-﻿/* ==== CSS för _ConversationList ==== */
+﻿.container {
+    max-width: 90% !important;
+}
+
+
+/* ==== CSS för _ConversationList ==== */
 
 .conversation-list {
     display: inline-flex;

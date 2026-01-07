@@ -12,6 +12,8 @@ namespace PortfolioProject.Models
         public string? ToUserId { get; set; }
         public virtual User? ToUser { get; set; }
 
+        public string? AnonymousDisplayName {get; set; }
+
         public string Body { get; set; }
         
         public DateTime SentAt { get; set; } = DateTime.UtcNow;

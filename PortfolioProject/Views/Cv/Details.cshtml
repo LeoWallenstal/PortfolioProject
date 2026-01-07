@@ -6,8 +6,16 @@
 
 <div class="intro custom-card">
 
+
+	@{string action = "StartAnonymousThread";}
+
+	@if (User.Identity?.IsAuthenticated ?? false)
+	{
+		action = "Index";
+	}
+
 	<a class="btn btn-outline-primary btn-sm send-message-btn" 
-	asp-controller="Message" asp-action="Index" asp-route-username="@Model.UserName">
+	asp-controller="Message" asp-action="@action" asp-route-username="@Model.UserName">
 		<i class="bi bi-envelope"></i>
 		Skicka meddelande
 	</a>

@@ -1,0 +1,49 @@
+﻿@model ConversationViewModel
+
+<link rel="stylesheet" href="/css/messages.css" />
+
+@{
+	var convoLink = Url.Action("AnonymousThread", "Message",
+		new { publicId = Model.PublicId }, protocol: Context.Request.Scheme);
+}
+
+<div class="card shadow-sm mb-3">
+	<div class="card-body">
+			<div class="fw-semibold">Konversationslänk</div>
+
+		<div class="text-muted small mt-1">
+			Använd länken för att komma tillbaka till den här konversationen.
+		</div>
+
+
+		<div class="mt-2">
+			<button type="button"
+					id="copyBtn"
+					class="btn btn-link p-0 text-decoration-none shadow-none text-dark d-flex gap-1"
+					onclick="navigator.clipboard.writeText('@convoLink')">
+				<i id="copyIcon" class="bi bi-clipboard"></i>
+				<div class="small">Kopiera länk</div>
+			</button>
+		</div>
+
+		<div class="">
+			<code class="d-block text-break p-2 bg-light rounded">@convoLink</code>
+		</div>
+
+	</div>
+</div>
+
+<partial name="_ConversationThread" model="@Model" />
+
+
+<script>
+	const btn = document.getElementById("copyBtn");
+	const icon = document.getElementById("copyIcon");
+
+	btn.addEventListener("click", () => {
+		icon.classList.remove("bi-clipboard");
+		icon.classList.add("bi-clipboard-check");
+	});
+</script>
+
+

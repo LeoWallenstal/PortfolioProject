@@ -10,8 +10,12 @@
 	<ul class="item-list">
 		@foreach (var c in Model)
 		{
+			var url = c.OtherUsersId == null
+			? Url.Action("Index", "Messages", new { conversationId = c.ConversationId })
+			: Url.Action("Index", "Messages", new { username = c.OtherUsername });
+
 			<li class="conversation-item"
-				data-url="@Url.Action("Index", "Message", new { username = c.OtherUsername })">
+				data-url="@url">
 
 				<div class="profile-pic icon-with-badge">
 					<img src="@c.OtherUsersProfileImageUrl"

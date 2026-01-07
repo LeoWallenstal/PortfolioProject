@@ -1,0 +1,63 @@
+﻿@using PortfolioProject.Models.InputModels
+@using PortfolioProject.Models.ViewModels
+@model StartAnonymousThreadViewModel
+
+
+<div class="container py-4">
+    <div class="mx-auto" style="max-width: 560px;">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+
+                <!-- Header -->
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <img src="@Model.RecipientProfileImageUrl"
+                         alt="Profilbild"
+                         class="rounded-circle"
+                         style="width:56px;height:56px;object-fit:cover;" />
+
+                    <div>
+                        <strong class="fw-semibold fs-5">
+                            @Model.RecipientFullName
+                        </strong>
+                        <div class="text-muted small">
+                            Du skickar ett anonymt meddelande. Skriv ditt namn för att kunna skicka.
+                        </div>
+                    </div>
+                </div>
+
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Namn</label>
+                        <input type="text" asp-for="Input.Name" class="form-control" placeholder="Ditt namn" />
+                        <span asp-validation-for="Input.Name" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Meddelande</label>
+                        <textarea class="form-control" asp-for="Input.Message" rows="5" placeholder="Skriv ditt meddelande..."></textarea>
+                        <span asp-validation-for="Input.Message" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Lösenord för konversationen (valfritt)</label>              
+                        <input type="password" asp-for="Input.Password" class="form-control" placeholder="Inte implementerat ännu" disabled/>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <div class="form-text">
+                            Skulle kunna användas för att hindra att vem som helst kan komma åt en chatt.
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            Skicka
+                        </button>
+                        <a class="btn btn-outline-secondary" href="javascript:history.back()">
+                            Avbryt
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
