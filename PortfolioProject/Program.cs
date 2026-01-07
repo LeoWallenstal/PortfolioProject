@@ -20,6 +20,7 @@ namespace PortfolioProject
             );
 
             builder.Services.AddIdentity<User, IdentityRole>()
+            .AddErrorDescriber<SwedishIdentityErrorDescriber>()
             .AddEntityFrameworkStores<DatabaseContext>()
             .AddDefaultTokenProviders();
 

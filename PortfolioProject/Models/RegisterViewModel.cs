@@ -9,14 +9,16 @@ namespace PortfolioProject.Models
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Password)]
-        [Compare("ConfirmPassword", ErrorMessage = "Lösenorden matchar inte.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "*")]
         [DataType(DataType.Password)]
+
+        [Compare("Password", ErrorMessage = "Lösenorden matchar inte.")]
         public string ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "*")]
+        [EmailAddress(ErrorMessage = "Ange en giltig e-postadress")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "*")]
