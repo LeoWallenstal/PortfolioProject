@@ -247,22 +247,10 @@ namespace PortfolioProject.Data
             return convo;
         }
 
-        public async Task<Conversation> EnsureConversationForSendByIdAsync(Guid conversationId, string currentUserId)
+        public async Task<Conversation?> GetConversationByIdAsync(Guid conversationId, string currentUserId)
         {
-            var convo = await _dbContext.Conversations
+            return await _dbContext.Conversations
                 .FirstOrDefaultAsync(c => c.Id == conversationId);
-
-            if (convo is null)
-            {
-                convo = new Conversation
-                {
-                    Id = Guid.NewGuid(),
-                    UserAId = currentUserId!,
-                };
-                _dbContext.Conversations.Add(convo);
-                await _dbContext.SaveChangesAsync();
-            }
-            return convo;
         }
 
 
@@ -276,8 +264,6 @@ namespace PortfolioProject.Data
         {
             return await _dbContext.Messages.CountAsync(m => m.ToUserId == userId && !m.IsRead);
         }
-
-
 
         public async Task<Conversation> CreateAnonymousConversationAsync(string recipientUserId, string displayName)
         {
@@ -321,6 +307,20 @@ namespace PortfolioProject.Data
             if (convo == null) { return null; }
 
             var recipient = await _userManager.FindByIdAsync(convo.RecipientUserId);
+
+            var unreadMessages = await _dbContext.Messages
+                .Where(m => m.ConversationId == convo.Id)
+                .Where(m => m.ToUserId == null)
+                .Where(m => !m.IsRead)
+                .ToListAsync();
+
+            if (unreadMessages.Any())
+            {
+                foreach (var msg in unreadMessages)
+                    msg.IsRead = true;
+
+                await _dbContext.SaveChangesAsync();
+            }
 
             return new ConversationViewModel
             {

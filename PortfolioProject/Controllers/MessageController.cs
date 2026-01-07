@@ -135,7 +135,7 @@ namespace PortfolioProject.Controllers
             }
 
 
-            var convo = await _messages.EnsureConversationForSendByIdAsync(conversationId, currentUserId);
+            var convo = await _messages.GetConversationByIdAsync(conversationId, currentUserId);
             if (convo != null)
             {
                 await _messages.InsertMessage(new Message
