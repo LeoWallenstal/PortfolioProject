@@ -41,7 +41,6 @@ namespace PortfolioProject.Controllers
                 if (otherUser.Id == currentUserId) return Forbid();
 
                 conversationId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
-                
 
                 //Om ingen konversation finns ännu så skapas en tom vm för start av ny konversation.
                 //Den nya konversationen kommer skapas när det första meddelandet skickas.
@@ -104,8 +103,19 @@ namespace PortfolioProject.Controllers
                 return RedirectToAction(nameof(Index), new { username });
             }
 
+            Conversation? convo = null;
 
-            var convo = await _messages.EnsureConversationForSendAsync(otherUser.Id, currentUserId);
+            var conversationId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
+            
+            if(conversationId != Guid.Empty)
+            {
+                convo = await _messages.GetConversationByIdAsync(conversationId);
+            }
+            else
+            {
+                convo = await _messages.CreateConversationAsync(otherUser.Id, currentUserId);
+            }
+
             if (convo != null)
             {
                 await _messages.InsertMessage(new Message

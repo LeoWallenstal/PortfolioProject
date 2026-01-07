@@ -17,6 +17,20 @@ namespace PortfolioProject.Data
             _dbContext = dbContext;
             _userManager = userManager;
         }
+        public async Task<Conversation> CreateConversationAsync(string otherUserId, string currentUserId)
+        {
+            var convo = new Conversation
+            {
+                Id = Guid.NewGuid(),
+                UserAId = currentUserId!,
+                UserBId = otherUserId
+            };
+            
+            _dbContext.Conversations.Add(convo);
+            await _dbContext.SaveChangesAsync();
+            
+            return convo;
+        }
 
         public async Task<List<ConversationListItemViewModel>> GetInboxAsync(string currentUserId)
         {
@@ -112,7 +126,7 @@ namespace PortfolioProject.Data
                                 (c.UserAId == otherUserId && c.UserBId == currentUserId))
                     .Select(c => c.Id)
                     .FirstOrDefaultAsync();
-        }       
+        }
 
         public async Task<ConversationViewModel?> GetConversationVmByIdAsync(Guid conversationId, string currentUserId)
         {
@@ -185,28 +199,6 @@ namespace PortfolioProject.Data
                     Messages = convo.Messages
                 };
             }
-        }
-
-
-        public async Task<Conversation> EnsureConversationForSendAsync(string otherUserId, string currentUserId)
-        {
-            var convo = await _dbContext.Conversations
-                .FirstOrDefaultAsync(c =>
-                    (c.UserAId == currentUserId && c.UserBId == otherUserId) ||
-                    (c.UserAId == otherUserId && c.UserBId == currentUserId));
-
-            if (convo is null)
-            {
-                convo = new Conversation
-                {
-                    Id = Guid.NewGuid(),
-                    UserAId = currentUserId!,
-                    UserBId = otherUserId
-                };
-                _dbContext.Conversations.Add(convo);
-                await _dbContext.SaveChangesAsync();
-            }
-            return convo;
         }
 
         public async Task<Conversation?> GetConversationByIdAsync(Guid conversationId)

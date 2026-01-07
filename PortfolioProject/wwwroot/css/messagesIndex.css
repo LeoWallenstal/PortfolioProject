@@ -4,6 +4,7 @@
 
 .messaging-page {
     display: flex;
+    gap: 1rem;
 }
 
 .thread-list {
@@ -17,7 +18,7 @@
 }
 
 
-/*Göra listan med conversationer till en gömpar sidopanel?*/
+/*Gör att endast en av dem 2 olika partials syns åt gången.*/
 @media (max-width: 768px) {
     .messaging-page.is-list .thread-view {
         display: none;
