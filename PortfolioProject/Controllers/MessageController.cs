@@ -6,6 +6,7 @@ using PortfolioProject.Data;
 using PortfolioProject.Models;
 using PortfolioProject.Models.InputModels;
 using PortfolioProject.Models.ViewModels;
+using System;
 using System.Linq;
 
 namespace PortfolioProject.Controllers
@@ -33,19 +34,18 @@ namespace PortfolioProject.Controllers
 
             ConversationViewModel? activeThread = null;
 
-            if (conversationId.HasValue)
-            {
-                activeThread = await _messages.GetConversationVmByIdAsync(conversationId.Value, currentUserId);
-            }
-            else if (!string.IsNullOrWhiteSpace(username))
+            if (!string.IsNullOrWhiteSpace(username))
             {
                 var otherUser = await _userManager.FindByNameAsync(username);
                 if (otherUser == null) return NotFound();
                 if (otherUser.Id == currentUserId) return Forbid();
 
-                activeThread = await _messages.GetConversationVmAsync(otherUser.Id, currentUserId!);
+                conversationId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
+                
 
-                if (activeThread is null)
+                //Om ingen konversation finns ännu så skapas en tom vm för start av ny konversation.
+                //Den nya konversationen kommer skapas när det första meddelandet skickas.
+                if (!conversationId.HasValue || conversationId == Guid.Empty)
                 {
                     activeThread = new ConversationViewModel
                     {
@@ -58,6 +58,11 @@ namespace PortfolioProject.Controllers
                 }
             }
 
+            //Om en konversation hittades i tidigare if eller om ett conversationId skickades som parameter så hämtas vm
+            if (conversationId.HasValue && conversationId != Guid.Empty)
+            {
+                activeThread = await _messages.GetConversationVmByIdAsync(conversationId.Value, currentUserId);
+            }
 
             var vm = new InboxViewModel
             {
@@ -135,7 +140,7 @@ namespace PortfolioProject.Controllers
             }
 
 
-            var convo = await _messages.GetConversationByIdAsync(conversationId, currentUserId);
+            var convo = await _messages.GetConversationByIdAsync(conversationId);
             if (convo != null)
             {
                 await _messages.InsertMessage(new Message
@@ -196,7 +201,7 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
                 return View(vm);
-            
+
             var convo = await _messages.CreateAnonymousConversationAsync(user.Id, vm.Input.Name);
 
             var msg = new Message

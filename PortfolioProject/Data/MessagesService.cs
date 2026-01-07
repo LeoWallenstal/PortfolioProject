@@ -105,74 +105,14 @@ namespace PortfolioProject.Data
             return items;
         }
 
-        public async Task<ConversationViewModel?> GetConversationVmAsync(string otherUserId, string currentUserId)
+        public async Task<Guid> GetConversationIdBetweenUsersAsync(string otherUserId, string currentUserId)
         {
-            var conversationId = await _dbContext.Conversations
+            return await _dbContext.Conversations
                     .Where(c => (c.UserAId == currentUserId && c.UserBId == otherUserId) ||
                                 (c.UserAId == otherUserId && c.UserBId == currentUserId))
                     .Select(c => c.Id)
                     .FirstOrDefaultAsync();
-
-            if (conversationId == Guid.Empty)
-                return null;
-
-            var convo = await _dbContext.Conversations
-                .AsNoTracking()
-                .Where(c => c.Id == conversationId)
-                .Where(c => c.UserAId == currentUserId || c.UserBId == currentUserId)
-                .Select(c => new
-                {
-                    c.Id,
-                    c.UserAId,
-                    c.UserBId,
-                    Messages = c.Messages
-                        .OrderBy(m => m.SentAt)
-                        .Select(m => new MessageViewModel
-                        {
-                            IsMine = m.FromUserId == currentUserId,
-                            SentAt = m.SentAt,
-                            Body = m.Body,
-                            IsRead = m.IsRead
-                        })
-                        .ToList()
-                })
-                .FirstOrDefaultAsync();
-
-
-            if (convo is null)
-                return null;
-
-            var otherUser = await _userManager.FindByIdAsync(otherUserId);
-
-            if (otherUser is null)
-                return null;
-
-            var unreadMessages = await _dbContext.Messages
-                .Where(m => m.ConversationId == conversationId)
-                .Where(m => m.ToUserId == currentUserId)
-                .Where(m => !m.IsRead)
-                .ToListAsync();
-
-            if (unreadMessages.Any())
-            {
-                foreach (var msg in unreadMessages)
-                    msg.IsRead = true;
-
-                await _dbContext.SaveChangesAsync();
-            }
-
-
-
-            return new ConversationViewModel
-            {
-                ConversationId = conversationId,
-                OtherUsersId = otherUser.Id,
-                OtherUsersFullName = $"{otherUser.FirstName}  {otherUser.LastName}",
-                OtherUsername = otherUser.UserName,
-                OtherUsersProfileImageUrl = otherUser.ProfileImageUrl,
-                Messages = convo.Messages
-            };
-        }
+        }       
 
         public async Task<ConversationViewModel?> GetConversationVmByIdAsync(Guid conversationId, string currentUserId)
         {
@@ -185,6 +125,7 @@ namespace PortfolioProject.Data
                     c.Id,
                     c.UserAId,
                     c.UserBId,
+                    c.IsAnonymous,
                     c.AnonymousDisplayName,
                     Messages = c.Messages
                         .OrderBy(m => m.SentAt)
@@ -217,14 +158,33 @@ namespace PortfolioProject.Data
                 await _dbContext.SaveChangesAsync();
             }
 
-
-
-            return new ConversationViewModel
+            if (convo.IsAnonymous)
             {
-                ConversationId = conversationId,
-                OtherUsersFullName = convo.AnonymousDisplayName,
-                Messages = convo.Messages
-            };
+                return new ConversationViewModel
+                {
+                    ConversationId = conversationId,
+                    OtherUsersFullName = convo.AnonymousDisplayName,
+                    Messages = convo.Messages
+                };
+            }
+            else
+            {
+                var otherUserId = currentUserId == convo.UserAId ? convo.UserBId : convo.UserAId;
+                var otherUser = await _userManager.FindByIdAsync(otherUserId);
+
+                if (otherUser is null)
+                    return null;
+
+                return new ConversationViewModel
+                {
+                    ConversationId = conversationId,
+                    OtherUsersId = otherUser.Id,
+                    OtherUsersFullName = $"{otherUser.FirstName}  {otherUser.LastName}",
+                    OtherUsername = otherUser.UserName,
+                    OtherUsersProfileImageUrl = otherUser.ProfileImageUrl,
+                    Messages = convo.Messages
+                };
+            }
         }
 
 
@@ -249,7 +209,7 @@ namespace PortfolioProject.Data
             return convo;
         }
 
-        public async Task<Conversation?> GetConversationByIdAsync(Guid conversationId, string currentUserId)
+        public async Task<Conversation?> GetConversationByIdAsync(Guid conversationId)
         {
             return await _dbContext.Conversations
                 .FirstOrDefaultAsync(c => c.Id == conversationId);

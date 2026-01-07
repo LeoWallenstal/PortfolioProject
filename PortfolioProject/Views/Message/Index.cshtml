@@ -13,9 +13,7 @@
 	<main class="thread-view" id="threadView">
 		@if (Model.Conversation is null)
 		{
-			<div class="empty-thread">
-				<p class="text-muted">Välj en konversation till vänster</p>
-			</div>
+			<partial name="_ConversationThreadEmpty" model="Model.Conversation" />
 		}
 		else
 		{

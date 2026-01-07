@@ -7,10 +7,10 @@ namespace PortfolioProject.Data
 
 
         Task<List<ConversationListItemViewModel>> GetInboxAsync(string currentUserId);
-        Task<ConversationViewModel?> GetConversationVmAsync(string otherUserId, string currentUserId);
+        Task<Guid> GetConversationIdBetweenUsersAsync(string otherUserId, string currentUserId);
         Task<ConversationViewModel?> GetConversationVmByIdAsync(Guid conversationId, string currentUserId);
         Task<Conversation> EnsureConversationForSendAsync(string otherUserId, string currentUserId);
-        Task<Conversation?> GetConversationByIdAsync(Guid conversationId, string currentUserId);
+        Task<Conversation?> GetConversationByIdAsync(Guid conversationId);
         Task InsertMessage(Message msg);
         Task<int> GetTotalUnreadAsync(string userId);
         Task<Conversation> CreateAnonymousConversationAsync(string recipientUserId, string displayName);
