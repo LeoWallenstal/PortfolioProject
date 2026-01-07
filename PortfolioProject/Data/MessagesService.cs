@@ -185,6 +185,7 @@ namespace PortfolioProject.Data
                     c.Id,
                     c.UserAId,
                     c.UserBId,
+                    c.AnonymousDisplayName,
                     Messages = c.Messages
                         .OrderBy(m => m.SentAt)
                         .Select(m => new MessageViewModel
@@ -221,6 +222,7 @@ namespace PortfolioProject.Data
             return new ConversationViewModel
             {
                 ConversationId = conversationId,
+                OtherUsersFullName = convo.AnonymousDisplayName,
                 Messages = convo.Messages
             };
         }
@@ -326,9 +328,9 @@ namespace PortfolioProject.Data
             {
                 ConversationId = convo.Id,
                 PublicId = publicId,
-                OtherUsersId = recipient?.Id ?? "",
-                OtherUsersFullName = recipient == null ? "(Anonym användare)" : $"{recipient.FirstName} {recipient.LastName}",
-                OtherUsername = recipient?.UserName ?? "",
+                OtherUsersId = recipient?.Id,
+                OtherUsersFullName = $"{recipient?.FirstName} {recipient?.LastName}",
+                OtherUsername = recipient?.UserName,
                 OtherUsersProfileImageUrl = recipient?.ProfileImageUrl ?? "/images/default-profile2.png",
                 Messages = convo.Messages
             };

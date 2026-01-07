@@ -12,9 +12,16 @@
 			<a class="back-link" href="@Url.Action("Index", "Message")">
 				<i class="bi bi-arrow-left"> Chattar</i>
 			</a>
-			<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
+			@if (Model.OtherUsername != null)
+			{
+				<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
+					<h1>@Model.OtherUsersFullName</h1>
+				</a>
+			}
+			else
+			{
 				<h1>@Model.OtherUsersFullName</h1>
-			</a>
+			}
 		</div>
 	}
 
