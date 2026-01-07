@@ -155,6 +155,13 @@ namespace PortfolioProject.Controllers
         [HttpGet("start/{username}")]
         public async Task<IActionResult> StartAnonymousThread(string username)
         {
+            var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (isLoggedIn)
+            {
+                return RedirectToAction("Index", new { username });
+            }
+
             var user = await _userManager.FindByNameAsync(username);
             if (user == null) return NotFound();
 
@@ -172,6 +179,13 @@ namespace PortfolioProject.Controllers
         [HttpPost("start/{username}")]
         public async Task<IActionResult> StartAnonymousThread(string username, StartAnonymousThreadViewModel vm)
         {
+            var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (isLoggedIn)
+            {
+                return RedirectToAction("Index", new { username });
+            }
+
             var user = await _userManager.FindByNameAsync(username);
             if (user == null) return NotFound();
 
@@ -182,8 +196,7 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
                 return View(vm);
-
-            // success: create conversation, save message...
+            
             var convo = await _messages.CreateAnonymousConversationAsync(user.Id, vm.Input.Name);
 
             var msg = new Message
@@ -205,6 +218,14 @@ namespace PortfolioProject.Controllers
         {
             if (publicId == Guid.Empty) return NotFound();
 
+            var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (isLoggedIn)
+            {
+                return RedirectToAction("Index");
+            }
+
+
             var activeThread = await _messages.GetAnonymousConversationVmAsync(publicId);
             if (activeThread == null) return NotFound();
 
@@ -215,6 +236,14 @@ namespace PortfolioProject.Controllers
         [HttpPost("anon/{publicId}/send")]
         public async Task<IActionResult> SendAnonymous(Guid publicId, SendMessageInputModel input)
         {
+            var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
+
+            if (isLoggedIn)
+            {
+                return RedirectToAction("Index");
+            }
+
+
             if (!ModelState.IsValid)
                 return RedirectToAction(nameof(AnonymousThread), new { publicId });
 
