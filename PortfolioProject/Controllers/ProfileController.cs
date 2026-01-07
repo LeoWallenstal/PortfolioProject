@@ -10,30 +10,47 @@ namespace PortfolioProject.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly DatabaseContext _dbContext;
-        private readonly User _loggedIn;
 
         public ProfileController(DatabaseContext dbContext, UserManager<User> userManager) {
             _userManager = userManager;
             _dbContext = dbContext;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
 
-            return View(user);
+            return View(new UserViewModel(user));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit() {
+        public async Task<IActionResult> Edit(UserViewModel userModel) {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
 
-            return View();
+            var viewModel = new UserViewModel(user); // create ViewModel from DB entity
+            return View(viewModel);
         }
 
         //[HttpPost]
-        //public async Task<IActionResult> Edit() { 
-            //For saving later
+        //public async Task<IActionResult> Edit(User editedUser, string action) {
+        //    if (action == "cancel") {
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    var user = await _userManager.GetUserAsync(User);
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(user);
+        //    }
+
+        //    //Validera osv, sen spara
+
         //}
 
     }

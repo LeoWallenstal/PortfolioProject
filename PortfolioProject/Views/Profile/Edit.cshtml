@@ -1,6 +1,49 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model UserViewModel
 
+<link href="/css/profile.css" rel="stylesheet">
+<script defer src="/js/togglePwSection.js"></script>
+
+<h1>Min Profil</h1>
+
+<form asp-action="Edit" method="post">
+    <section class="profile-grid">
+
+        <label>Förnamn:</label>
+        <input type="text" asp-for="FirstName" />
+        <!-- ERROR <span>'s nånstans här-->
+        <label>Efternamn:</label>
+        <input type="text" asp-for="LastName" />
+
+        <label>Email:</label>
+        <input type="text" asp-for="Email" />
+
+        <label>Telefonnummer:</label>
+        <input type="text" asp-for="PhoneNumber" />
+        <!-- ERROR <span>'s nånstans här-->
+        <label>Adress:</label>
+        <input type="text" asp-for="Adress" />
+
+        <label asp-for="IsPrivate">Privat profil:</label>
+        <input type="checkbox" asp-for="IsPrivate" />
+
+    </section>
+
+    <section id="pw-section">
+        <label>Nytt Lösenord:</label>
+        <input type="text" asp-for="NewPassword"/>
+
+        <!-- ERROR <span>'s nånstans här-->
+        <label>Ange Igen:</label>
+        <input type="text" asp-for="ConfirmPassword" />
+        <div class="button-wrapper">
+            <button type="submit" class="btn btn-primary">Spara</button>
+            <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+        </div>
+    </section>
+
+    <div class="button-wrapper">
+        <button id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</button> <!-- DENNA REVEALAR PW-SECTION OVAN -->
+        <button type="submit" class="btn btn-primary">Spara</button>
+        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+    </div>
+</form>
