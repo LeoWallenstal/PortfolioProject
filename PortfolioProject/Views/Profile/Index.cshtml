@@ -4,4 +4,29 @@
 @{
 }
 
-<h1>User Profile</h1>
+@model User
+
+<link href="/css/profile.css" rel="stylesheet">
+
+<h1>My Profile</h1>
+
+<section class="profile-info">
+    <div class="label-w-text">
+        <p class="label">Name: </p>
+        <p class="text">@($"{Model.FirstName} {Model.LastName}")</p>
+    </div>
+
+    <div class="label-w-text">
+        <p class="label">Adress: </p>
+        <p class="text">@($"{Model.Adress}")</p>
+    </div>
+
+    <div class="label-w-checkbox">
+        <label asp-for="IsPrivate">Private:</label>
+        <input type="checkbox" asp-for="IsPrivate" disabled>
+    </div>
+
+</section>
+
+<button asp-action="Edit" class="btn btn-primary">Edit Profile</button>
+
