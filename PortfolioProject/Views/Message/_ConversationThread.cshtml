@@ -6,14 +6,17 @@
 
 <div class="conversation-content">
 
-	<div class="thread-header">
-		<a class="back-link" href="@Url.Action("Index", "Message")">
-			<i class="bi bi-arrow-left"> Chattar</i>
-		</a>
-		<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
-			<h1>@Model.OtherUsersFullName</h1>
-		</a>
-	</div>
+	@if (!Context.Request.Path.Value!.Contains("/anon/"))
+	{
+		<div class="thread-header">
+			<a class="back-link" href="@Url.Action("Index", "Message")">
+				<i class="bi bi-arrow-left"> Chattar</i>
+			</a>
+			<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
+				<h1>@Model.OtherUsersFullName</h1>
+			</a>
+		</div>
+	}
 
 
 	<div class="messages">
@@ -54,8 +57,8 @@
 		var url = !isLoggedIn
 		? Url.Action("SendAnonymous", "Message", new { publicId = Model.PublicId })
 		: (Model.OtherUsersId == null
-			? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
-			: Url.Action("Send", "Message", new { username = Model.OtherUsername }));
+		? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
+		: Url.Action("Send", "Message", new { username = Model.OtherUsername }));
 
 	}
 	<div class="send-area">
