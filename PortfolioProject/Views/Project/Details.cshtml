@@ -28,15 +28,14 @@
 		<div class="col-md-4">
 			<div class="card mt-2">
 				<div class="card-body details-card">
-					<p><strong>Deltagare (@Model.Project.Users.Count):</strong></p>
+					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
 						<div class="d-flex align-items-center mb-2">
 							@if (Model.Owner == null || !Model.Owner.IsActive)
 							{
 								<img src="/images/default-profile2.png"
 										class="rounded-circle me-2"
 										style="width:40px; height:40px;" />
-								<span class="ms-1 fst-italic">Inaktiverat konto</span>
-									
+								<span class="ms-1 fst-italic">Inaktiverat konto</span>	
 							}
 							else
 							{
