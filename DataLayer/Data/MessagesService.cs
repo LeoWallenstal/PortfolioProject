@@ -25,10 +25,10 @@ namespace DataLayer.Data
                 UserAId = currentUserId!,
                 UserBId = otherUserId
             };
-            
+
             _dbContext.Conversations.Add(convo);
             await _dbContext.SaveChangesAsync();
-            
+
             return convo;
         }
 
@@ -43,6 +43,7 @@ namespace DataLayer.Data
 
             var latestMessages = await _dbContext.Messages
                 .Where(m => convoIds.Contains(m.ConversationId))
+                .Where(m => m.ToUserId != currentUserId || !m.IsDeletedByReceiver)
                 .GroupBy(m => m.ConversationId)
                 .Select(g => g
                     .OrderByDescending(m => m.SentAt)
@@ -52,7 +53,8 @@ namespace DataLayer.Data
                         m.ConversationId,
                         m.SentAt,
                         m.Body,
-                        IsMine = m.FromUserId == currentUserId
+                        IsMine = m.FromUserId == currentUserId,
+                        m.IsDeletedByReceiver
                     })
                     .FirstOrDefault()!)
                 .ToListAsync();
@@ -91,6 +93,7 @@ namespace DataLayer.Data
                 var convo = convos.First(c => c.Id == msg.ConversationId);
                 var preview = (msg.Body ?? "");
                 preview = preview.Length > 25 ? preview.Substring(0, 25).Trim() + "…" : preview;
+
 
                 var convoListItem = new ConversationListItemViewModel
                 {
@@ -145,10 +148,12 @@ namespace DataLayer.Data
                         .OrderBy(m => m.SentAt)
                         .Select(m => new MessageViewModel
                         {
+                            MessageId = m.MessageId,
                             IsMine = m.FromUserId == currentUserId,
                             SentAt = m.SentAt,
                             Body = m.Body,
-                            IsRead = m.IsRead
+                            IsRead = m.IsRead,
+                            IsDeletedByReceiver = m.IsDeletedByReceiver
                         })
                         .ToList()
                 })
@@ -208,10 +213,24 @@ namespace DataLayer.Data
         }
 
 
-        public async Task InsertMessage(Message msg)
+        public async Task InsertMessageAsync(Message msg)
         {
             _dbContext.Messages.Add(msg);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> MarkReceivedMessageAsDeletedAsync(Guid messageId, string currentUserId)
+        {
+            var msg = await _dbContext.Messages
+                .FirstOrDefaultAsync(m => m.MessageId == messageId);
+
+            if (msg == null) return false;
+
+            if(msg.ToUserId != currentUserId) return false;
+
+            msg.IsDeletedByReceiver = true;
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<int> GetTotalUnreadAsync(string userId)
@@ -249,6 +268,7 @@ namespace DataLayer.Data
                         .OrderBy(m => m.SentAt)
                         .Select(m => new MessageViewModel
                         {
+                            MessageId = m.MessageId,
                             IsMine = m.FromUserId == null,
                             SentAt = m.SentAt,
                             Body = m.Body,

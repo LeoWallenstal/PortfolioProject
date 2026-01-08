@@ -8,6 +8,7 @@ using DataLayer.Models;
 using DataLayer.Data;
 using System;
 using System.Linq;
+using Castle.Core.Internal;
 
 namespace PortfolioProject.Controllers
 {
@@ -106,8 +107,8 @@ namespace PortfolioProject.Controllers
             Conversation? convo = null;
 
             var conversationId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
-            
-            if(conversationId != Guid.Empty)
+
+            if (conversationId != Guid.Empty)
             {
                 convo = await _messages.GetConversationByIdAsync(conversationId);
             }
@@ -118,7 +119,7 @@ namespace PortfolioProject.Controllers
 
             if (convo != null)
             {
-                await _messages.InsertMessage(new Message
+                await _messages.InsertMessageAsync(new Message
                 {
                     ConversationId = convo.Id,
                     FromUserId = currentUserId,
@@ -153,7 +154,7 @@ namespace PortfolioProject.Controllers
             var convo = await _messages.GetConversationByIdAsync(conversationId);
             if (convo != null)
             {
-                await _messages.InsertMessage(new Message
+                await _messages.InsertMessageAsync(new Message
                 {
                     ConversationId = convo.Id,
                     FromUserId = currentUserId,
@@ -164,7 +165,26 @@ namespace PortfolioProject.Controllers
             return RedirectToAction(nameof(Index), new { conversationId });
         }
 
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> DeleteMessage(Guid messageId, string? username, Guid? conversationId)
+        {
+            var currentUserId = _userManager.GetUserId(User);
 
+            var deleted = await _messages.MarkReceivedMessageAsDeletedAsync(messageId, currentUserId);
+
+            if (deleted)
+            {
+                if (!string.IsNullOrWhiteSpace(username))
+                    return RedirectToAction(nameof(Index), new { username });
+
+                else if (conversationId.HasValue && conversationId != Guid.Empty)
+                    return RedirectToAction(nameof(Index), new { conversationId });
+            }
+
+            return RedirectToAction(nameof(Index));
+
+        }
 
         [AllowAnonymous]
         [HttpGet("start/{username}")]
@@ -222,7 +242,7 @@ namespace PortfolioProject.Controllers
                 Body = vm.Input.Message
             };
 
-            await _messages.InsertMessage(msg);
+            await _messages.InsertMessageAsync(msg);
 
             return RedirectToAction("AnonymousThread", new { convo.PublicId });
         }
@@ -265,7 +285,7 @@ namespace PortfolioProject.Controllers
             var convo = await _messages.GetAnonymousConversationAsync(publicId);
             if (convo != null)
             {
-                await _messages.InsertMessage(new Message
+                await _messages.InsertMessageAsync(new Message
                 {
                     ConversationId = convo.Id,
                     AnonymousDisplayName = convo.AnonymousDisplayName,

@@ -103,8 +103,6 @@
     text-decoration: none;
 }
 
-
-
 /* ==== CSS för _ConversationThread ==== */
 .thread-header {
     display: none;
@@ -166,13 +164,17 @@
 
     .received-row img {
         width: 40px;
-        margin-top: auto;
-        margin-bottom: -16px;
+        height: 40px;
         border-radius: 50%;
         border: 2px solid lightgrey;
         background-color: white;
-        object-fit: cover;
     }
+
+.deleted-message {
+    font-style: italic;
+    color: #888;
+    margin: 0;
+}
 
 .received {
     position: relative;

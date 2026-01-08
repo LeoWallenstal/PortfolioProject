@@ -34,14 +34,28 @@
 					<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
 						<img src="@Model.OtherUsersProfileImageUrl" />
 					</a>
-					<div class="received">
-						<small class="timestamp">@msg.SentAt.ToString("g")</small>
-						<p>@msg.Body</p>
-						<button class="msg-delete" aria-label="Ta bort">
-							<i class="bi bi-trash3"></i>
-						</button>
-					</div>
-					
+					@if (msg.IsDeletedByReceiver)
+					{
+						<p class="deleted-message">Du har raderat meddelandet.</p>
+					}
+					else
+					{
+						<div class="received">
+							<small class="timestamp">@msg.SentAt.ToString("g")</small>
+							<p>@msg.Body</p>
+							@if (!Context.Request.Path.Value!.Contains("/anon/"))
+							{
+								var urlDelete = (Model.OtherUsersId == null
+								? Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, conversationId = Model.ConversationId })
+								: Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, username = Model.OtherUsername }));
+								<form action=@urlDelete  method="post">
+									<button class="msg-delete" aria-label="Ta bort" type="submit">
+										<i class="bi bi-trash3"></i>
+									</button>
+								</form>
+							}
+						</div>
+					}
 				</div>
 			}
 			else
@@ -65,7 +79,7 @@
 		var isLoggedIn = User?.Identity?.IsAuthenticated == true;
 
 
-		var url = !isLoggedIn
+		var urlSend = !isLoggedIn
 		? Url.Action("SendAnonymous", "Message", new { publicId = Model.PublicId })
 		: (Model.OtherUsersId == null
 		? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
@@ -73,7 +87,7 @@
 
 	}
 	<div class="send-area">
-		<form action="@url" method="post" style="display: contents;">
+		<form action="@urlSend" method="post" style="display: contents;">
 			<div class="text-box">
 				<small id="counter">0/3500</small>
 				@if (TempData["SendError"] is string error)
