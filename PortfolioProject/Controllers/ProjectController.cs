@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioProject.Data;
-using PortfolioProject.Models;
+using DataLayer.Data;
+using DataLayer.Models.ViewModels;
+using DataLayer.Models;
 using System.Threading.Tasks;
 
 namespace PortfolioProject.Controllers

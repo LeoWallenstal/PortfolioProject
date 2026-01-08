@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioProject.Data;
-using PortfolioProject.Models;
-using PortfolioProject.Models.InputModels;
-using PortfolioProject.Models.ViewModels;
+using DataLayer.Models.InputModels;
+using DataLayer.Models.ViewModels;
+using DataLayer.Models;
+using DataLayer.Data;
 using System;
 using System.Linq;
 
