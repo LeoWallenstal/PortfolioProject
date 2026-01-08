@@ -11,7 +11,8 @@ namespace DataLayer.Data
         Task<Guid> GetConversationIdBetweenUsersAsync(string otherUserId, string currentUserId);
         Task<ConversationViewModel?> GetConversationVmByIdAsync(Guid conversationId, string currentUserId);
         Task<Conversation?> GetConversationByIdAsync(Guid conversationId);
-        Task InsertMessage(Message msg);
+        Task InsertMessageAsync(Message msg);
+        Task<bool> MarkReceivedMessageAsDeletedAsync(Guid messageId, string currentUserId);
         Task<int> GetTotalUnreadAsync(string userId);
         Task<Conversation> CreateAnonymousConversationAsync(string recipientUserId, string displayName);
         Task<ConversationViewModel?> GetAnonymousConversationVmAsync(Guid publicId);

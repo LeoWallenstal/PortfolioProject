@@ -19,5 +19,6 @@ namespace DataLayer.Models
         public DateTime SentAt { get; set; } = DateTime.UtcNow;
 
         public bool IsRead { get; set; } = false;
+        public bool IsDeletedByReceiver { get; set; } = false;
     }
 }
