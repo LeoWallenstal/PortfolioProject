@@ -1,28 +1,34 @@
 ﻿@model ProjectViewModel
+@section Scripts {
+	<script src="~/js/projects.js" defer></script>
+}
 
-<section class="search-section text-center my-2">
-	<h3>Skapa nytt projekt</h3>
+<section class="search-section d-flex align-items-center position-relative my-2">
+	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+		<i class="bi bi-arrow-left"></i>
+	</a>
+	<h3 class="mx-auto">Skapa nytt projekt</h3>
 </section>
 
 <section class="container mt-4">
-	<div class="row justify-content-center">
-		<div class="col-md-6">
+	<div class="row justify-content-center text-center">
+		<div class="col-md-6 mt-3">
 			<form method="post" asp-action="Create">
 				<div class="mb-3">
-					<div class="d-flex align-items-center gap-2">
+					<div class="d-flex gap-2">
 						<label class="form-label mb-2 me-2">Titel: </label>
 						<span asp-validation-for="Project.Title" class="text-danger mb-2"></span>
 					</div>
 					<input asp-for="Project.Title" class="form-control" />
 				</div>
 				<div class="mb-3">
-					<div class="d-flex align-items-center gap-2">
+					<div class="d-flex gap-2">
 						<label class="form-label mb-2 me-2">Beskrivning: </label>
 						<span asp-validation-for="Project.Description" class="text-danger mb-2"></span>
 					</div>
 					<textarea asp-for="Project.Description" class="form-control" rows="5" style="resize: none;"></textarea>
 				</div>
-				<button type="submit" class="btn btn-primary">Skapa</button>
+					<button type="submit" class="save-changes-btn border-0" disabled>Spara ändringar</button>
 			</form>
 		</div>
 	</div>	

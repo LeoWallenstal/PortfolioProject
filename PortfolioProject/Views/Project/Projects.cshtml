@@ -1,7 +1,13 @@
 ﻿@using System.Security.Claims
 @model IEnumerable<ProjectViewModel>
+@section Scripts {
+	<script src="~/js/projects.js" defer></script>
+}
 
 <section class="search-section d-flex align-items-center position-relative my-2">
+	<a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+		<i class="bi bi-arrow-left"></i>
+	</a>
 	<h3 class="mx-auto">Projekt</h3>
 	@if (User.Identity.IsAuthenticated)
 	{
@@ -12,57 +18,72 @@
 </section>
 
 <section>
-	<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 all-projects">
+	<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 mt-4 mb-4 ms-5 me-5 justify-content-center">
 		@foreach (var projectVM in Model)
 		{
-			<div class="col">
-				<div class="card project-card2 mt-2">
-					<a asp-controller="Project" asp-action="Details" asp-route-id="@projectVM.Project.Id" class="text-decoration-none text-reset">
-					<div class="card-header">
+			<div class="card text-center mt-2 project-card pc">
+				<a asp-controller="Project" asp-action="Details" asp-route-id="@projectVM.Project.Id" class="text-decoration-none text-reset">
+					<div class="card-header align-items-center">
 						<h5>@projectVM.Project.Title</h5>
 					</div>
 					<div class="card-body">
-						<p>Skapat: @projectVM.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
+						<p class="project-meta">Skapat: @projectVM.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
 						<p>@projectVM.Project.Description</p>
 
-						<p><strong>Deltagare (@projectVM.Project.Users.Count):</strong></p>
-						@if (projectVM.VisibleUsers != null && projectVM.VisibleUsers.Any())
-						{
-							<div class="row g-2">
-							@foreach (var user in projectVM.VisibleUsers)
-							{
+						<div class="d-flex justify-content-center mt2">
+								@if (projectVM.Owner == null || !projectVM.Owner.IsActive)
+								{
 									<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
-									<img src="@(string.IsNullOrEmpty(user.ProfileImageUrl)
-																? Url.Content("~/images/default-profile2.png")
-																: user.ProfileImageUrl)"
-									alt=""/>
-								</div>
-							}
-							</div>
-						}
-					</div>
-					</a>
-					@if (User.Identity.IsAuthenticated)
-					{
-						bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-						<div class="card-footer text-center">
+										<img src="/images/default-profile2.png" />
+									</div>
+								}
+								else
+								{
+									<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+										<img src="@projectVM.Owner.ProfileImageUrl" />
+									</div>
+								}
 
-							@if (!isParticipant)
+							@if (projectVM.Participants != null)
 							{
-								<form asp-action="JoinProject" asp-controller="Project" method="post">
-									<input type="hidden" name="pid" value="@projectVM.Project.Id" />
-									@* skickar med url för sidan användaren är på *@
-									<input type="hidden" name="returnUrl" value="@Context.Request.Path" /> 
-									<button class="border-0"> Delta </button>
-								</form>
-							}
-							else
-							{
-								<button disabled class="border-0"> Deltar ✔ </button>
+									@foreach (var user in projectVM.Participants.Take(4))
+									{
+										if(user.IsActive && user != null)
+										{
+											<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+												<img src="@user.ProfileImageUrl" />
+											</div>
+										}
+									}
+									@if (projectVM.Participants.Count() > 4)
+									{
+										<span class="ms-2 small text-muted">+@(@projectVM.Participants.Count() - 5)</span>
+									}
+							
 							}
 						</div>
-					}
-				</div>
+					</div>
+				</a>
+				@if (User.Identity.IsAuthenticated)
+				{
+					bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+					<div class="card-footer text-center">
+
+						@if (!isParticipant)
+						{
+							<form asp-action="JoinProject" asp-controller="Project" method="post">
+								<input type="hidden" name="pid" value="@projectVM.Project.Id" />
+								@* skickar med url för sidan användaren är på *@
+								<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+								<button class="border-0"> Delta </button>
+							</form>
+						}
+						else
+						{
+							<button disabled class="border-0"> Deltar ✔ </button>
+						}
+					</div>
+				}
 			</div>
 		}
 	</div>

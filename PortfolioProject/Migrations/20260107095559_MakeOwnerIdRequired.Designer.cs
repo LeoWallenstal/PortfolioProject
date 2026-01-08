@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PortfolioProject.Data;
 
@@ -11,9 +12,10 @@ using PortfolioProject.Data;
 namespace PortfolioProject.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260107095559_MakeOwnerIdRequired")]
+    partial class MakeOwnerIdRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,29 +259,6 @@ namespace PortfolioProject.Migrations
                         .IsUnique();
 
                     b.ToTable("Cvs");
-                });
-
-            modelBuilder.Entity("PortfolioProject.Models.CvVisit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CvId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("VisitorId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VisitorId");
-
-                    b.HasIndex("CvId", "VisitorId")
-                        .IsUnique()
-                        .HasFilter("[VisitorId] IS NOT NULL");
-
-                    b.ToTable("CvVisits");
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Education", b =>
@@ -633,24 +612,6 @@ namespace PortfolioProject.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("PortfolioProject.Models.CvVisit", b =>
-                {
-                    b.HasOne("PortfolioProject.Models.Cv", "Cv")
-                        .WithMany()
-                        .HasForeignKey("CvId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PortfolioProject.Models.User", "Visitor")
-                        .WithMany()
-                        .HasForeignKey("VisitorId")
-                        .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("Cv");
-
-                    b.Navigation("Visitor");
                 });
 
             modelBuilder.Entity("PortfolioProject.Models.Message", b =>

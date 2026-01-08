@@ -13,7 +13,7 @@ namespace PortfolioProject.Models
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-        public string? OwnerId { get; set; }
+        public string OwnerId { get; set; }
         public virtual User? Owner { get; set; }
     }
 }
