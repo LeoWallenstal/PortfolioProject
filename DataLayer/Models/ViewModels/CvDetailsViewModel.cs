@@ -9,7 +9,7 @@
         public bool IsPrivate { get; set; }
 
         // --- CV details ---
-        public int ViewCount { get; set; }
+        public int? ViewCount { get; set; }
         public string? Title { get; set; }
         public string? Summary { get; set; }
         public ICollection<Skill> Skills { get; set; } = new List<Skill>();

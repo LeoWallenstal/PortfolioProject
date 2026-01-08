@@ -28,12 +28,26 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Edit(UserViewModel userModel) {
+        public async Task<IActionResult> Edit() {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
 
+            ModelState.Clear(); // clears any previous validation messages
+
             var viewModel = new UserViewModel(user); // create ViewModel from DB entity
+            return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateCv(){
+            var user = await _userManager.GetUserAsync(User);
+            if(user == null)
+                return NotFound();
+
+            ModelState.Clear();
+
+            var viewModel = new UserViewModel(user);
             return View(viewModel);
         }
 

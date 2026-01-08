@@ -4,25 +4,28 @@ namespace DataLayer.Models.ViewModels
 {
     public class UserViewModel
     {
-        [Required]
-        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Only letters and hyphens allowed!")]
+        [Required(ErrorMessage = "Kan inte vara tom!")]
+        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
         public string? FirstName { get; set; }
 
-        [Required]
-        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Only letters and hyphens allowed!")]
+        [Required(ErrorMessage = "Kan inte vara tom!")]
+        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
         public string? LastName { get; set; }
 
         public string FullName => $"{FirstName} {LastName}";
 
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
+        [Required(ErrorMessage = "Kan inte vara tom!")]
+        [EmailAddress(ErrorMessage = "Ogilitigt format!")]
         public string Email { get; set; }
 
-        [Phone(ErrorMessage = "Invalid phone number")]
+        [Phone(ErrorMessage = "Ogiltigt format!")]
         public string PhoneNumber { get; set; }
+
+        [RegularExpression(@"^[0-9+\-()\s]+$", ErrorMessage = "Ogiltigt format!")]
         public string? Adress { get; set; }
+
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public string ProfileImageUrl { get; set; } = "/images/default-profile2.png";
@@ -34,11 +37,9 @@ namespace DataLayer.Models.ViewModels
         [Compare("NewPassword", ErrorMessage = "Lösenorden matchar inte.")]
         public string ConfirmPassword { get; set; }
 
-        public Cv? Cv { get; set; }
-        public List<ProjectViewModel> Projects { get; set; } = new List<ProjectViewModel>();
+        public CvProfileViewModel? Cv { get; set; } = new CvProfileViewModel();
 
-        public List<MessageViewModel> SentMessages { get; set; } = new List<MessageViewModel>();
-        public List<MessageViewModel> ReceivedMessages { get; set; } = new List<MessageViewModel>();
+        public List<ProjectViewModel> Projects { get; set; } = new List<ProjectViewModel>();
 
         public UserViewModel(User aUser) { 
             FirstName = aUser.FirstName;
@@ -50,10 +51,15 @@ namespace DataLayer.Models.ViewModels
             IsPrivate = aUser.IsPrivate;
             IsActive = aUser.IsActive;
             ProfileImageUrl = aUser.ProfileImageUrl;
-            //Kanske CV, Projects, SentMessages, RecievedMessages
+
+            Cv = new CvProfileViewModel(aUser);
         }
 
         //For modelbinding
         public UserViewModel() { }
+
+        public bool CvIsEmpty() { 
+            return !Cv.Skills.Any() && !Cv.Experiences.Any() && !Cv.Experiences.Any();
+        }
     }
 }

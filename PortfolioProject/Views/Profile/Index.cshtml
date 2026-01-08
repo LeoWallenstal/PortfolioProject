@@ -43,7 +43,28 @@
 </section>
 
 <!-- CV -->
-<section></section>
+
+    @if (Model.CvIsEmpty())
+    {
+        <section>
+            <p>Ditt cv är tomt just nu!</p>
+            <div class="button-wrapper">
+                <a asp-action="CreateCv" class="btn btn-primary">Skapa CV</a>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section>
+            <h1>@Model.Cv.Title</h1>
+            <p>@Model.Cv.Summary</p>
+
+            <div class="button-wrapper">
+                <a asp-action="Edit" class="btn btn-primary">Redigera CV</a>
+            </div>
+        </section>
+    }
+
 
 
 
