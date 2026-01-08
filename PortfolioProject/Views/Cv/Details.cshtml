@@ -16,12 +16,12 @@
 	}
 
 	<a class="btn btn-outline-primary btn-sm send-message-btn" 
-	asp-controller="Message" asp-action="@action" asp-route-username="@Model.UserName">
+	asp-controller="Message" asp-action="@action" asp-route-username="@Model.User.UserName">
 		<i class="bi bi-envelope"></i>
 		Skicka meddelande
 	</a>
 
-	@if (Model.IsPrivate)
+	@if (Model.User.IsPrivate)
 	{
 		<i class="bi bi-lock-fill lock" title="Privat profil"></i>
 	}
@@ -33,7 +33,7 @@
 	<div class="personal">
 		<div class="pic-and-socials">
 			<div class="profile-pic">
-				<img src="@Model.ProfileImagePath"
+				<img src="@Model.User.ProfileImageUrl"
 					 alt="Profile picture"
 					 class="avatar-img" />
 			</div>
@@ -73,21 +73,21 @@
 
 		<div class="personal-info">
 			@*Lägga till null-check på namn eller göra namn required?*@
-			<h1>@Model.FullName</h1>
-			@if (Model.Title != null)
+			<h1>@Model.User.FirstName @Model.User.LastName</h1>
+			@if (Model.Cv.Title != null)
 			{
-				<h4 class="text-muted">@Model.Title</h4>
+				<h4 class="text-muted">@Model.Cv.Title</h4>
 			}
-			@if (Model.Summary != null)
+			@if (Model.Cv.Summary != null)
 			{
-				<p>@Model.Summary</p>
+				<p>@Model.Cv.Summary</p>
 			}
 		</div>
 	</div>
 
 	<h4 class="text-muted">Färdigheter</h4>
 	<section class="skills">
-		@foreach (var skill in Model.Skills)
+		@foreach (var skill in Model.Cv.Skills)
 		{
 			<span class="skill-pill">
 				@if (skill.ImageUrl != null)
@@ -107,7 +107,7 @@
 
 	<section class="educations">
 		<h2>Utbildning</h2>
-		@foreach (var education in Model.Educations)
+		@foreach (var education in Model.Cv.Educations)
 		{
 			<div class="education custom-card">
 				<div style="display: flex; gap: 0.5rem;">
@@ -123,7 +123,7 @@
 
 	<section class="experiences">
 		<h2>Erfarenhet</h2>
-		@foreach (var experience in Model.Experiences)
+		@foreach (var experience in Model.Cv.Experiences)
 		{
 			<div class="experience custom-card">
 				<div style="display: flex; gap: 0.5rem;">
@@ -138,6 +138,64 @@
 			</div>
 		}
 	</section>
+</div>
+
+<div>
+	@if (Model.User.Projects.Count > 0)
+	{
+		<h2 class="m-2 mt-4 p-2">Projekt</h2>
+	}
+	<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1">
+		
+		@foreach (var project in Model.User.Projects)
+		{
+			<div class="card text-center mt-2 project-card pc show">
+				<a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="text-decoration-none text-reset">
+					<div class="card-header align-items-center">
+						<h5>@project.Title</h5>
+					</div>
+					<div class="card-body">
+						<p class="project-meta">Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
+						<p>@project.Description</p>
+
+						<div class="d-flex justify-content-center mt2">
+							@if (project.Owner == null || !project.Owner.IsActive)
+							{
+								<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+									<img src="/images/default-profile2.png" />
+								</div>
+							}
+							else
+							{
+								<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+									<img src="@project.Owner.ProfileImageUrl" />
+								</div>
+							}
+
+							@if (project.Users.Any())
+							{
+								var activeUsers = project.Users.Where(u => u.IsActive && u.Id != project.Owner.Id && !u.IsPrivate).ToList();
+								@foreach (var user in activeUsers.Take(4))
+								{
+									if (user.IsActive && user != null)
+									{
+										<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+											<img src="@user.ProfileImageUrl" />
+										</div>
+									}
+								}
+								@if (project.Users.Count() > 4)
+								{
+									<span class="ms-2 small text-muted">+@(@project.Users.Count() - 4)</span>
+								}
+
+							}
+						</div>
+					</div>
+				</a>
+			</div>
+		}
+	</div>
 </div>
 
 

@@ -78,28 +78,25 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel logInViewModel)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(logInViewModel.UserName, logInViewModel.Password, 
-                    isPersistent:logInViewModel.RememberMe, lockoutOnFailure:false);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
-                if (result.IsLockedOut)
-                    ModelState.AddModelError("", "This account is locked.");
-
-                else if (result.IsNotAllowed)
-                    ModelState.AddModelError("", "You are not allowed to log in (email not confirmed?).");
-
-                else if (result.RequiresTwoFactor)
-                    ModelState.AddModelError("", "Two-factor authentication is required.");
-
-                else
-                    ModelState.AddModelError("", "Ogiltigt användarnamn eller lösenord.");
+                return View(logInViewModel);
             }
 
+            var result = await _signInManager.PasswordSignInAsync(logInViewModel.UserName, logInViewModel.Password,
+                    isPersistent: logInViewModel.RememberMe, lockoutOnFailure: false);
+
+
+            if (result.Succeeded)
+            {
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "Ogiltigt användarnamn eller lösenord.");
+
             return View(logInViewModel);
+
         }
 
         [HttpPost]
