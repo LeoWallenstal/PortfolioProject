@@ -9,7 +9,7 @@
 		<i class="bi bi-arrow-left"></i>
 	</a>
 	<h3 class="mx-auto">Projekt</h3>
-	@if (User.Identity.IsAuthenticated)
+	@if (User.Identity.IsAuthenticated && (ViewBag.IsActive ?? false))
 	{
 		<a asp-controller="Project" asp-action="Create" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4" style="text-decoration: none">
 			<i class="bi bi-plus-lg"></i>
@@ -57,7 +57,7 @@
 									}
 									@if (projectVM.Participants.Count() > 4)
 									{
-										<span class="ms-2 small text-muted">+@(@projectVM.Participants.Count() - 5)</span>
+										<span class="ms-2 small text-muted">+@(@projectVM.Participants.Count() - 4)</span>
 									}
 							
 							}
