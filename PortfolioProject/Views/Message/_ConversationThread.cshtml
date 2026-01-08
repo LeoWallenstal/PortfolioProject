@@ -45,7 +45,7 @@
 							<p>@msg.Body</p>
 							@if (!Context.Request.Path.Value!.Contains("/anon/"))
 							{
-								var urlDelete = (Model.OtherUsersId == null
+								var urlDelete = (Model.OtherUsername == null
 								? Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, conversationId = Model.ConversationId })
 								: Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, username = Model.OtherUsername }));
 								<form action=@urlDelete method="post">
@@ -78,7 +78,7 @@
 
 		var urlSend = !isLoggedIn
 		? Url.Action("SendAnonymous", "Message", new { publicId = Model.PublicId })
-		: (Model.OtherUsersId == null
+		: (Model.OtherUsername == null
 		? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
 		: Url.Action("Send", "Message", new { username = Model.OtherUsername }));
 

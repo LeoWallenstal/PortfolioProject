@@ -11,7 +11,7 @@
 	<ul class="item-list">
 		@foreach (var c in Model)
 		{
-			var url = c.OtherUsersId == null
+			var url = c.OtherUsername == null
 			? Url.Action("Index", "Messages", new { conversationId = c.ConversationId })
 			: Url.Action("Index", "Messages", new { username = c.OtherUsername });
 
