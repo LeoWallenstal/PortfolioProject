@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PortfolioProject.Data;
-using PortfolioProject.Models;
+using DataLayer .Data;
+using DataLayer.Models;
 
 namespace PortfolioProject
 {
@@ -46,7 +46,7 @@ namespace PortfolioProject
                     FirstName = "Leo",
                     LastName = "Student",
                     ProfileImageUrl = "/cv/images/hero.png",
-                    IsActive = true,
+                    IsActive = false,
                     IsPrivate = false
                 };
 
@@ -268,8 +268,8 @@ namespace PortfolioProject
             await db.SaveChangesAsync();
 
             // --- Projects ---
-            var p1 = new Project { Title = "Portfolio Website", Description = "MVC + EF Core" };
-            var p2 = new Project { Title = "Messaging System", Description = "User-to-user chat" };
+            var p1 = new Project { Title = "Portfolio Website", Description = "MVC + EF Core", OwnerId = admin.Id };
+            var p2 = new Project { Title = "Messaging System", Description = "User-to-user chat", OwnerId = leo.Id };
 
             // many-to-many user<->project (if your model has it)
             p1.Users.Add(leo);

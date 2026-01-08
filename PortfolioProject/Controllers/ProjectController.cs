@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PortfolioProject.Data;
-using PortfolioProject.Models;
+using DataLayer.Data;
+using DataLayer.Models.ViewModels;
+using DataLayer.Models;
 using System.Threading.Tasks;
 
 namespace PortfolioProject.Controllers
@@ -19,19 +20,35 @@ namespace PortfolioProject.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Projects()
+        public async Task<IActionResult> Projects()
         {
             bool isLoggedIn = User.Identity?.IsAuthenticated ?? false;
 
-            var projects = _context.Projects
+            var projects = await _context.Projects
+                .Include(p => p.Users)
+                .ToListAsync();
+
+            var ownerIds = projects
+                .Select(p => p.OwnerId)
+                .Distinct()
+                .ToList();
+
+            var owners = await _context.Users
+                .IgnoreQueryFilters()
+                .Where(u => ownerIds.Contains(u.Id))
+                .ToDictionaryAsync(u => u.Id);
+
+            var projectVM = projects
                 .Select(p => new ProjectViewModel
                 {
                     Project = p,
-                    VisibleUsers = isLoggedIn ? p.Users : p.Users.Where(u => !u.IsPrivate)
-                })
-                .ToList();
+                    Owner = owners[p.OwnerId],
+                    Participants = isLoggedIn
+                        ? p.Users.Where(u => u.Id != p.OwnerId).ToList()
+                        : p.Users.Where(u => u.Id != p.OwnerId && !u.IsPrivate).ToList()
+                });
 
-            return View(projects);
+            return View(projectVM);
         }
 
         [HttpGet]
@@ -48,17 +65,18 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProjectViewModel projectVM)
         {
-            if(!ModelState.IsValid)
-            {
+            ModelState.Remove("Project.OwnerId");
+            ModelState.Remove("Project.Owner");
+
+            if (!ModelState.IsValid)
                 return View(projectVM);
-            }
 
             var userId = _userManager.GetUserId(User);
 
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if(user == null)
+            if (user == null || userId == null)
                 return Unauthorized();
 
             Project newProject = new Project
@@ -90,10 +108,10 @@ namespace PortfolioProject.Controllers
                 .Include(p => p.Users)
                 .FirstOrDefaultAsync(p => p.Id == pid);
 
-            if(user == null || project == null)
+            if (user == null || project == null)
                 return NotFound();
 
-            if(!user.Projects.Any(p => p.Id == pid))
+            if (!user.Projects.Any(p => p.Id == pid))
             {
                 user.Projects.Add(project);
                 await _context.SaveChangesAsync();
@@ -122,7 +140,7 @@ namespace PortfolioProject.Controllers
             if (user == null || project == null)
                 return NotFound();
 
-            if(userId == project.OwnerId)
+            if (userId == project.OwnerId)
                 return Forbid();
 
             if (user.Projects.Any(p => p.Id == pid))
@@ -147,10 +165,10 @@ namespace PortfolioProject.Controllers
             var project = await _context.Projects
                 .FirstOrDefaultAsync(p => p.Id == id);
 
-            if(project == null)
+            if (project == null)
                 return NotFound();
 
-            if(project.OwnerId == null || project.OwnerId != userId)
+            if (project.OwnerId != userId)
                 return Forbid();
 
             var projectVM = new ProjectViewModel
@@ -173,14 +191,14 @@ namespace PortfolioProject.Controllers
             if (project == null)
                 return NotFound();
 
-            if(project.OwnerId == null || project.OwnerId != userId)
+            if (project.OwnerId != userId)
                 return Forbid();
 
             project.Title = projectVM.Project.Title;
             project.Description = projectVM.Project.Description;
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = project.Id});
+            return RedirectToAction("Details", new { id = project.Id });
         }
 
         public async Task<IActionResult> Details(Guid id)
@@ -189,18 +207,25 @@ namespace PortfolioProject.Controllers
 
             var project = await _context.Projects
                 .Include(p => p.Users)
-                .Where(p => p.Id == id)
-                .Select(p => new ProjectViewModel
-                {
-                    Project = p,
-                    VisibleUsers = isLoggedIn ? p.Users : p.Users.Where(u => !u.IsPrivate)
-                })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            if(project == null)
+            if (project == null)
                 return NotFound();
 
-            return View(project);
+            var owner = await _context.Users
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(u => u.Id == project.OwnerId);
+
+            var projectVM = new ProjectViewModel
+            {
+                Project = project,
+                Owner = owner,
+                Participants = isLoggedIn 
+                    ? project.Users.Where(u => u.Id != project.OwnerId).ToList() 
+                    : project.Users.Where(u => u.Id != project.OwnerId && !u.IsPrivate).ToList()
+            };
+
+            return View(projectVM);
         }
     }
 }

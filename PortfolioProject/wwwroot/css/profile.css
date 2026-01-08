@@ -1,0 +1,101 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Viewing */
+
+section {
+    display: flex;
+    flex-direction: column;
+
+    margin: 1rem 0;
+    padding: 1rem 2rem;
+
+    gap: 0.2rem;
+
+    border: 2px solid black;
+    border-radius: 5px;
+}
+
+/* Viewing */
+
+.label-w-text {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1rem;
+
+    padding: 0;
+    margin: 0;
+}
+
+/* Editing */
+
+.label-w-checkbox {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1rem;
+
+    padding: 0;
+    margin: 0;
+}
+
+.horizontal-container {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1rem;
+
+    padding: 0.5rem;
+    margin: 0;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0.5rem;
+
+    padding: 0;
+    margin: 0;
+}
+
+.input-wrapper {
+    width: 200px; 
+    max-width: 100%; 
+    box-sizing: border-box; 
+}
+
+.button-wrapper {
+    align-self: flex-start;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* 2 columns: labels fixed, inputs flexible */
+    gap: 0.5rem 1rem; /* row-gap, column-gap */
+    align-items: center; /* vertical alignment for inputs & labels */
+    margin-bottom: 1rem;
+}
+
+    .profile-grid input[type="text"] {
+        width: 250px; 
+        box-sizing: border-box;
+    }
+
+    .profile-grid input[type="checkbox"] {
+        width: auto;
+        justify-self: start;
+    }
+
+.button-wrapper {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+#pw-section {
+    display: none;
+}

@@ -1,7 +1,49 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model UserViewModel
 
-<h1>User Profile</h1>
+<link href="/css/profile.css" rel="stylesheet">
+
+<h1>Min Profil</h1>
+
+<!-- PROFILBILD NÅNSTANS -->
+
+<section>
+    <div class="label-w-text">
+        <p class="label">Namn: </p>
+        <p class="text">@($"{Model.FullName}")</p>
+    </div>
+
+    <div class="label-w-text">
+        <p class="label">Användarnamn: </p>
+        <p class="text">@($"{Model.UserName}")</p>
+    </div>
+
+    <div class="label-w-text">
+        <p>Email: </p>
+        <p>@($"{Model.Email}")</p>
+    </div>
+
+    <div class="label-w-text">
+        <p>Telefonnummer: </p>
+        <p>@($"{Model.PhoneNumber}")</p>
+    </div>
+
+    <div class="label-w-text">
+        <p>Adress: </p>
+        <p>@($"{Model.Adress}")</p>
+    </div>
+
+    <div class="label-w-checkbox">
+        <label asp-for="IsPrivate">Privat profil:</label>
+        <input type="checkbox" asp-for="IsPrivate" disabled>
+    </div>
+
+    <div class="button-wrapper">
+        <a asp-action="Edit" class="btn btn-primary">Redigera Profil</a>
+    </div>    
+</section>
+
+<!-- CV -->
+<section></section>
+
+
+

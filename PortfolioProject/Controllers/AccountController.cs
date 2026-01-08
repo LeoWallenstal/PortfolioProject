@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PortfolioProject.Controllers;
-using PortfolioProject.Models;
+using DataLayer.Models.ViewModels;
+using DataLayer.Models;
+
 
 namespace PortfolioProject.Controllers
-
 {
     public class AccountController : Controller
     {
