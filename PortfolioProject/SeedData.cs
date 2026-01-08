@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PortfolioProject.Data;
-using PortfolioProject.Models;
+using DataLayer .Data;
+using DataLayer.Models;
 
 namespace PortfolioProject
 {
