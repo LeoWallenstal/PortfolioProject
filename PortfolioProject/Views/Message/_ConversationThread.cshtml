@@ -38,13 +38,18 @@
 					<div class="received">
 						<small class="timestamp">@msg.SentAt.ToString("g")</small>
 						<p>@msg.Body</p>
+						<button class="msg-delete" aria-label="Ta bort">
+							<i class="bi bi-trash3"></i>
+						</button>
 					</div>
+					
 				</div>
 			}
 			else
 			{
 				<div class="sent">
 					<small class="timestamp">@msg.SentAt.ToString("g")</small>
+
 					<p>@msg.Body</p>
 					<small class="read-status">
 						@(msg.IsRead ? "Läst" : "Skickat")
