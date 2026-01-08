@@ -2,9 +2,10 @@
 function init() {
     const name = document.getElementById("nameSearch");
     const skill = document.getElementById("skillSearch");
-    name.addEventListener("input", searchCvs)
-    skill.addEventListener("change", searchCvs)
+    name.addEventListener("input", searchCvs);
+    skill.addEventListener("change", searchCvs);
 
+    onScrollEventProjects();
     window.addEventListener("scroll", onScrollEventProjects);
 
     toggleButtons();
@@ -53,6 +54,8 @@ function onScrollEventProjects() {
         return;
     }
     const projectsection = document.getElementById("recentProjects");
+    if (!projectsection) return;
+
     const rect = projectsection.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
@@ -61,7 +64,7 @@ function onScrollEventProjects() {
     if (rect.top < triggerPoint) {
         animateProjectCards();
         projectsAnimated = true;
-        window.removeEventListener("scroll", onScrollAnimateProjects);
+        window.removeEventListener("scroll", onScrollEventProjects);
     }
 }
 
