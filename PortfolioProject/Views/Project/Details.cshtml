@@ -2,8 +2,11 @@
 @model ProjectViewModel
 
 <section class="search-section d-flex align-items-center position-relative my-2">
+	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+		<i class="bi bi-arrow-left"></i>
+	</a>
 	<h3 class="mx-auto">@Model.Project.Title</h3>
-	
+
 	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId)
 	{
 		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4">
@@ -13,38 +16,56 @@
 </section>
 
 <div class="container">
-	<div class="row mx-auto">
+	<div class="row mx-auto details-container">
 		<div class="col-md-8">
-			<div class="card mt-2">
-				<div class="card-body">
-					<p>Skapat: @Model.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
+			<div class="card mt-2 details-card">
+				<div class="card-body text-center">
+					<p class="project-meta">Skapat: @Model.Project.CreatedDate.ToString("yyyy-MM-dd")</p>
 					<p>@Model.Project.Description</p>
 				</div>
 			</div>
 		</div>
 		<div class="col-md-4">
 			<div class="card mt-2">
-				<div class="card-body">
+				<div class="card-body details-card">
 					<p><strong>Deltagare (@Model.Project.Users.Count):</strong></p>
-					@if (Model.VisibleUsers != null && Model.VisibleUsers.Any())
+						<div class="d-flex align-items-center mb-2">
+							@if (Model.Owner == null || !Model.Owner.IsActive)
+							{
+								<img src="/images/default-profile2.png"
+										class="rounded-circle me-2"
+										style="width:40px; height:40px;" />
+								<span class="ms-1 fst-italic">Inaktiverat konto</span>
+									
+							}
+							else
+							{
+								<img src="@Model.Owner.ProfileImageUrl"
+									 class="rounded-circle me-2"
+									 style="width:40px; height:40px;" />
+								<span>@Model.Owner.FirstName @Model.Owner.LastName</span>
+							}
+							<span class="badge owner-badge ms-2">Ägare</span>
+						</div>
+					@if (Model.Participants != null && Model.Participants.Any())
 					{
 						<div class="list-group">
-							@foreach (var user in Model.VisibleUsers)
+							@foreach (var user in Model.Participants)
 							{
-								<div class="d-flex align-items-center mb-2">
-									<img src="@(string.IsNullOrEmpty(user.ProfileImageUrl)
-																	? Url.Content("~/images/default-profile2.png")
-																	: user.ProfileImageUrl)"
-									alt=""
-									class="rounded-circle me-2"
-									style="width:40px; height:40px;"/>
-									<span class="ms-1">@user.FirstName @user.LastName 
-										@if(@user.Id == Model.Project.OwnerId)
-										{
-											<span class="badge bg-primary ms-2">Ägare</span>
-										}
-									</span>
-								</div>
+								if(user.IsActive)
+								{
+									<div class="d-flex align-items-center mb-2">
+										<div>
+											<img src="@user.ProfileImageUrl"
+												 class="rounded-circle me-2"
+												 style="width:40px; height:40px;"/>
+										</div>
+								
+										<span class="ms-1">
+											@user.FirstName @user.LastName
+										</span>
+									</div>
+								}
 							}
 						</div>
 					}
@@ -55,18 +76,27 @@
 				bool isParticipant = Model.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 				bool isOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId;
 
-				if(User.Identity.IsAuthenticated && isParticipant && !isOwner)
+				if (User.Identity.IsAuthenticated && isParticipant && !isOwner)
 				{
 					<div class="text-center mt-2">
 						<form asp-action="LeaveProject" method="post">
 							<input type="hidden" name="pid" value="@Model.Project.Id" />
 							<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-							<button class="btn btn-sm btn-outline-danger">Lämna projekt</button>
+							<button class="border-0 leave-btn">Lämna projekt</button>
+						</form>
+					</div>
+				}
+				else if (User.Identity.IsAuthenticated && !isParticipant)
+				{
+					<div class="text-center mt-2">
+						<form asp-action="JoinProject" method="post">
+							<input type="hidden" name="pid" value="@Model.Project.Id" />
+							<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+							<button class="border-0 participate-btn">Delta i projekt</button>
 						</form>
 					</div>
 				}
 			}
-
 		</div>
 	</div>
 </div>

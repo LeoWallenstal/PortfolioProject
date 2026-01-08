@@ -80,7 +80,10 @@ namespace PortfolioProject.Data
                 .HasForeignKey(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
+            //Appliceras på alla EF Core-frågor mot User, filtrerar bort inaktiva användare automatiskt
+            //Vill vi ha denna??
+            modelBuilder.Entity<User>()
+                .HasQueryFilter(u => u.IsActive);
         }
     }
 }

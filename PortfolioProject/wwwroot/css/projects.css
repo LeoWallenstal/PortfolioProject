@@ -1,34 +1,93 @@
-﻿.participant-img {
-    border-radius: 50%;
-    background-color: white;
-    margin: 0px 3px;
+﻿.pc {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 1rem;
 }
 
-    .participant-img img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        object-fit: contain;
+    .pc:hover {
+        transform: scale(1.02);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.05);
     }
 
-.project-card2 {
+.owner-badge {
+    background: rgb(67, 133, 207);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.participate-btn {
+    background: rgb(175, 176, 176);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    margin: 0.5rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .participate-btn:hover {
+        background: rgb(67, 133, 207);
+        transform: scale(1.05);
+    }
+
+    .participate-btn[disabled] {
+        background: #d1e7dd;
+        color: #0f5132;
+        cursor: default;
+    }
+
+.leave-btn {
+    background: rgb(175, 176, 176);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    margin: 0.5rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .leave-btn:hover {
+        background: rgb(198, 52, 52);
+        transform: scale(1.05);
+    }
+
+    .leave-btn[disabled] {
+        background: #d1e7dd;
+        color: #0f5132;
+        cursor: default;
+    }
+
+.details-card {
+    border-radius: 0.5rem;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-    .project-card2:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-    }
-
-
-@media (max-width: 576px) {
-    .participant-img img {
-        width: 25px;
-        height: 25px;
-    }
-
-    .all-projects {
-        margin: 0 1.5rem 2rem 1.5rem;
-    }
+.details-container {
+    padding: 1rem 4rem;
 }
+
+.save-changes-btn {
+    background: rgb(67, 133, 207);
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .save-changes-btn:hover {
+        transform: scale(1.05);
+    }
+
+    .save-changes-btn[disabled] {
+        background: #ccc;
+        color: #666;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+        .save-changes-btn[disabled]:hover {
+            transform: none;
+        }

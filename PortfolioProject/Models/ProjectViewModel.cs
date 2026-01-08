@@ -3,6 +3,7 @@
     public class ProjectViewModel
     {
         public Project Project { get; set; } = new Project();
-        public IEnumerable<User>? VisibleUsers { get; set; }
+        public User? Owner { get; set; }
+        public IEnumerable<User>? Participants { get; set; }
     }
 }
