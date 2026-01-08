@@ -88,26 +88,6 @@ namespace PortfolioProject.Controllers
         {
             var currentUserId = _userManager.GetUserId(User);
 
-            var body = (input.Body ?? "").Trim();
-            if (string.IsNullOrWhiteSpace(body))
-            {
-                TempData["SendError"] = "Meddelandet får inte vara tomt.";
-                return RedirectToAction(nameof(Index),
-                    !string.IsNullOrWhiteSpace(username)
-                        ? new { username }
-                        : new { conversationId });
-
-            }
-
-            if (!ModelState.IsValid)
-            {
-                TempData["SendError"] = "Meddelandet är för långt.";
-                return RedirectToAction(nameof(Index),
-                    !string.IsNullOrWhiteSpace(username)
-                        ? new { username }
-                        : new { conversationId });
-            }
-
             if (!string.IsNullOrWhiteSpace(username))
             {
                 var otherUser = await _userManager.FindByNameAsync(username);
@@ -121,17 +101,23 @@ namespace PortfolioProject.Controllers
 
                 if (convo != null)
                 {
+                    if (!ModelState.IsValid)
+                    {
+                        var vm = await _messages.GetConversationVmByIdAsync(convo.Id, currentUserId);
+                        return PartialView("_ConversationThread", vm);
+                    }
+
                     await _messages.InsertMessageAsync(new Message
                     {
                         ConversationId = convo.Id,
                         FromUserId = currentUserId,
                         ToUserId = otherUser.Id,
                         SentAt = DateTime.UtcNow,
-                        Body = body
+                        Body = (input.Body ?? "").Trim()
                     });
                 }
 
-                return RedirectToAction(nameof(Index), new { username });
+                return NoContent();
 
             }
 
@@ -145,15 +131,21 @@ namespace PortfolioProject.Controllers
 
                 if (convo != null)
                 {
+                    if (!ModelState.IsValid)
+                    {
+                        var vm = await _messages.GetConversationVmByIdAsync(convo.Id, currentUserId);
+                        return PartialView("_ConversationThread", vm);
+                    }
+
                     await _messages.InsertMessageAsync(new Message
                     {
                         ConversationId = convo.Id,
                         FromUserId = currentUserId,
                         SentAt = DateTime.UtcNow,
-                        Body = body
+                        Body = (input.Body ?? "").Trim()
                     });
                 }
-                return RedirectToAction(nameof(Index), new { conversationId });
+                return NoContent();
             }
 
             return RedirectToAction(nameof(Index));
@@ -272,13 +264,14 @@ namespace PortfolioProject.Controllers
                 return RedirectToAction("Index");
             }
 
-
-            if (!ModelState.IsValid)
-                return RedirectToAction(nameof(AnonymousThread), new { publicId });
-
             var convo = await _messages.GetAnonymousConversationAsync(publicId);
             if (convo != null)
             {
+                if (!ModelState.IsValid)
+                {
+                    var vm = await _messages.GetAnonymousConversationVmAsync(publicId);
+                    return PartialView("_ConversationThread", vm);
+                }
                 await _messages.InsertMessageAsync(new Message
                 {
                     ConversationId = convo.Id,
@@ -287,13 +280,9 @@ namespace PortfolioProject.Controllers
                     SentAt = DateTime.UtcNow,
                     Body = input.Body
                 });
+
             }
-            // 4) Redirect back to thread
-            return RedirectToAction(nameof(AnonymousThread), new { publicId });
-
-
-
-
+            return NoContent();
         }
 
 

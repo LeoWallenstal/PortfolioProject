@@ -48,7 +48,7 @@
 								var urlDelete = (Model.OtherUsersId == null
 								? Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, conversationId = Model.ConversationId })
 								: Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, username = Model.OtherUsername }));
-								<form action=@urlDelete  method="post">
+								<form action=@urlDelete method="post">
 									<button class="msg-delete" aria-label="Ta bort" type="submit">
 										<i class="bi bi-trash3"></i>
 									</button>
@@ -84,18 +84,16 @@
 
 	}
 	<div class="send-area">
-		<form action="@urlSend" method="post" style="display: contents;">
+		<form action="@urlSend" method="post" id="sendForm" style="display: contents;">
 			<div class="text-box">
 				<small id="counter">0/3500</small>
-				@if (TempData["SendError"] is string error)
-				{
-					<div id="send-error" class="text-danger">@error</div>
-				}
+
+				
 
 				<emoji-picker class="emoji-picker light" hidden></emoji-picker>
 				<i class="bi bi-emoji-smile-fill emoji"></i>
-				<textarea maxlength="3500" name="Body" class="input-box"></textarea>
-
+				<textarea maxlength="3500" asp-for="Input.Body" class="input-box"></textarea>
+				<span asp-validation-for="Input.Body" id="send-error" class="text-danger"></span>
 				<button class="send-btn" type="submit">
 					<i class="bi bi-send"></i>
 				</button>
