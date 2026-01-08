@@ -1,4 +1,30 @@
-﻿function initScroll(root) {
+﻿//Metod för att swapa partial istället för att ladda om hela sidan.
+async function postThread(form, push) {
+    const threadView = document.getElementById("threadView");
+    if (!threadView) return;
+
+    const res = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form)
+    });
+
+    //Om det lyckas så ska sidan laddas om istället för att bara byta partial.
+    if (res.status === 204) {
+        window.location.href = form.action.replace(/\/send(\?|$)/, "?");
+        return;
+    }
+
+    const html = await res.text();
+    threadView.innerHTML = html;
+
+    const mod = await import("/js/messageThread.js");
+    mod.initThreadBehaviors(threadView);
+
+    if (push) history.pushState({}, "", form.action);
+}
+
+
+function initScroll(root) {
     const m = root.querySelector(".messages");
     if (!m) return;
 
@@ -110,6 +136,24 @@ function initResize(root) {
     resize();
 }
 
+//Variabel för att unvika att man attachar lyssnaren flera gånger, tex vid felaktig inmatning.
+let sendListenerAttached = false;
+//Fångar upp när man skickar ett meddelande för att fetcha med AJAX
+function initSend(root) {
+    if (sendListenerAttached) return;
+    sendListenerAttached = true;
+
+    root.addEventListener("submit", (e) => {
+        const form = e.target;
+        if (!(form instanceof HTMLFormElement)) return;
+
+        if (!form.matches("#sendForm")) return;
+
+        e.preventDefault();
+        postThread(form, false);
+    });
+}
+
 //Gör så att användare skicka meddelande med enter men låter shift+enter skapa ny rad.
 function initEnterToSend(root) {
     const textarea = root.querySelector(".text-box textarea");
@@ -143,6 +187,7 @@ export function initThreadBehaviors(root) {
     initGlobalEmojiClosers(root);
     initCounter(root);
     initResize(root);
+    initSend(root);
     initEnterToSend(root);
     initClearError(root);
 }
@@ -151,4 +196,3 @@ export function initThreadBehaviors(root) {
 document.addEventListener("DOMContentLoaded", () => {
     initThreadBehaviors(document);
 });
-console.log("Hellooooo");

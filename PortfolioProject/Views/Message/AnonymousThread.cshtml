@@ -7,35 +7,43 @@
 		new { publicId = Model.PublicId }, protocol: Context.Request.Scheme);
 }
 
-<div class="card shadow-sm mb-3">
-	<div class="card-body">
+<div style="
+	height: 85vh;
+	display: flex;
+    flex-direction: column;">
+	<div class="card shadow-sm mb-1">
+		<div class="card-body">
 			<div class="fw-semibold">Konversationslänk</div>
 
-		<div class="text-muted small mt-1">
-			Använd länken för att komma tillbaka till den här konversationen.
+			<div class="text-muted small mt-1">
+				Använd länken för att komma tillbaka till den här konversationen.
+			</div>
+
+
+			<div class="mt-2">
+				<button type="button"
+						id="copyBtn"
+						class="btn btn-link p-0 text-decoration-none shadow-none text-dark d-flex gap-1"
+						onclick="navigator.clipboard.writeText('@convoLink')">
+					<i id="copyIcon" class="bi bi-clipboard"></i>
+					<div class="small">Kopiera länk</div>
+				</button>
+			</div>
+
+			<div class="">
+				<code class="d-block text-break p-2 bg-light rounded">@convoLink</code>
+			</div>
+
 		</div>
-
-
-		<div class="mt-2">
-			<button type="button"
-					id="copyBtn"
-					class="btn btn-link p-0 text-decoration-none shadow-none text-dark d-flex gap-1"
-					onclick="navigator.clipboard.writeText('@convoLink')">
-				<i id="copyIcon" class="bi bi-clipboard"></i>
-				<div class="small">Kopiera länk</div>
-			</button>
-		</div>
-
-		<div class="">
-			<code class="d-block text-break p-2 bg-light rounded">@convoLink</code>
-		</div>
-
 	</div>
+
+	<main class="wrapper" id="threadView" style="
+	flex: 1;
+	min-height: 0;
+	display: flex;">
+		<partial name="_ConversationThread" model="@Model" />
+	</main>
 </div>
-
-<partial name="_ConversationThread" model="@Model" />
-
-
 <script>
 	const btn = document.getElementById("copyBtn");
 	const icon = document.getElementById("copyIcon");

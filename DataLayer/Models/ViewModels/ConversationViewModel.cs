@@ -1,4 +1,6 @@
-﻿namespace DataLayer.Models.ViewModels
+﻿using DataLayer.Models.InputModels;
+
+namespace DataLayer.Models.ViewModels
 {
     public class ConversationViewModel
     {
@@ -9,5 +11,6 @@
         public string? OtherUsername { get; set; }
         public string? OtherUsersProfileImageUrl { get; set; } = "/images/default-profile2.png";
         public List<MessageViewModel> Messages { get; set; }
+        public SendMessageInputModel Input { get; set; } = new ();
     }
 }
