@@ -113,7 +113,7 @@ namespace DataLayer.Data
                     var otherId = convo.UserAId == currentUserId ? convo.UserBId : convo.UserAId;
                     users.TryGetValue(otherId!, out var other);
 
-                    convoListItem.OtherUsersFullName = other.IsActive ? $"{other.FirstName} {other.LastName}" : "Avaktiverad användare";
+                    convoListItem.OtherUsersFullName = other.IsActive ? $"{other.FirstName} {other.LastName}" : "Inaktiverat konto";
                     convoListItem.OtherUsersId = other.Id;
 
                     if (other.IsActive)
@@ -204,7 +204,7 @@ namespace DataLayer.Data
                 if (otherUser is null)
                     return null;
 
-                convoVm.OtherUsersFullName = otherUser.IsActive ? $"{otherUser.FirstName} {otherUser.LastName}" : "Avaktiverad användare";
+                convoVm.OtherUsersFullName = otherUser.IsActive ? $"{otherUser.FirstName} {otherUser.LastName}" : "Inaktiverat konto";
                 convoVm.OtherUsersId = otherUser.Id;
 
                 if (otherUser.IsActive) {
