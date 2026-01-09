@@ -88,18 +88,25 @@
 			<div class="text-box">
 				<small id="counter">0/3500</small>
 
-				
-
-				<emoji-picker class="emoji-picker light" hidden></emoji-picker>
-				<i class="bi bi-emoji-smile-fill emoji"></i>
-				<textarea maxlength="3500" asp-for="Input.Body" class="input-box"></textarea>
-				<span asp-validation-for="Input.Body" id="send-error" class="text-danger"></span>
-				<button class="send-btn" type="submit">
-					<i class="bi bi-send"></i>
-				</button>
-
+				@if(isLoggedIn && !User.HasClaim("IsActive", "true"))
+				{
+					<i class="bi bi-emoji-smile-fill emoji" style="cursor: default"></i>
+					<textarea maxlength="3500" asp-for="Input.Body" class="input-box" disabled placeholder="Aktivera ditt konto för att kunna skicka meddelanden"></textarea>
+					<button class="send-btn" style="cursor: default" disabled>
+						<i class="bi bi-send"></i>
+					</button>
+				}
+				else
+				{
+					<emoji-picker class="emoji-picker light" hidden></emoji-picker>
+					<i class="bi bi-emoji-smile-fill emoji"></i>
+					<textarea maxlength="3500" asp-for="Input.Body" class="input-box"></textarea>
+					<span asp-validation-for="Input.Body" id="send-error" class="text-danger"></span>
+					<button class="send-btn" type="submit">
+						<i class="bi bi-send"></i>
+					</button>
+				}				
 			</div>
-
 		</form>
 	</div>
 </div>
