@@ -9,6 +9,7 @@ using DataLayer.Data;
 using System;
 using System.Linq;
 using Castle.Core.Internal;
+using DataLayer;
 
 namespace PortfolioProject.Controllers
 {
@@ -18,13 +19,32 @@ namespace PortfolioProject.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IMessagesService _messages;
+        private readonly ExportPlaceholder _exportService;
 
-
-        public MessageController(UserManager<User> userManager, IMessagesService messages)
+        public MessageController(UserManager<User> userManager, IMessagesService messages, ExportPlaceholder exportPlaceholder)
         {
             _userManager = userManager;
             _messages = messages;
+            _exportService = exportPlaceholder;
         }
+
+        //!!!!!! Notis till James !!!!!!
+        //Ska flyttas till ProfileController.
+        [HttpGet("export")]
+        public async Task<IActionResult> ExportXml()
+        {
+            var userId = _userManager.GetUserId(User);
+            if (string.IsNullOrWhiteSpace(userId))
+                return Unauthorized();
+
+            var result = await _exportService.ExportProfileXmlAsync(userId);
+            if (result is null)
+                return NotFound();
+
+            return File(result.Bytes, result.ContentType, result.FileName);
+        }
+
+
 
         [Authorize]
         [HttpGet("")]
