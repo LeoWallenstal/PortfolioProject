@@ -88,7 +88,7 @@
 			<div class="text-box">
 				<small id="counter">0/3500</small>
 
-				@if(isLoggedIn && !User.HasClaim("IsActive", "true"))
+				@if (isLoggedIn && !User.HasClaim("IsActive", "true"))
 				{
 					<i class="bi bi-emoji-smile-fill emoji" style="cursor: default"></i>
 					<textarea maxlength="3500" asp-for="Input.Body" class="input-box" disabled placeholder="Aktivera ditt konto för att kunna skicka meddelanden"></textarea>
@@ -105,13 +105,50 @@
 					<button class="send-btn" type="submit">
 						<i class="bi bi-send"></i>
 					</button>
-				}				
+				}
 			</div>
 		</form>
 	</div>
 </div>
 
+@if (!Context.Request.Path.Value!.Contains("/anon/"))
+{
+	<!-- Overlay + dialog för att bekräfta innan man raderar ett meddelande. -->
+	<div id="deleteDialogOverlay" class="delete-dialog-overlay d-none" aria-hidden="true">
+		<div class="delete-dialog" tabindex="-1">
+			<div class="delete-dialog-header">
 
+				<div class="delete-dialog-icon">
+					<i class="bi bi-exclamation-triangle"></i>
+				</div>
+
+				<div>
+					<h2 id="deleteDialogTitle" class="delete-dialog-title">Ta bort meddelande</h2>
+					<p class="delete-dialog-subtitle">Det går inte att ångra detta</p>
+				</div>
+
+				<button type="button" class="delete-dialog-close close">×</button>
+			</div>
+
+			<div class="delete-dialog-body">
+				<div class="delete-dialog-warning">
+					<ul class="delete-dialog-list">
+						<li><strong>Du kan inte</strong> återställa ett raderat meddelande.</li>
+						<li>Meddelandet tas bara bort från <strong>din vy</strong>.</li>
+						<li>Avsändaren kan fortfarande <strong>se</strong> meddelandet.</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="delete-dialog-footer">
+				<button type="button" class="btn btn-secondary close">Avbryt</button>
+				<button type="button" class="btn btn-danger" id="deleteDialogConfirm">
+					Ta bort
+				</button>
+			</div>
+		</div>
+	</div>
+}
 
 
 

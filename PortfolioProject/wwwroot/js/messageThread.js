@@ -1,4 +1,68 @@
-﻿//Metod för att swapa partial istället för att ladda om hela sidan.
+﻿//Hanterar dialog rutan som kräver att användaren bekräftar innan ett meddelande raderas.
+function initDeleteDialog() {
+    const overlay = document.getElementById("deleteDialogOverlay")
+    if (!overlay) return;
+
+    const dialog = overlay.querySelector(".delete-dialog")
+    const confirmBtn = document.getElementById("deleteDialogConfirm");
+
+    let pendingForm = null;
+    let lastFocused = null;
+
+    const openDialog = (form) => {
+        pendingForm = form;
+        lastFocused = document.activeElement;
+
+        overlay.classList.remove("d-none");
+        overlay.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+
+        dialog.focus();
+    };
+
+    const closeDialog = () => {
+        pendingForm = null;
+
+        overlay.classList.add("d-none");
+        overlay.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+
+        if (lastFocused) lastFocused.focus();
+    };
+
+    document.addEventListener("click", (e) => {
+        const deleteBtn = e.target.closest("button.msg-delete");
+        if (!deleteBtn) return;
+
+        const form = deleteBtn.closest("form");
+        if (!form) return;
+
+        e.preventDefault();
+        openDialog(form);
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        if (!pendingForm) return;
+        pendingForm.submit();
+    });
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) closeDialog();
+        if (e.target.closest(".close")) closeDialog();
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !overlay.classList.contains("d-none")) {
+            closeDialog();
+        }
+    });
+
+}
+
+
+//Metod för att swapa partial istället för att ladda om hela sidan.
+//Dels för att inte hela sidan ska få en "blinkande" effekt,
+//men också för att inte förlora felmeddelanden från DataAnnotations
 async function postThread(form, push) {
     const threadView = document.getElementById("threadView");
     if (!threadView) return;
@@ -17,13 +81,13 @@ async function postThread(form, push) {
     const html = await res.text();
     threadView.innerHTML = html;
 
-    const mod = await import("/js/messageThread.js");
-    mod.initThreadBehaviors(threadView);
+    initThreadBehaviors(threadView);
 
     if (push) history.pushState({}, "", form.action);
 }
 
 
+//Ser till att man kommer ner till nyaste chattarna direkt.
 function initScroll(root) {
     const m = root.querySelector(".messages");
     if (!m) return;
@@ -92,8 +156,7 @@ function initGlobalEmojiClosers(root) {
 }
 
 /* !OBS! 
-Just nu räknas vissa emojis som flera chars, hanterar heller inte nådd maxgräns. 
-Se över hur det ska hanteras. 
+Just nu räknas vissa emojis som flera chars, se över hur det ska hanteras. 
 !OBS! */
 
 //Kontrollerar längden på meddelande
@@ -104,7 +167,7 @@ function initCounter(root) {
 
     const update = () => { counter.textContent = `${textarea.value.length}/${textarea.maxLength}`; };
     textarea.addEventListener("input", update);
-    update(); // init
+    update();
 }
 
 //Sköter växandet av input rutan vid radbrytning.
@@ -182,6 +245,7 @@ function initClearError(root) {
 export function initThreadBehaviors(root) {
     if (!root) return;
 
+    initDeleteDialog();
     initScroll(root);
     initEmoji(root);
     initGlobalEmojiClosers(root);
@@ -190,6 +254,7 @@ export function initThreadBehaviors(root) {
     initSend(root);
     initEnterToSend(root);
     initClearError(root);
+    
 }
 
 
