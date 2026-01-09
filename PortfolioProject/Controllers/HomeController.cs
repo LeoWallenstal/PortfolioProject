@@ -84,7 +84,7 @@ namespace PortfolioProject.Controllers
             
             var result = query.ToList();
 
-            return PartialView("CvCarouselPartial", result);
+            return PartialView("_CvCarouselPartial", result);
         }
 
 

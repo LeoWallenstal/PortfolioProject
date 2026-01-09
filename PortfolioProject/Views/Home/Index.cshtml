@@ -5,7 +5,7 @@
 }
 
 <section class="search-section">
-	
+
 	<div class="row m-3 align-items-center">
 
 		<div class="col-auto">
@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="col-md-3">
-			<input class="form-control" placeholder="Namn" id="nameSearch"/>
+			<input class="form-control" placeholder="Namn" id="nameSearch" />
 		</div>
 
 		<div class="col-auto">
@@ -38,8 +38,8 @@
 			 class="carousel slide"
 			 data-bs-interval="false">
 
-				@await Html.PartialAsync("CvCarouselPartial", Model.Cvs)
-			
+			@await Html.PartialAsync("_CvCarouselPartial", Model.Cvs)
+
 			<button class="carousel-control-prev"
 					type="button"
 					data-bs-target="#cvCarousel"
@@ -53,6 +53,7 @@
 					data-bs-slide="next">
 				<span class="carousel-control-next-icon"></span>
 			</button>
+		</div>
 	</div>
 </section>
 
@@ -118,7 +119,7 @@
 								<form asp-action="JoinProject" asp-controller="Project" method="post">
 									<input type="hidden" name="pid" value="@project.Id" />
 									@* skickar med url för sidan användaren är på *@
-									<input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString + "#recentProjects")"/>
+									<input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString + "#recentProjects")" />
 									<button class="border-0"> Delta </button>
 								</form>
 							}
@@ -129,7 +130,7 @@
 						</div>
 					}
 				</div>
-			
+
 			}
 		</div>
 	</div>

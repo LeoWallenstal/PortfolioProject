@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using DataLayer .Data;
+using DataLayer.Data;
 using DataLayer.Models;
 
 namespace PortfolioProject
@@ -149,6 +149,121 @@ namespace PortfolioProject
                     throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
             }
 
+            // ===== Erik =====
+            var erik = await userManager.FindByNameAsync("erik");
+            if (erik == null)
+            {
+                erik = new User
+                {
+                    UserName = "erik",
+                    Email = "erik@demo.local",
+                    FirstName = "Erik",
+                    LastName = "Eklund",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(erik, "Erik123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Frida =====
+            var frida = await userManager.FindByNameAsync("frida");
+            if (frida == null)
+            {
+                frida = new User
+                {
+                    UserName = "frida",
+                    Email = "frida@demo.local",
+                    FirstName = "Frida",
+                    LastName = "Forsberg",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(frida, "Frida123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Gustav =====
+            var gustav = await userManager.FindByNameAsync("gustav");
+            if (gustav == null)
+            {
+                gustav = new User
+                {
+                    UserName = "gustav",
+                    Email = "gustav@demo.local",
+                    FirstName = "Gustav",
+                    LastName = "Gunnarsson",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(gustav, "Gustav123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Helena =====
+            var helena = await userManager.FindByNameAsync("helena");
+            if (helena == null)
+            {
+                helena = new User
+                {
+                    UserName = "helena",
+                    Email = "helena@demo.local",
+                    FirstName = "Helena",
+                    LastName = "Holm",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(helena, "Helena123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Isak =====
+            var isak = await userManager.FindByNameAsync("isak");
+            if (isak == null)
+            {
+                isak = new User
+                {
+                    UserName = "isak",
+                    Email = "isak@demo.local",
+                    FirstName = "Isak",
+                    LastName = "Ivarsson",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(isak, "Isak123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+            // ===== Julia =====
+            var julia = await userManager.FindByNameAsync("julia");
+            if (julia == null)
+            {
+                julia = new User
+                {
+                    UserName = "julia",
+                    Email = "julia@demo.local",
+                    FirstName = "Julia",
+                    LastName = "Jonsson",
+                    IsActive = true,
+                    IsPrivate = false
+                };
+
+                var result = await userManager.CreateAsync(julia, "Julia123!");
+                if (!result.Succeeded)
+                    throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+
+
             // Prevent duplicating seed data
             if (await db.Cvs.AnyAsync() || await db.Conversations.AnyAsync() || await db.Messages.AnyAsync())
                 return;
@@ -185,8 +300,19 @@ namespace PortfolioProject
             var bobCv = MakeCv(bob);
             var claraCv = MakeCv(clara);
             var davidCv = MakeCv(david);
+            var erikCv = MakeCv(erik);
+            var fridaCv = MakeCv(frida);
+            var gustavCv = MakeCv(gustav);
+            var helenaCv = MakeCv(helena);
+            var isakCv = MakeCv(isak);
+            var juliaCv = MakeCv(julia);
 
-            db.Cvs.AddRange(adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv);
+
+            db.Cvs.AddRange(
+            adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv,
+            erikCv, fridaCv, gustavCv, helenaCv, isakCv, juliaCv
+        );
+
 
             // --- EDUCATIONS ---
             var edu1 = new Education
@@ -211,6 +337,12 @@ namespace PortfolioProject
             edu2.Cvs.Add(claraCv);
             edu2.Cvs.Add(davidCv);
             edu2.Cvs.Add(leoCv);
+            edu1.Cvs.Add(erikCv);
+            edu2.Cvs.Add(fridaCv);
+            edu1.Cvs.Add(gustavCv);
+            edu2.Cvs.Add(helenaCv);
+            edu1.Cvs.Add(isakCv);
+            edu2.Cvs.Add(juliaCv);
 
             // --- EXPERIENCES ---
             var exp1 = new Experience
@@ -235,6 +367,12 @@ namespace PortfolioProject
             exp1.Cvs.Add(claraCv);
             exp1.Cvs.Add(davidCv);
             exp2.Cvs.Add(leoCv);
+            exp2.Cvs.Add(erikCv);
+            exp1.Cvs.Add(fridaCv);
+            exp2.Cvs.Add(gustavCv);
+            exp1.Cvs.Add(helenaCv);
+            exp2.Cvs.Add(isakCv);
+            exp1.Cvs.Add(juliaCv);
 
             // --- SKILLS ---
             var skill1 = new Skill { Name = "C#", ImageUrl = "/cv/images/Logo_C_sharp.svg" };
@@ -259,6 +397,27 @@ namespace PortfolioProject
 
             skill2.Cvs.Add(davidCv);
             skill3.Cvs.Add(davidCv);
+
+            skill3.Cvs.Add(erikCv); // JavaScript
+            skill4.Cvs.Add(erikCv); // React
+
+            skill1.Cvs.Add(fridaCv); // C#
+            skill3.Cvs.Add(fridaCv); // JavaScript
+            skill4.Cvs.Add(fridaCv); // React
+
+            skill1.Cvs.Add(gustavCv); // C#
+            skill2.Cvs.Add(gustavCv); // ASP.NET Core
+
+            skill2.Cvs.Add(helenaCv); // ASP.NET Core
+            skill4.Cvs.Add(helenaCv); // React
+
+            skill1.Cvs.Add(isakCv); // C#
+            skill3.Cvs.Add(isakCv); // JavaScript
+
+            skill2.Cvs.Add(juliaCv); // ASP.NET Core
+            skill3.Cvs.Add(juliaCv); // JavaScript
+            skill4.Cvs.Add(juliaCv); // React
+
 
             // --- SAVE ALL (CV-related) ---
             db.Educations.AddRange(edu1, edu2);
@@ -438,10 +597,6 @@ namespace PortfolioProject
             );
 
             await db.SaveChangesAsync();
-
-            // NOTE:
-            // This seed assumes Conversation.Id and Message.ConversationId are the SAME type (Guid recommended).
-            // If your Message.ConversationId is still int, change it to Guid (or change Conversation.Id to int).
         }
     }
 }
