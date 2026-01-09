@@ -5,23 +5,23 @@
 }
 
 <section class="search-section d-flex align-items-center position-relative my-2">
-	<a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+	<a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">
 		<i class="bi bi-arrow-left"></i>
 	</a>
 	<h3 class="mx-auto">Projekt</h3>
-	@if (User.Identity.IsAuthenticated && (ViewBag.IsActive ?? false))
+	@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
 	{
-		<a asp-controller="Project" asp-action="Create" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4" style="text-decoration: none">
+		<a asp-controller="Project" asp-action="Create" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4 project-btn" style="text-decoration: none">
 			<i class="bi bi-plus-lg"></i>
 		</a>
 	}
 </section>
 
-<section>
+<section id ="allProjects">
 	<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 mt-4 mb-4 ms-5 me-5 justify-content-center">
 		@foreach (var projectVM in Model)
 		{
-			<div class="card text-center mt-2 project-card pc">
+			<div class="card text-center mt-2 project-card">
 				<a asp-controller="Project" asp-action="Details" asp-route-id="@projectVM.Project.Id" class="text-decoration-none text-reset">
 					<div class="card-header align-items-center">
 						<h5>@projectVM.Project.Title</h5>
@@ -33,13 +33,13 @@
 						<div class="d-flex justify-content-center mt2">
 								@if (projectVM.Owner == null || !projectVM.Owner.IsActive)
 								{
-									<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+									<div class="participant-img">
 										<img src="/images/default-profile2.png" />
 									</div>
 								}
 								else
 								{
-									<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+									<div class="participant-img">
 										<img src="@projectVM.Owner.ProfileImageUrl" />
 									</div>
 								}
@@ -50,7 +50,7 @@
 									{
 										if(user.IsActive && user != null)
 										{
-											<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+											<div class="participant-img">
 												<img src="@user.ProfileImageUrl" />
 											</div>
 										}
@@ -64,7 +64,7 @@
 						</div>
 					</div>
 				</a>
-				@if (User.Identity.IsAuthenticated)
+				@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
 				{
 					bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 					<div class="card-footer text-center">

@@ -1,14 +1,4 @@
-﻿.pc {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 1rem;
-}
-
-    .pc:hover {
-        transform: scale(1.02);
-        box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-.owner-badge {
+﻿.owner-badge {
     background: rgb(67, 133, 207);
     color: white;
     padding: 0.25rem 0.5rem;
@@ -16,6 +6,19 @@
     font-size: 0.75rem;
     font-weight: 500;
 }
+
+.participant-img {
+    border-radius: 50%;
+    background-color: white;
+    margin: 0px 3px;
+}
+
+    .participant-img img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
 
 .participate-btn {
     background: rgb(175, 176, 176);
@@ -91,3 +94,23 @@
         .save-changes-btn[disabled]:hover {
             transform: none;
         }
+
+
+@media (max-width: 576px) {
+    .project-textarea {
+        height: 20rem;
+    }
+
+    .project-btn {
+        font-size: 0.75rem;
+    }
+
+        .project-btn i {
+            font-size: 0.9rem;
+        }
+
+    .details-container {
+        padding: 1rem 2rem;
+    }
+
+}

@@ -24,11 +24,6 @@ namespace PortfolioProject.Controllers
         {
             bool isLoggedIn = User.Identity?.IsAuthenticated ?? false;
 
-            var userId = _userManager.GetUserId(User);
-            var user = await _userManager.FindByIdAsync(userId);
-
-            ViewBag.IsActive = user?.IsActive ?? false;
-
             var projects = await _context.Projects
                 .Include(p => p.Users)
                 .Include(p => p.Owner)
@@ -61,7 +56,6 @@ namespace PortfolioProject.Controllers
         public async Task<IActionResult> Create(ProjectViewModel projectVM)
         {
             ModelState.Remove("Project.OwnerId");
-            ModelState.Remove("Project.Owner");
 
             if (!ModelState.IsValid)
                 return View(projectVM);
@@ -73,7 +67,7 @@ namespace PortfolioProject.Controllers
 
             if (user == null || userId == null)
                 return Unauthorized();
-
+            
             Project newProject = new Project
             {
                 Title = projectVM.Project.Title,
@@ -91,7 +85,7 @@ namespace PortfolioProject.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> JoinProject(Guid pid, string returnUrl)
+        public async Task<IActionResult> JoinProject(Guid pid, string? returnUrl)
         {
             var userId = _userManager.GetUserId(User);
 
@@ -107,7 +101,7 @@ namespace PortfolioProject.Controllers
                 return NotFound();
 
             if (!user.Projects.Any(p => p.Id == pid))
-            {
+            {   
                 user.Projects.Add(project);
                 await _context.SaveChangesAsync();
             }

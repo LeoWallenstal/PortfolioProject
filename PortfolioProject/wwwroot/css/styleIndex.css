@@ -112,19 +112,6 @@
     right: -40px;
 }
 
-.participant-img {
-    border-radius: 50%;
-    background-color: white;
-    margin: 0px 3px;
-}
-
-    .participant-img img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        object-fit: contain;
-    }
-
 .project-section {
     background-color: rgb(247, 247, 247);
     border: 2px solid lightgrey;
@@ -171,12 +158,17 @@
             padding:0.3rem;
         }
 
+    .project-card.visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        margin: 1rem;
+    }
 
-
-.project-meta {
-    font-size: 0.7rem;
-    color: #777;
-}
+        .project-card.visible:hover {
+            transform: translateY(0) scale(1.02);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.05);
+        }
 
 .project-card button {
     background: rgb(175, 176, 176);
@@ -196,6 +188,7 @@
         background: #d1e7dd;
         color: #0f5132;
         cursor: default;
+        transform: none;
     }
 
 @media (min-width: 992px) {

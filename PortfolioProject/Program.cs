@@ -26,6 +26,8 @@ namespace PortfolioProject
 
             builder.Services.AddScoped<IMessagesService, MessagesService>();
 
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+
 
             var app = builder.Build();
 
@@ -51,7 +53,7 @@ namespace PortfolioProject
             );
 
             SeedData.SeedAsync(app.Services);
-            app.Run();
+            app.Run();            
         }
     }
 }
