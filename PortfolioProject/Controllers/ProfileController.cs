@@ -294,20 +294,20 @@ namespace PortfolioProject.Controllers
             foreach (var s in educationRemove)
                 user.Cv.Educations.Remove(s);
 
-            var educationNames = cvVm.Skills.Select(s => s.Name.Trim().ToLower()).ToList();
-            var existingEducations = await _dbContext.Skills
-                .Where(s => skillNames.Contains(s.Name.ToLower()))
+            var educationNames = cvVm.Educations.Select(s => s.School.Trim().ToLower()).ToList();
+            var existingEducations = await _dbContext.Educations
+                .Where(s => educationNames.Contains(s.School.ToLower()))
                 .ToListAsync();
 
             foreach (var eVm in cvVm.Educations)
             {
                 var normalizedName = eVm.School.Trim();
-                var skill = existingEducations.FirstOrDefault(s => s.Name.ToLower() == normalizedName.ToLower());
+                var education = existingEducations.FirstOrDefault(s => s.School.ToLower() == normalizedName.ToLower());
                 if (!user.Cv.Educations.Any(s => s.School.ToLower() == normalizedName.ToLower()))
                 {
-                    if (skill != null)
+                    if (education != null)
                     {
-                        user.Cv.Skills.Add(skill);
+                        user.Cv.Educations.Add(education);
                     }
                     else
                     {
@@ -334,7 +334,7 @@ namespace PortfolioProject.Controllers
 
             var experienceNames = cvVm.Experiences.Select(s => s.Company.Trim().ToLower()).ToList();
             var existingExperiences = await _dbContext.Experiences
-                .Where(s => skillNames.Contains(s.Company.ToLower()))
+                .Where(s => experienceNames.Contains(s.Company.ToLower()))
                 .ToListAsync();
 
             foreach (var eVm in cvVm.Experiences)
