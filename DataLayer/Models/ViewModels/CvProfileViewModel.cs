@@ -9,15 +9,17 @@ namespace DataLayer.Models.ViewModels
     public class CvProfileViewModel
     {
         // --- User / profile ---
-        public string UserName { get; set; } = "";
-        public string? FullName { get; set; }
-        public string? ProfileImagePath { get; set; }
-        public bool IsPrivate { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public string? FullName { get; set; } = string.Empty;
+        public string? ProfileImagePath { get; set; } = string.Empty;
+        public bool IsPrivate { get; set; } = false;
 
         // --- CV details ---
-        public int ViewCount { get; set; }
-        public string? Title { get; set; }
-        public string? Summary { get; set; }
+        public string? Title { get; set; } = string.Empty;
+        public string? Summary { get; set; } = string.Empty;
+        public string? GitHubUrl { get; set; } = string.Empty;
+        public string? LinkedInUrl { get; set; } = string.Empty;
+        public string? XUrl { get; set; } = string.Empty;
         public ICollection<SkillViewModel> Skills { get; set; } = new List<SkillViewModel>();
         public ICollection<EducationViewModel> Educations { get; set; } = new List<EducationViewModel>();
         public ICollection<ExperienceViewModel> Experiences { get; set; } = new List<ExperienceViewModel>();
@@ -34,9 +36,8 @@ namespace DataLayer.Models.ViewModels
             if (user.Cv != null)
             {
                 //CV
-                ViewCount = user.Cv.ViewCount;
                 Title = user.Cv.Title ?? "";
-                Summary = user.Cv.Summary;
+                Summary = user.Cv.Summary ?? "";
 
                 Skills = user.Cv.Skills
                     .Select(s => new SkillViewModel

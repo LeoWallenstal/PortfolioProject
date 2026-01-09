@@ -1,4 +1,5 @@
 using DataLayer.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataLayer.Models.ViewModels
 {
@@ -6,10 +7,17 @@ namespace DataLayer.Models.ViewModels
     {
         public Guid ExperienceId { get; set; }
 
+        [Required]
         public string Company { get; set; }
+        [Required]
         public string Role { get; set; }
-
+        [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime StartYear { get; set; }
+        [Required]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime EndYear { get; set; }
     }
 }

@@ -95,8 +95,9 @@
 
     educationPlaqueSection.addEventListener("click", (e) => {
         if (e.target.classList.contains("remove-btn")) {
-            const plaque = e.target.closest(".plaque");
-            plaque.remove();
+            const plaque = e.target.closest(".plaque")
+            plaque.remove()
+            reindexEducations()
         }
     });
 
@@ -130,23 +131,23 @@
 
         plaques.forEach((plaque, index) => {
             plaque.querySelector('input[name$=".School"]').name =
-                `Cv.Educations[${index}].School`
+                `Educations[${index}].School`
 
             plaque.querySelector('input[name$=".Degree"]').name =
-                `Cv.Educations[${index}].Degree`
+                `Educations[${index}].Degree`
 
             plaque.querySelector('input[name$=".FromYear"]').name =
-                `Cv.Educations[${index}].FromYear`
+                `Educations[${index}].FromYear`
 
             plaque.querySelector('input[name$=".ToYear"]').name =
-                `Cv.Educations[${index}].ToYear`
+                `Educations[${index}].ToYear`
         });
     }
 
     const getInputMapper = (inputElement, nameOfProperty, index) => {
         const inputMapper = document.createElement("input")
         inputMapper.type = "hidden"
-        inputMapper.name = `Cv.Educations[${index}].${nameOfProperty}`
+        inputMapper.name = `Educations[${index}].${nameOfProperty}`
         inputMapper.value = inputElement.value.trim()
 
         return inputMapper

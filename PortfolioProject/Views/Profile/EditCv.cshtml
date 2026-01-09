@@ -6,10 +6,10 @@
 
 <link href="/css/profile.css" rel="stylesheet">
 
-<form asp-action="CreateCv" method="post">
-    <h1>Skapa ditt CV</h1>
+<form asp-action="EditCv" method="post">
+    <h1>Redigera ditt CV</h1>
 
-    <section class="profile-grid" id="profile-grid">    
+    <section class="profile-grid" id="profile-grid">
         <p class="section-header">Allmän information</p>
 
         <div class="form-row">
@@ -50,7 +50,7 @@
         <div class="form-row">
             <label>Färdighet:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="input-skill-name" type="text"/>
+                <input class="text-input" id="input-skill-name" type="text" />
                 <span class="error-text" id="skill-name-error"></span>
             </div>
         </div>
@@ -65,8 +65,21 @@
 
         <button id="btn-add-skill" disabled>Lägg till</button>
 
-        <div id ="skill-plaque-section">
-
+        <div id="skill-plaque-section">
+            @{
+                if (Model.Skills.Count > 0)
+                {
+                    foreach (SkillViewModel sVm in Model.Skills)
+                    {
+                        <div class="plaque">
+                            <img src="@(!string.IsNullOrEmpty(sVm.ImageUrl) ? sVm.ImageUrl : "../images/default-img.png")"
+                                 onerror="this.src='../images/default-img.png'"
+                                 class="thumbnail" />
+                            <p>@($"{sVm.Name}")</p>
+                        </div>
+                    }
+                }
+            }
         </div>
 
         <hr>
@@ -94,7 +107,7 @@
         <div class="form-row">
             <label>Från År:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="from-year-education-input" type="date" placeholder="yyyy-mm-dd"/>
+                <input class="text-input" id="from-year-education-input" type="date" placeholder="yyyy-mm-dd" />
                 <span class="error-text" id="education-year-error"></span>
             </div>
         </div>
@@ -109,7 +122,21 @@
         <button id="btn-add-education" disabled>Lägg till</button>
 
         <div id="education-plaque-section" class="plaque-section">
-
+            @{
+                if (Model.Educations.Count > 0)
+                {
+                    foreach (EducationViewModel eVm in Model.Educations)
+                    {
+                        <div class="plaque">
+                            <div class="plaque">
+                                <p>@($"{eVm.School}")</p>
+                                <p>@($"{eVm.Degree}")</p>
+                                <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
+                            </div>
+                        </div>
+                    }
+                }
+            }
         </div>
 
         <hr>
@@ -152,6 +179,19 @@
         <button id="btn-add-experience" disabled>Lägg till</button>
 
         <div id="experience-plaque-section" class="plaque-section">
+            @{
+                if (Model.Experiences.Count > 0)
+                {
+                    foreach (ExperienceViewModel eVm in Model.Experiences)
+                    {
+                        <div class="plaque">
+                            <p>@($"{eVm.Company}")</p>
+                            <p>@($"{eVm.Role}")</p>
+                            <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
+                        </div>
+                    }
+                }
+            }
         </div>
 
         <hr>

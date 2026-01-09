@@ -6,73 +6,93 @@
 
 <h1>Min Profil</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-action="EditProfile" method="post">
     <section class="profile-grid" id="profile-grid">
 
         <div class="form-row">
-            <label asp-for="FirstName">*Förnamn:</label>
+            <label asp-for="Profile.FirstName">*Förnamn:</label>
             <div class="input-wrapper">
-                <input asp-for="FirstName" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
+                <input asp-for="Profile.FirstName" />
+                <span asp-validation-for="Profile.FirstName" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
-            <label asp-for="LastName">*Efternamn:</label>
+            <label asp-for="Profile.LastName">*Efternamn:</label>
             <div class="input-wrapper">
-                <input asp-for="LastName" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
+                <input asp-for="Profile.LastName" />
+                <span asp-validation-for="Profile.LastName" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
-            <label asp-for="Email">*Email:</label>
+            <label asp-for="Profile.Email">*Email:</label>
             <div class="input-wrapper">
-                <input asp-for="Email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <input asp-for="Profile.Email" />
+                <span asp-validation-for="Profile.Email" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
-            <label asp-for="PhoneNumber">Telefonnummer:</label>
+            <label asp-for="Profile.PhoneNumber">Telefonnummer:</label>
             <div class="input-wrapper">
-                <input asp-for="PhoneNumber" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                <input asp-for="Profile.PhoneNumber" />
+                <span asp-validation-for="Profile.PhoneNumber" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
-            <label asp-for="Adress">Adress:</label>
+            <label asp-for="Profile.Adress">Adress:</label>
             <div class="input-wrapper">
-                <input asp-for="Adress" />
-                <span asp-validation-for="Adress" class="text-danger"></span>
+                <input asp-for="Profile.Adress" />
+                <span asp-validation-for="Profile.Adress" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
             <div class="checkbox-row">
-                <label asp-for="IsPrivate">Privat profil:</label>
-                <input type="checkbox" asp-for="IsPrivate" />
+                <label asp-for="Profile.IsPrivate">Privat profil:</label>
+                <input type="checkbox" asp-for="Profile.IsPrivate" />
             </div>
+        </div>
+
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label asp-for="Profile.IsActive">Aktiverad profil:</label>
+                <input type="checkbox" asp-for="Profile.IsActive" />
+            </div>
+        </div>
+
+        <div class="button-wrapper">
+            <button type="submit" class="btn btn-primary">Spara profil</button>
         </div>
 
     </section>
-
+</form>
+<form asp-action="UpdatePassword" method="post">
     <!-- Password section -->
     <section id="pw-section" class="password-container">
         <div class="form-row">
-            <label asp-for="NewPassword">Nytt Lösenord:</label>
+            <label asp-for="pwVm.ConfirmPassword">Ange Nuvarande Lösenord:</label>
             <div class="input-wrapper">
-                <input type="password" asp-for="NewPassword" />
-                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                <input type="password" asp-for="pwVm.ConfirmPassword" />
+                <span asp-validation-for="pwVm.ConfirmPassword" class="text-danger"></span>
             </div>
         </div>
 
         <div class="form-row">
-            <label asp-for="ConfirmPassword">Ange Igen:</label>
+            <label asp-for="pwVm.NewPassword">Nytt Lösenord:</label>
             <div class="input-wrapper">
-                <input type="password" asp-for="ConfirmPassword" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                <input type="password" asp-for="pwVm.NewPassword" />
+                <span asp-validation-for="pwVm.NewPassword" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="pwVm.ConfirmPassword">Ange Igen:</label>
+            <div class="input-wrapper">
+                <input type="password" asp-for="pwVm.ConfirmNewPassword" />
+                <span asp-validation-for="pwVm.ConfirmNewPassword" class="text-danger"></span>
             </div>
         </div>
 
@@ -80,12 +100,11 @@
             <button type="submit" class="btn btn-primary">Spara lösenord</button>
         </div>
     </section>
-
+</form>
     <!-- BUTTONS -->
 
     <div class="button-wrapper" id="profile-buttons">
         <button type="button" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</button>
-        <button type="submit" class="btn btn-primary">Spara profil</button>
         <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
     </div>
-</form>
+

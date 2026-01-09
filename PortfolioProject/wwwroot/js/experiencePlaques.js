@@ -88,7 +88,7 @@
     const getInputMapper = (inputElement, nameOfProperty, index) => {
         const inputMapper = document.createElement("input")
         inputMapper.type = "hidden"
-        inputMapper.name = `Cv.Experiences[${index}].${nameOfProperty}`
+        inputMapper.name = `Experiences[${index}].${nameOfProperty}`
         inputMapper.value = inputElement.value.trim()
 
         return inputMapper
@@ -124,16 +124,16 @@
 
         plaques.forEach((plaque, index) => {
             plaque.querySelector('input[name$=".Company"]').name =
-                `Cv.Experiences[${index}].Company`
+                `Experiences[${index}].Company`
 
             plaque.querySelector('input[name$=".Role"]').name =
-                `Cv.Experiences[${index}].Role`
+                `Experiences[${index}].Role`
 
             plaque.querySelector('input[name$=".FromYear"]').name =
-                `Cv.Experiences[${index}].FromYear`
+                `Experiences[${index}].FromYear`
 
             plaque.querySelector('input[name$=".ToYear"]').name =
-                `Cv.Experiences[${index}].ToYear`
+                `Experiences[${index}].ToYear`
         });
     }
 

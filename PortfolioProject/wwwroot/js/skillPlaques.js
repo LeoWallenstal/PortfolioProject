@@ -91,17 +91,17 @@
 
         plaques.forEach((plaque, index) => {
             plaque.querySelector('input[name$=".Name"]').name =
-                `Cv.Skills[${index}].Name`
+                `Skills[${index}].Name`
 
             plaque.querySelector('input[name$=".ImageUrl"]').name =
-                `Cv.Skills[${index}].ImageUrl`
+                `Skills[${index}].ImageUrl`
         });
     }
 
     const getInputMapper = (inputElement, nameOfProperty, index) => {
         const inputMapper = document.createElement("input")
         inputMapper.type = "hidden"
-        inputMapper.name = `Cv.Skills[${index}].${nameOfProperty}`
+        inputMapper.name = `Skills[${index}].${nameOfProperty}`
         inputMapper.value = inputElement.value.trim()
 
         return inputMapper

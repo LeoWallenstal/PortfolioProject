@@ -230,3 +230,9 @@ span.text-danger {
     text-align: center;
     padding: 0;
 }
+
+.nothing-to-show-text {
+    text-align: center;
+    font-style: italic;
+    opacity: 0.75;
+}
