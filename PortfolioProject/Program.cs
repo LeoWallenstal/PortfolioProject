@@ -26,6 +26,8 @@ namespace PortfolioProject
 
             builder.Services.AddScoped<IMessagesService, MessagesService>();
 
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+
             builder.Services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Error/403";
@@ -58,7 +60,7 @@ namespace PortfolioProject
             );
 
             SeedData.SeedAsync(app.Services);
-            app.Run();
+            app.Run();            
         }
     }
 }

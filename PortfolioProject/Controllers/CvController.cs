@@ -30,7 +30,7 @@ namespace PortfolioProject.Controllers
             var isLoggedIn = User.Identity != null && User.Identity.IsAuthenticated;
             var viewerId = _userManager.GetUserId(User);
 
-            var cvUser = await _db.Users.AsNoTracking()
+            var cvUser = await _db.Users.Include(u => u.Projects)
                 .FirstOrDefaultAsync(u => u.UserName == username);
             if (cvUser == null)
             {
@@ -42,7 +42,7 @@ namespace PortfolioProject.Controllers
                 return View("Private");
             }
 
-            Cv? cv = await _db.Cvs.AsNoTracking()
+            Cv? cv = await _db.Cvs
                 .Include(c => c.Skills)
                 .Include(c => c.Educations)
                 .Include(c => c.Experiences)
@@ -55,17 +55,8 @@ namespace PortfolioProject.Controllers
 
             CvDetailsViewModel cvVm = new CvDetailsViewModel
             {
-                UserName = cvUser.UserName,
-                FullName = (cvUser.FirstName + " " + cvUser.LastName).Trim(),
-                ProfileImagePath = cvUser.ProfileImageUrl,
-                IsPrivate = cvUser.IsPrivate,
-
-                ViewCount = cv.ViewCount,
-                Title = cv.Title,
-                Summary = cv.Summary,
-                Skills = cv.Skills,
-                Educations = cv.Educations,
-                Experiences = cv.Experiences
+                User = cvUser,
+                Cv = cv
 
             };
 

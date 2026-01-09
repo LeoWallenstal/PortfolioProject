@@ -7,8 +7,10 @@ namespace DataLayer.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required(ErrorMessage = "Fyll i titel")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Titeln måste vara mellan 2 och 100 tecken lång")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Fyll i beskrivning")]
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Beskrivningen måste vara mellan 10 och 1000 tecken lång")]
         public string Description { get; set; }
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
