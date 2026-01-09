@@ -204,6 +204,10 @@ span.text-danger {
     width: 100px;
 }
 
+#btn-save-cv {
+    align-self: center;
+    width: 100px;
+}
 
 .section-header {
     text-align: center;

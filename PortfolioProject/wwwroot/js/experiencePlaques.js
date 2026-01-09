@@ -1,5 +1,6 @@
 ﻿(() => {
-    const addExperienceBtn = document.getElementById("btn-add-experience")
+    //Plaque Section
+    const experiencePlaqueSection = document.getElementById("experience-plaque-section")
 
     //Inputs
     const companyInput = document.getElementById("company-input")
@@ -16,10 +17,12 @@
         })
     })
 
-    //Plaque Section
-    const experiencePlaqueSection = document.getElementById("experience-plaque-section")
-
+    //Button to add
+    const addExperienceBtn = document.getElementById("btn-add-experience")
+    
+    
     addExperienceBtn.addEventListener("click", () => {
+        const index = experiencePlaqueSection.children.length;
         const experiencePlaque = document.createElement("div")
         experiencePlaque.className = "plaque"
 
@@ -31,8 +34,7 @@
             return
         }
 
-        //Bygger ihop plaquen här
-
+        //Skapar htmlelement
         const companyName = document.createElement("p")
         companyName.innerText = companyInput.value.trim()
 
@@ -43,9 +45,26 @@
         workYears.innerText = fromDateInput.value.trim() + " - " + toDateInput.value.trim()
 
 
+        //Skapar inputmappers
+        const mappers = [
+            getInputMapper(companyInput, "Company", index),
+            getInputMapper(roleInput, "Role", index),
+            getInputMapper(fromDateInput, "StartYear", index),
+            getInputMapper(toDateInput, "EndYear", index)
+        ]
+
+        //Remove-knapp på plaque
         const removeBtn = document.createElement("button")
         removeBtn.className = "remove-btn"
+        removeBtn.type = "button"
         removeBtn.innerText = "X"
+
+
+        //----Bygger ihop en plaque----
+        //Lägg till gömda inputmapprs
+        mappers.forEach(mapper => {
+            experiencePlaque.appendChild(mapper)
+        })
 
         experiencePlaque.appendChild(removeBtn)
         experiencePlaque.appendChild(companyName)
@@ -59,10 +78,34 @@
 
     experiencePlaqueSection.addEventListener("click", (e) => {
         if (e.target.classList.contains("remove-btn")) {
-            const plaque = e.target.closest(".skill-plaque");
-            plaque.remove();
+            const plaque = e.target.closest(".plaque")
+
+            plaque.remove()
+            reindexExperiences()
         }
     })
+
+    const getInputMapper = (inputElement, nameOfProperty, index) => {
+        const inputMapper = document.createElement("input")
+        inputMapper.type = "hidden"
+        inputMapper.name = `Cv.Experiences[${index}].${nameOfProperty}`
+        inputMapper.value = inputElement.value.trim()
+
+        return inputMapper
+    }
+
+    const inputIsntEmpty = (anInput) => anInput.value.trim().length > 0
+
+    const validDate = (aString) => {
+        const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
+        return regex.test(aString)
+    }
+
+    const resetInputs = (inputs) => {
+        inputs.forEach((input) => {
+            input.value = ""
+        })
+    }
 
     const showError = (errorSpanId, errorMsg) => {
         const errorSpan = document.getElementById(errorSpanId)
@@ -76,10 +119,22 @@
         errorSpan.style.display = "none"
     }
 
-    const resetInputs = (inputs) => {
-        inputs.forEach((input) => {
-            input.value = ""
-        })
+    const reindexExperiences = () => {
+        const plaques = experiencePlaqueSection.querySelectorAll(".plaque");
+
+        plaques.forEach((plaque, index) => {
+            plaque.querySelector('input[name$=".Company"]').name =
+                `Cv.Experiences[${index}].Company`
+
+            plaque.querySelector('input[name$=".Role"]').name =
+                `Cv.Experiences[${index}].Role`
+
+            plaque.querySelector('input[name$=".FromYear"]').name =
+                `Cv.Experiences[${index}].FromYear`
+
+            plaque.querySelector('input[name$=".ToYear"]').name =
+                `Cv.Experiences[${index}].ToYear`
+        });
     }
 
 })()
