@@ -361,6 +361,7 @@ namespace PortfolioProject.Controllers
                     }
                 }
             }
+            return RedirectToAction("Index");
         }
     }
 }
