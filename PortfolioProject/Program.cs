@@ -28,6 +28,10 @@ namespace PortfolioProject
 
             builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Error/403";
+            });
 
             var app = builder.Build();
 
@@ -46,6 +50,9 @@ namespace PortfolioProject
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            
 
             app.MapControllerRoute(
                 name: "default",

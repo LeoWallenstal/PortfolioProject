@@ -39,7 +39,7 @@ namespace PortfolioProject.Controllers
             {
                 var otherUser = await _userManager.FindByNameAsync(username);
                 if (otherUser == null) return NotFound();
-                if (otherUser.Id == currentUserId) return Forbid();
+                if (otherUser.Id == currentUserId || !otherUser.IsActive) return Forbid();
 
                 conversationId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
 
@@ -92,6 +92,7 @@ namespace PortfolioProject.Controllers
             {
                 var otherUser = await _userManager.FindByNameAsync(username);
                 if (otherUser == null) { return NotFound(); }
+                if (otherUser.Id == currentUserId || !otherUser.IsActive) return Forbid();
 
                 var convoId = await _messages.GetConversationIdBetweenUsersAsync(otherUser.Id, currentUserId);
 
@@ -141,6 +142,7 @@ namespace PortfolioProject.Controllers
                     {
                         ConversationId = convo.Id,
                         FromUserId = currentUserId,
+                        ToUserId = convo.UserAId == currentUserId ? convo.UserBId : convo.UserAId,
                         SentAt = DateTime.UtcNow,
                         Body = (input.Body ?? "").Trim()
                     });
