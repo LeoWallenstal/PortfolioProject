@@ -329,3 +329,97 @@
             font-weight: 600;
         }
 }
+
+
+/* ==== CSS för delete-dialog-overlay i _ConversationThread ==== */
+.delete-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    z-index: 3000;
+}
+
+.delete-dialog {
+    width: min(520px, 100%);
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+    outline: none;
+}
+
+.delete-dialog-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 12px;
+    padding: 18px 18px 10px 18px;
+    align-items: start;
+}
+
+.delete-dialog-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: rgba(220, 38, 38, 0.12);
+    color: #dc2626;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+}
+
+.delete-dialog-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+}
+
+.delete-dialog-subtitle {
+    margin: 6px 0 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.delete-dialog-close {
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    line-height: 1;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 10px;
+}
+
+    .delete-dialog-close:hover {
+        background: rgba(148, 163, 184, 0.15);
+    }
+
+.delete-dialog-body {
+    padding: 10px 18px 0 18px;
+}
+
+.delete-dialog-warning {
+    border: 1px solid rgba(220, 38, 38, 0.25);
+    background: rgba(220, 38, 38, 0.06);
+    border-radius: 14px;
+    padding: 12px 14px;
+}
+
+.delete-dialog-list {
+    margin: 0 0 0 18px;
+    padding: 0;
+    color: #334155;
+}
+
+    .delete-dialog-list li {
+        margin: 6px 0;
+    }
+
+.delete-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 18px 18px 18px;
+}
