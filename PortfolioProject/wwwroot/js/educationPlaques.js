@@ -22,7 +22,7 @@
     const educationPlaqueSection = document.getElementById("education-plaque-section")
 
     addEducationBtn.addEventListener("click", () => {
-        const index = educationPlaqueSection.children.length;
+        const index = educationPlaqueSection.querySelectorAll(".plaque").length;
         const educationPlaque = document.createElement("div")
         educationPlaque.className = "plaque"
 

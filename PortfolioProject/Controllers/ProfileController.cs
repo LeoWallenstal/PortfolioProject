@@ -237,15 +237,20 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCv(CvProfileViewModel cvVm)
         {
+            Debug.WriteLine("\n\n\nEditCv[POST] Running!");
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
             {
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                    Debug.WriteLine(error.ErrorMessage);
-
+                foreach (var kvp in ModelState)
+                {
+                    foreach (var error in kvp.Value.Errors)
+                    {
+                        Debug.WriteLine($"❌ {kvp.Key}: {error.ErrorMessage}");
+                    }
+                }
                 return View(cvVm);
             }
 
@@ -263,6 +268,27 @@ namespace PortfolioProject.Controllers
                 };
                 _dbContext.Cvs.Add(cv);
             }
+
+            Debug.WriteLine($"\nTitle: {cvVm.Title}" +
+                $"\nSummary: {cvVm.Summary}" +
+                $"\nGitHubUrl: {cvVm.GitHubUrl}" +
+                $"\nLinkedInUrl: {cvVm.LinkedInUrl}" +
+                $"\nXUrl: {cvVm.XUrl}");
+
+            foreach (SkillViewModel sVm in cvVm.Skills) {
+                Debug.WriteLine($"Name:{sVm.Name}");
+            }
+
+            foreach (EducationViewModel eVm in cvVm.Educations)
+            {
+                Debug.WriteLine($"Name:{eVm.School}");
+            }
+
+            foreach (ExperienceViewModel eVm in cvVm.Experiences)
+            {
+                Debug.WriteLine($"Name:{eVm.Company}");
+            }
+            Debug.WriteLine("\n\n\n\n");
 
             cv.Title = cvVm.Title;
             cv.Summary = cvVm.Summary;
@@ -395,7 +421,6 @@ namespace PortfolioProject.Controllers
 
             // --- Save all changes ---
             await _dbContext.SaveChangesAsync();
-
             return RedirectToAction("Index");
         }
 

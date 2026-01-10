@@ -20,9 +20,9 @@ namespace DataLayer.Models.ViewModels
         public string? GitHubUrl { get; set; } = string.Empty;
         public string? LinkedInUrl { get; set; } = string.Empty;
         public string? XUrl { get; set; } = string.Empty;
-        public ICollection<SkillViewModel> Skills { get; set; } = new List<SkillViewModel>();
-        public ICollection<EducationViewModel> Educations { get; set; } = new List<EducationViewModel>();
-        public ICollection<ExperienceViewModel> Experiences { get; set; } = new List<ExperienceViewModel>();
+        public List<SkillViewModel> Skills { get; set; } = new List<SkillViewModel>();
+        public List<EducationViewModel> Educations { get; set; } = new List<EducationViewModel>();
+        public List<ExperienceViewModel> Experiences { get; set; } = new List<ExperienceViewModel>();
 
         public CvProfileViewModel(User user)
         {

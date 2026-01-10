@@ -7,7 +7,7 @@ namespace DataLayer.Models.ViewModels
     {
         public Guid Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Url]
         public string? ImageUrl { get; set; }
     }

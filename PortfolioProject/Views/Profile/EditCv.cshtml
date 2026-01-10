@@ -23,7 +23,7 @@
         <div class="form-row">
             <label asp-for="Summary">Sammanfattning:</label>
             <div class="input-wrapper">
-                <textarea asp-for="Summary" id="cv-summary" name="summary" rows="5" cols="50"></textarea>
+                <textarea asp-for="Summary" id="cv-summary" rows="5" cols="50"></textarea>
             </div>
         </div>
 
@@ -66,22 +66,26 @@
         <button type="button" id="btn-add-skill" disabled>Lägg till</button>
 
         <div id="skill-plaque-section">
-            @{
-                if (Model.Skills.Count > 0)
-                {
-                    foreach (SkillViewModel sVm in Model.Skills)
-                    {
-                        <div class="plaque">
-                            <button class="remove-btn" type="button">X</button>
-                            <img src="@(!string.IsNullOrEmpty(sVm.ImageUrl) ? sVm.ImageUrl : "../images/default-img.png")"
-                                 onerror="this.src='../images/default-img.png'"
-                                 class="thumbnail" />
-                            <p>@($"{sVm.Name}")</p>
-                        </div>
-                    }
-                }
-            }
+            @for (int i = 0; i < Model.Skills.Count; i++)
+            {
+                <div class="plaque">
+                    <button class="remove-btn" type="button">X</button>
+
+                    <!-- REQUIRED hidden inputs -->
+                    <input type="hidden" name="Skills[@i].Name" value="@Model.Skills[i].Name" />
+                    <input type="hidden" name="Skills[@i].ImageUrl" value="@Model.Skills[i].ImageUrl" />
+
+                    <img src="@(!string.IsNullOrEmpty(Model.Skills[i].ImageUrl)
+                                     ? Model.Skills[i].ImageUrl
+                                     : "../images/default-img.png")"
+                     onerror="this.src='../images/default-img.png'"
+                     class="thumbnail" />
+
+                    <p>@Model.Skills[i].Name</p>
+                </div>
+                        }
         </div>
+
 
         <hr>
 
@@ -112,7 +116,7 @@
                 <span class="error-text" id="education-year-error"></span>
             </div>
         </div>
-
+    
         <div class="form-row">
             <label>Till År:</label>
             <div class="input-wrapper">
@@ -123,21 +127,28 @@
         <button type="button" id="btn-add-education" disabled>Lägg till</button>
 
         <div id="education-plaque-section" class="plaque-section">
-            @{
-                if (Model.Educations.Count > 0)
-                {
-                    foreach (EducationViewModel eVm in Model.Educations)
-                    {
-                        <div class="plaque">
-                            <button class="remove-btn" type="button">X</button>
-                            <p>@($"{eVm.School}")</p>
-                            <p>@($"{eVm.Degree}")</p>
-                            <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
-                        </div>
-                    }
-                }
+            @for (int i = 0; i < Model.Educations.Count; i++)
+            {
+                <div class="plaque">
+                    <button class="remove-btn" type="button">X</button>
+
+                    <!-- REQUIRED hidden inputs -->
+                    <input type="hidden" name="Educations[@i].School" value="@Model.Educations[i].School" />
+                    <input type="hidden" name="Educations[@i].Degree" value="@Model.Educations[i].Degree" />
+                    <input type="hidden" name="Educations[@i].StartYear" value="@Model.Educations[i].StartYear" />
+                    <input type="hidden" name="Educations[@i].EndYear" value="@Model.Educations[i].EndYear" />
+
+                    <p>@Model.Educations[i].School</p>
+                    <p>@Model.Educations[i].Degree</p>
+                    <p>
+                        @Model.Educations[i].StartYear.ToString("yyyy-MM-dd")
+                        -
+                        @Model.Educations[i].EndYear.ToString("yyyy-MM-dd")
+                    </p>
+                </div>
             }
         </div>
+
 
         <hr>
 
@@ -179,21 +190,28 @@
         <button type="button" id="btn-add-experience" disabled>Lägg till</button>
 
         <div id="experience-plaque-section" class="plaque-section">
-            @{
-                if (Model.Experiences.Count > 0)
-                {
-                    foreach (ExperienceViewModel eVm in Model.Experiences)
-                    {
-                        <div class="plaque">
-                            <button class="remove-btn" type="button">X</button>
-                            <p>@($"{eVm.Company}")</p>
-                            <p>@($"{eVm.Role}")</p>
-                            <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
-                        </div>
-                    }
-                }
+            @for (int i = 0; i < Model.Experiences.Count; i++)
+            {
+                <div class="plaque">
+                    <button class="remove-btn" type="button">X</button>
+
+                    <!-- REQUIRED hidden inputs -->
+                    <input type="hidden" name="Experiences[@i].Company" value="@Model.Experiences[i].Company" />
+                    <input type="hidden" name="Experiences[@i].Role" value="@Model.Experiences[i].Role" />
+                    <input type="hidden" name="Experiences[@i].StartYear" value="@Model.Experiences[i].StartYear" />
+                    <input type="hidden" name="Experiences[@i].EndYear" value="@Model.Experiences[i].EndYear" />
+
+                    <p>@Model.Experiences[i].Company</p>
+                    <p>@Model.Experiences[i].Role</p>
+                    <p>
+                        @Model.Experiences[i].StartYear.ToString("yyyy-MM-dd")
+                        -
+                        @Model.Experiences[i].EndYear.ToString("yyyy-MM-dd")
+                    </p>
+                </div>
             }
         </div>
+
         <button id="save-cv-btn" type="submit" class="btn btn-primary">Spara</button>
     </section>
 </form>

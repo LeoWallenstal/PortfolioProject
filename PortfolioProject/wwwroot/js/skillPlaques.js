@@ -11,7 +11,7 @@
     })
 
     addSkillBtn.addEventListener("click", () => {
-        const index = skillPlaqueSection.children.length;
+        const index = educationPlaqueSection.querySelectorAll(".plaque").length;
 
         const skillPlaque = document.createElement("div")
         skillPlaque.className = "plaque"

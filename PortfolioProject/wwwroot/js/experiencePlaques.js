@@ -22,7 +22,7 @@
     
     
     addExperienceBtn.addEventListener("click", () => {
-        const index = experiencePlaqueSection.children.length;
+        const index = educationPlaqueSection.querySelectorAll(".plaque").length;
         const experiencePlaque = document.createElement("div")
         experiencePlaque.className = "plaque"
 
