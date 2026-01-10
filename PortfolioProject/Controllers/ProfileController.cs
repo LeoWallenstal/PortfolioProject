@@ -249,7 +249,6 @@ namespace PortfolioProject.Controllers
                 return View(cvVm);
             }
 
-            // Load existing CV for the user, including collections
             var cv = await _dbContext.Cvs
                 .Include(c => c.Skills)
                 .Include(c => c.Educations)
@@ -258,7 +257,6 @@ namespace PortfolioProject.Controllers
 
             if (cv == null)
             {
-                // If no CV exists, create new
                 cv = new Cv
                 {
                     UserId = user.Id
@@ -266,7 +264,6 @@ namespace PortfolioProject.Controllers
                 _dbContext.Cvs.Add(cv);
             }
 
-            // --- Update main CV info ---
             cv.Title = cvVm.Title;
             cv.Summary = cvVm.Summary;
             cv.GitHubUrl = cvVm.GitHubUrl;
@@ -276,9 +273,6 @@ namespace PortfolioProject.Controllers
             bool EqualsIgnoreCase(string a, string b) =>
                 string.Equals(a?.Trim(), b?.Trim(), StringComparison.OrdinalIgnoreCase);
 
-            // =====================
-            // --- SKILLS ----------
-            // =====================
             var skillNamesFromVm = cvVm.Skills.Select(s => s.Name.Trim().ToLower()).ToHashSet();
 
             // Remove skills that are not in VM
@@ -311,9 +305,6 @@ namespace PortfolioProject.Controllers
                 }
             }
 
-            // =====================
-            // --- EDUCATIONS ------
-            // =====================
             var eduKeysFromVm = cvVm.Educations
                 .Select(e => $"{e.School.Trim().ToLower()}|{e.Degree.Trim().ToLower()}|{e.StartYear}|{e.EndYear}")
                 .ToHashSet();
@@ -361,9 +352,6 @@ namespace PortfolioProject.Controllers
                 }
             }
 
-            // =====================
-            // --- EXPERIENCES -----
-            // =====================
             var expKeysFromVm = cvVm.Experiences
                 .Select(e => $"{e.Company.Trim().ToLower()}|{e.Role.Trim().ToLower()}|{e.StartYear}|{e.EndYear}")
                 .ToHashSet();
