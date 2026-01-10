@@ -37,7 +37,6 @@ namespace DataLayer.Models.ViewModels
         public ProfileViewModel(User aUser) {
             FirstName = aUser.FirstName;
             LastName = aUser.LastName;
-            UserName = aUser.UserName;
             Email = aUser.Email;
             PhoneNumber = aUser.PhoneNumber;
             Adress = aUser.Adress;

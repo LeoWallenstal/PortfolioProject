@@ -63,7 +63,7 @@
             </div>
         </div>
 
-        <button id="btn-add-skill" disabled>Lägg till</button>
+        <button type="button" id="btn-add-skill" disabled>Lägg till</button>
 
         <div id="skill-plaque-section">
             @{
@@ -72,6 +72,7 @@
                     foreach (SkillViewModel sVm in Model.Skills)
                     {
                         <div class="plaque">
+                            <button class="remove-btn" type="button">X</button>
                             <img src="@(!string.IsNullOrEmpty(sVm.ImageUrl) ? sVm.ImageUrl : "../images/default-img.png")"
                                  onerror="this.src='../images/default-img.png'"
                                  class="thumbnail" />
@@ -107,7 +108,7 @@
         <div class="form-row">
             <label>Från År:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="from-year-education-input" type="date" placeholder="yyyy-mm-dd" />
+                <input class="text-input" id="from-year-education-input" type="date"/>
                 <span class="error-text" id="education-year-error"></span>
             </div>
         </div>
@@ -115,11 +116,11 @@
         <div class="form-row">
             <label>Till År:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="to-year-education-input" type="date" placeholder="yyyy-mm-dd" />
+                <input class="text-input" id="to-year-education-input" type="date"/>
             </div>
         </div>
 
-        <button id="btn-add-education" disabled>Lägg till</button>
+        <button type="button" id="btn-add-education" disabled>Lägg till</button>
 
         <div id="education-plaque-section" class="plaque-section">
             @{
@@ -128,11 +129,10 @@
                     foreach (EducationViewModel eVm in Model.Educations)
                     {
                         <div class="plaque">
-                            <div class="plaque">
-                                <p>@($"{eVm.School}")</p>
-                                <p>@($"{eVm.Degree}")</p>
-                                <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
-                            </div>
+                            <button class="remove-btn" type="button">X</button>
+                            <p>@($"{eVm.School}")</p>
+                            <p>@($"{eVm.Degree}")</p>
+                            <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
                         </div>
                     }
                 }
@@ -164,7 +164,7 @@
         <div class="form-row">
             <label>Från År:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="from-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
+                <input class="text-input" id="from-year-experience-input" type="date"/>
                 <span class="error-text" id="experience-year-error"></span>
             </div>
         </div>
@@ -172,11 +172,11 @@
         <div class="form-row">
             <label>Till År:</label>
             <div class="input-wrapper">
-                <input class="text-input" id="to-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
+                <input class="text-input" id="to-year-experience-input" type="date"/>
             </div>
         </div>
 
-        <button id="btn-add-experience" disabled>Lägg till</button>
+        <button type="button" id="btn-add-experience" disabled>Lägg till</button>
 
         <div id="experience-plaque-section" class="plaque-section">
             @{
@@ -185,6 +185,7 @@
                     foreach (ExperienceViewModel eVm in Model.Experiences)
                     {
                         <div class="plaque">
+                            <button class="remove-btn" type="button">X</button>
                             <p>@($"{eVm.Company}")</p>
                             <p>@($"{eVm.Role}")</p>
                             <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
@@ -193,10 +194,6 @@
                 }
             }
         </div>
-
-        <hr>
-
         <button id="save-cv-btn" type="submit" class="btn btn-primary">Spara</button>
-
     </section>
 </form>

@@ -80,6 +80,28 @@ namespace DataLayer.Data
                 .HasForeignKey(p => p.OwnerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            //modelBuilder.Entity<Cv>()
+            //    .HasOne<User>(c => c.User)
+            //    .WithMany()
+            //    .HasForeignKey(c => c.UserId)
+            //    .OnDelete(DeleteBehavior.Restrict);
+
+            //modelBuilder.Entity<Cv>()
+            //    .HasMany(c => c.Skills)
+            //    .WithMany(s => s.Cvs)
+            //    .UsingEntity(j => j.ToTable("CvSkills")); // optional: specify join table name
+
+            //modelBuilder.Entity<Cv>()
+            //    .HasMany(c => c.Educations)
+            //    .WithMany(e => e.Cvs)
+            //    .UsingEntity(j => j.ToTable("CvEducations"));
+
+            //modelBuilder.Entity<Cv>()
+            //    .HasMany(c => c.Experiences)
+            //    .WithMany(e => e.Cvs)
+            //    .UsingEntity(j => j.ToTable("CvExperiences"));
+
+
             //Appliceras på alla EF Core-frågor mot User, filtrerar bort inaktiva användare automatiskt
             //Vill vi ha denna??
             /*modelBuilder.Entity<User>()

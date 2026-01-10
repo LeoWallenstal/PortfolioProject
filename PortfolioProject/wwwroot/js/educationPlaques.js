@@ -37,18 +37,13 @@
             return educationName === degreeInput.value.trim()
         });
 
-        const datesAreValid = validDate(fromDateInput.value.trim()) && validDate(toDateInput.value.trim())
-
-        const validityChecksPassed = !schoolAlreadyExists && !educationAlreadyExists && datesAreValid
+        const validityChecksPassed = !schoolAlreadyExists && !educationAlreadyExists
 
         if (schoolAlreadyExists) {
             showError("school-name-error", "Den skolan finns redan!")
         }
         if (educationAlreadyExists) {
             showError("education-name-error", "Den utbildningen finns redan!")
-        }
-        if (!datesAreValid) {
-            showError("education-year-error", "Ogiltigt datumformat! (yyyy-mm-dd)")
         }
 
         if (!validityChecksPassed) {
@@ -75,8 +70,8 @@
         const mappers = [
             getInputMapper(schoolInput, "School", index),
             getInputMapper(degreeInput, "Degree", index),
-            getInputMapper(fromDateInput, "FromYear", index),
-            getInputMapper(toDateInput, "ToYear", index)
+            getInputMapper(fromDateInput, "StartYear", index),
+            getInputMapper(toDateInput, "EndYear", index)
         ]
 
         mappers.forEach((mapper) => {
@@ -103,11 +98,6 @@
 
     const inputIsntEmpty = (anInput) => anInput.value.trim().length > 0
 
-    const validDate = (aString) => {
-        const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
-        return regex.test(aString)
-    } 
-
     const resetInputs = (inputs) => {
         inputs.forEach((input) => {
             input.value = ""
@@ -120,12 +110,6 @@
         errorSpan.innerText = errorMsg
     }
 
-    const resetError = (errorSpanId) => {
-        const errorSpan = document.getElementById(errorSpanId)
-        errorSpan.innerText = ""
-        errorSpan.style.display = "none"
-    }
-
     const reindexEducations = () => {
         const plaques = educationPlaqueSection.querySelectorAll(".plaque");
 
@@ -136,11 +120,11 @@
             plaque.querySelector('input[name$=".Degree"]').name =
                 `Educations[${index}].Degree`
 
-            plaque.querySelector('input[name$=".FromYear"]').name =
-                `Educations[${index}].FromYear`
+            plaque.querySelector('input[name$=".StartYear"]').name =
+                `Educations[${index}].StartYear`
 
-            plaque.querySelector('input[name$=".ToYear"]').name =
-                `Educations[${index}].ToYear`
+            plaque.querySelector('input[name$=".EndYear"]').name =
+                `Educations[${index}].EndYear`
         });
     }
 

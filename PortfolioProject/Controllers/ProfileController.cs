@@ -148,7 +148,7 @@ namespace PortfolioProject.Controllers
                         ImageUrl = sVm.ImageUrl?.Trim() ?? ""
                     };
                     toCreate.Skills.Add(newSkill);
-                    _dbContext.Skills.Add(newSkill);
+                    await _dbContext.SaveChangesAsync();
                 }
             }
 
@@ -179,7 +179,6 @@ namespace PortfolioProject.Controllers
                         EndYear = eVm.EndYear
                     };
                     toCreate.Educations.Add(newEducation);
-                    _dbContext.Educations.Add(newEducation);
                 }
             }
 
@@ -213,11 +212,8 @@ namespace PortfolioProject.Controllers
                         EndYear = eVm.EndYear
                     };
                     toCreate.Experiences.Add(newExperience);
-                    _dbContext.Experiences.Add(newExperience);
                 }
             }
-
-
 
             // ------------------- SAVE CV -------------------
             _dbContext.Cvs.Add(toCreate);
@@ -228,140 +224,193 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditCv(CvProfileViewModel cvVm) {
+        public async Task<IActionResult> EditCv() {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            UserViewModel uVm = new UserViewModel(user);
+
+            return View(uVm.Cv);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCv(CvProfileViewModel cvVm)
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
 
             if (!ModelState.IsValid)
             {
-                // FÖR DEBUG
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
                     Debug.WriteLine(error.ErrorMessage);
-                }
+
                 return View(cvVm);
             }
 
-            user.Cv.Title = cvVm.Title;
-            user.Cv.Summary = cvVm.Summary;
-            user.Cv.GitHubUrl = cvVm.GitHubUrl;
-            user.Cv.LinkedInUrl = cvVm.LinkedInUrl;
-            user.Cv.XUrl = cvVm.XUrl;
+            // Load existing CV for the user, including collections
+            var cv = await _dbContext.Cvs
+                .Include(c => c.Skills)
+                .Include(c => c.Educations)
+                .Include(c => c.Experiences)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
 
+            if (cv == null)
+            {
+                // If no CV exists, create new
+                cv = new Cv
+                {
+                    UserId = user.Id
+                };
+                _dbContext.Cvs.Add(cv);
+            }
 
-            // -------SKILLS----------
-            var skillsRemove = user.Cv.Skills
-                .Where(s => !cvVm.Skills.Any(vm => vm.Name.Trim().ToLower() == s.Name.ToLower()))
+            // --- Update main CV info ---
+            cv.Title = cvVm.Title;
+            cv.Summary = cvVm.Summary;
+            cv.GitHubUrl = cvVm.GitHubUrl;
+            cv.LinkedInUrl = cvVm.LinkedInUrl;
+            cv.XUrl = cvVm.XUrl;
+
+            bool EqualsIgnoreCase(string a, string b) =>
+                string.Equals(a?.Trim(), b?.Trim(), StringComparison.OrdinalIgnoreCase);
+
+            // =====================
+            // --- SKILLS ----------
+            // =====================
+            var skillNamesFromVm = cvVm.Skills.Select(s => s.Name.Trim().ToLower()).ToHashSet();
+
+            // Remove skills that are not in VM
+            var skillsToRemove = cv.Skills
+                .Where(s => !skillNamesFromVm.Contains(s.Name.Trim().ToLower()))
                 .ToList();
 
-            foreach (var s in skillsRemove)
-                user.Cv.Skills.Remove(s);
+            foreach (var s in skillsToRemove)
+                cv.Skills.Remove(s);
 
-            var skillNames = cvVm.Skills.Select(s => s.Name.Trim().ToLower()).ToList();
-            var existingSkills = await _dbContext.Skills
-                .Where(s => skillNames.Contains(s.Name.ToLower()))
-                .ToListAsync();
-
+            // Add new skills
             foreach (var sVm in cvVm.Skills)
             {
-                var normalizedName = sVm.Name.Trim();
-                var skill = existingSkills.FirstOrDefault(s => s.Name.ToLower() == normalizedName.ToLower());
-                if (!user.Cv.Skills.Any(s => s.Name.ToLower() == normalizedName.ToLower()))
+                if (cv.Skills.Any(s => EqualsIgnoreCase(s.Name, sVm.Name)))
+                    continue;
+
+                var existingSkill = await _dbContext.Skills
+                    .FirstOrDefaultAsync(s => s.Name.ToLower() == sVm.Name.Trim().ToLower());
+
+                if (existingSkill != null)
+                    cv.Skills.Add(existingSkill);
+                else
                 {
-                    if (skill != null)
+                    var newSkill = new Skill
                     {
-                        user.Cv.Skills.Add(skill);
-                    }
-                    else
-                    {
-                        var newSkill = new Skill
-                        {
-                            Name = normalizedName,
-                            ImageUrl = sVm.ImageUrl?.Trim() ?? ""
-                        };
-                        user.Cv.Skills.Add(newSkill);
-                        _dbContext.Skills.Add(newSkill);
-                    }
+                        Name = sVm.Name.Trim(),
+                        ImageUrl = sVm.ImageUrl?.Trim() ?? ""
+                    };
+                    cv.Skills.Add(newSkill);
                 }
             }
 
-            // -------EDUCATION----------
-            var educationRemove = user.Cv.Educations
-                .Where(s => !cvVm.Educations.Any(vm => vm.School.Trim().ToLower() == s.School.ToLower()))
+            // =====================
+            // --- EDUCATIONS ------
+            // =====================
+            var eduKeysFromVm = cvVm.Educations
+                .Select(e => $"{e.School.Trim().ToLower()}|{e.Degree.Trim().ToLower()}|{e.StartYear}|{e.EndYear}")
+                .ToHashSet();
+
+            var eduKeysInCv = cv.Educations
+                .Select(e => $"{e.School.Trim().ToLower()}|{e.Degree.Trim().ToLower()}|{e.StartYear}|{e.EndYear}")
                 .ToList();
 
-            foreach (var s in educationRemove)
-                user.Cv.Educations.Remove(s);
+            // Remove educations not in VM
+            var educationsToRemove = cv.Educations
+                .Where(e => !eduKeysFromVm.Contains($"{e.School.Trim().ToLower()}|{e.Degree.Trim().ToLower()}|{e.StartYear}|{e.EndYear}"))
+                .ToList();
 
-            var educationNames = cvVm.Educations.Select(s => s.School.Trim().ToLower()).ToList();
-            var existingEducations = await _dbContext.Educations
-                .Where(s => educationNames.Contains(s.School.ToLower()))
-                .ToListAsync();
+            foreach (var e in educationsToRemove)
+                cv.Educations.Remove(e);
 
+            // Add new educations
             foreach (var eVm in cvVm.Educations)
             {
-                var normalizedName = eVm.School.Trim();
-                var education = existingEducations.FirstOrDefault(s => s.School.ToLower() == normalizedName.ToLower());
-                if (!user.Cv.Educations.Any(s => s.School.ToLower() == normalizedName.ToLower()))
+                if (cv.Educations.Any(e =>
+                    EqualsIgnoreCase(e.School, eVm.School) &&
+                    EqualsIgnoreCase(e.Degree, eVm.Degree) &&
+                    e.StartYear == eVm.StartYear &&
+                    e.EndYear == eVm.EndYear))
+                    continue;
+
+                var existingEdu = await _dbContext.Educations.FirstOrDefaultAsync(e =>
+                    e.School.ToLower() == eVm.School.Trim().ToLower() &&
+                    e.Degree.ToLower() == eVm.Degree.Trim().ToLower() &&
+                    e.StartYear == eVm.StartYear &&
+                    e.EndYear == eVm.EndYear);
+
+                if (existingEdu != null)
+                    cv.Educations.Add(existingEdu);
+                else
                 {
-                    if (education != null)
+                    var newEdu = new Education
                     {
-                        user.Cv.Educations.Add(education);
-                    }
-                    else
-                    {
-                        var newEducation = new Education
-                        {
-                            School = normalizedName,
-                            Degree = eVm.Degree,
-                            StartYear = eVm.StartYear,
-                            EndYear = eVm.EndYear
-                        };
-                        user.Cv.Educations.Add(newEducation);
-                        _dbContext.Educations.Add(newEducation);
-                    }
+                        School = eVm.School.Trim(),
+                        Degree = eVm.Degree.Trim(),
+                        StartYear = eVm.StartYear,
+                        EndYear = eVm.EndYear
+                    };
+                    cv.Educations.Add(newEdu);
                 }
             }
 
-            // ----------EXPERIENCES----------
-            var experiencesRemove = user.Cv.Experiences
-                .Where(s => !cvVm.Experiences.Any(vm => vm.Company.Trim().ToLower() == s.Company.ToLower()))
+            // =====================
+            // --- EXPERIENCES -----
+            // =====================
+            var expKeysFromVm = cvVm.Experiences
+                .Select(e => $"{e.Company.Trim().ToLower()}|{e.Role.Trim().ToLower()}|{e.StartYear}|{e.EndYear}")
+                .ToHashSet();
+
+            var experiencesToRemove = cv.Experiences
+                .Where(e => !expKeysFromVm.Contains($"{e.Company.Trim().ToLower()}|{e.Role.Trim().ToLower()}|{e.StartYear}|{e.EndYear}"))
                 .ToList();
 
-            foreach (var s in experiencesRemove)
-                user.Cv.Experiences.Remove(s);
-
-            var experienceNames = cvVm.Experiences.Select(s => s.Company.Trim().ToLower()).ToList();
-            var existingExperiences = await _dbContext.Experiences
-                .Where(s => experienceNames.Contains(s.Company.ToLower()))
-                .ToListAsync();
+            foreach (var e in experiencesToRemove)
+                cv.Experiences.Remove(e);
 
             foreach (var eVm in cvVm.Experiences)
             {
-                var normalizedName = eVm.Company.Trim();
-                var experience = existingExperiences.FirstOrDefault(s => s.Company.ToLower() == normalizedName.ToLower());
-                if (!user.Cv.Skills.Any(s => s.Name.ToLower() == normalizedName.ToLower()))
+                if (cv.Experiences.Any(e =>
+                    EqualsIgnoreCase(e.Company, eVm.Company) &&
+                    EqualsIgnoreCase(e.Role, eVm.Role) &&
+                    e.StartYear == eVm.StartYear &&
+                    e.EndYear == eVm.EndYear))
+                    continue;
+
+                var existingExp = await _dbContext.Experiences.FirstOrDefaultAsync(e =>
+                    e.Company.ToLower() == eVm.Company.Trim().ToLower() &&
+                    e.Role.ToLower() == eVm.Role.Trim().ToLower() &&
+                    e.StartYear == eVm.StartYear &&
+                    e.EndYear == eVm.EndYear);
+
+                if (existingExp != null)
+                    cv.Experiences.Add(existingExp);
+                else
                 {
-                    if (experience != null)
+                    var newExp = new Experience
                     {
-                        user.Cv.Experiences.Add(experience);
-                    }
-                    else
-                    {
-                        var newExperience = new Experience
-                        {
-                            Company = eVm.Company,
-                            Role = eVm.Role,
-                            StartYear = eVm.StartYear,
-                            EndYear = eVm.EndYear,
-                        };
-                        user.Cv.Experiences.Add(newExperience);
-                        _dbContext.Experiences.Add(newExperience);
-                    }
+                        Company = eVm.Company.Trim(),
+                        Role = eVm.Role.Trim(),
+                        StartYear = eVm.StartYear,
+                        EndYear = eVm.EndYear
+                    };
+                    cv.Experiences.Add(newExp);
                 }
             }
+
+            // --- Save all changes ---
+            await _dbContext.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
+
+
     }
 }

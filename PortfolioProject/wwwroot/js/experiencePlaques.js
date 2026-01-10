@@ -26,14 +26,6 @@
         const experiencePlaque = document.createElement("div")
         experiencePlaque.className = "plaque"
 
-        const datesAreValid = validDate(fromDateInput.value.trim()) && validDate(toDateInput.value.trim())
-
-
-        if (!datesAreValid) {
-            showError("experience-year-error", "Ogiltigt datumformat! (yyyy-mm-dd)")
-            return
-        }
-
         //Skapar htmlelement
         const companyName = document.createElement("p")
         companyName.innerText = companyInput.value.trim()
@@ -96,11 +88,6 @@
 
     const inputIsntEmpty = (anInput) => anInput.value.trim().length > 0
 
-    const validDate = (aString) => {
-        const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/
-        return regex.test(aString)
-    }
-
     const resetInputs = (inputs) => {
         inputs.forEach((input) => {
             input.value = ""
@@ -129,11 +116,11 @@
             plaque.querySelector('input[name$=".Role"]').name =
                 `Experiences[${index}].Role`
 
-            plaque.querySelector('input[name$=".FromYear"]').name =
-                `Experiences[${index}].FromYear`
+            plaque.querySelector('input[name$=".StartYear"]').name =
+                `Experiences[${index}].StartYear`
 
-            plaque.querySelector('input[name$=".ToYear"]').name =
-                `Experiences[${index}].ToYear`
+            plaque.querySelector('input[name$=".EndYear"]').name =
+                `Experiences[${index}].EndYear`
         });
     }
 

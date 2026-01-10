@@ -19,31 +19,31 @@
 
     <div class="label-w-text">
         <p>Email: </p>
-        <p>@($"{Model.Email}")</p>
+        <p>@($"{Model.Profile.Email}")</p>
     </div>
 
     <div class="label-w-text">
         <p>Telefonnummer: </p>
-        <p>@($"{Model.PhoneNumber}")</p>
+        <p>@($"{Model.Profile.PhoneNumber}")</p>
     </div>
 
     <div class="label-w-text">
         <p>Adress: </p>
-        <p>@($"{Model.Adress}")</p>
+        <p>@($"{Model.Profile.Adress}")</p>
     </div>
 
     <div class="label-w-checkbox">
-        <label asp-for="IsPrivate">Privat profil:</label>
-        <input type="checkbox" asp-for="IsPrivate" disabled>
+        <label asp-for="Profile.IsPrivate">Privat profil:</label>
+        <input type="checkbox" asp-for="Profile.IsPrivate" disabled>
     </div>
 
     <div class="label-w-checkbox">
-        <label asp-for="IsActive">Profil aktiv:</label>
-        <input type="checkbox" asp-for="IsActive" disabled>
+        <label asp-for="Profile.IsActive">Profil aktiv:</label>
+        <input type="checkbox" asp-for="Profile.IsActive" disabled>
     </div>
 
     <div class="button-wrapper">
-        <a asp-action="EditCv" class="btn btn-primary">Redigera Profil</a>
+        <a asp-action="Edit" class="btn btn-primary">Redigera Profil</a>
     </div>    
 </section>
 
@@ -143,7 +143,7 @@
             }
         }
             <div class="button-wrapper">
-                <a asp-action="Edit" class="btn btn-primary">Redigera CV</a>
+                <a asp-action="EditCv" class="btn btn-primary">Redigera CV</a>
             </div>
         </section>
     }
