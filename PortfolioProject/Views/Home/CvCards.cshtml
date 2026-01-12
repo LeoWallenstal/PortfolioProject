@@ -15,18 +15,18 @@
 						@if (cv.Educations.Any())
 						{
 							<p><strong>Utbildning</strong></p>
-							@foreach (var education in cv.Educations)
+							@foreach (var education in cv.Educations.OrderByDescending(e => e.StartYear).Take(1))
 							{
-								<p>@education.School  - @education.Degree - @education.StartYear.ToString("yyyy-MM-dd") - @education.EndYear.ToString("yyyy-MM-dd")</p>
+								<p>@education.School  - @education.Degree</p>
 							}
 						}
 
 						@if (cv.Experiences.Any())
 						{
 							<p><strong>Erfarenhet</strong></p>
-							@foreach (var experience in cv.Experiences)
+							@foreach (var experience in cv.Experiences.OrderByDescending(e => e.StartYear).Take(1))
 							{
-								<p>@experience.Company - @experience.Role  - @experience.StartYear.ToString("yyyy-MM-dd") - @experience.EndYear.ToString("yyyy-MM-dd")</p>
+								<p>@experience.Company - @experience.Role</p>
 							}
 						}
 
