@@ -175,7 +175,7 @@
 		
 		@foreach (var project in Model.User.Projects)
 		{
-			<div class="card text-center mt-2 project-card pc show">
+			<div class="card text-center mt-2 project-card pc visible">
 				<a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="text-decoration-none text-reset">
 					<div class="card-header align-items-center">
 						<h5>@project.Title</h5>
