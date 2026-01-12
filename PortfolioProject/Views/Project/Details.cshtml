@@ -7,7 +7,7 @@
 	</a>
 	<h3 class="mx-auto">@Model.Project.Title</h3>
 
-	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId && User.HasClaim("IsActive", "true"))
+	@if (User.Identity?.IsAuthenticated == true && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId && User.HasClaim("IsActive", "true"))
 	{
 		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4 project-btn">
 			<i class="bi bi-pencil"></i>
@@ -28,25 +28,18 @@
 		<div class="col-md-4 mt-3 mt-md-0">
 			<div class="card mt-2">
 				<div class="card-body details-card">
+
 					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
+
 						<div class="d-flex align-items-center mb-2">
-							@if (Model.Owner == null || !Model.Owner.IsActive)
-							{
-								<img src="/images/default-profile2.png"
-										class="rounded-circle me-2"
-										style="width:40px; height:40px;" />
-								<span class="ms-1 fst-italic">Inaktiverat konto</span>	
-							}
-							else
-							{
-								<img src="@Model.Owner.ProfileImageUrl"
-									 class="rounded-circle me-2"
-									 style="width:40px; height:40px;" />
-								<span>@Model.Owner.FirstName @Model.Owner.LastName</span>
-							}
+							<img src="@Model.OwnerImageUrl"
+								class="rounded-circle me-2"
+								style="width:40px; height:40px;" />
+							<span class="ms-1 @(Model.OwnerTextIsSpecial ? "fst-italic" : "")">@Model.OwnerText</span>
 							<span class="badge owner-badge ms-2">Ägare</span>
 						</div>
-					@if (Model.Participants != null && Model.Participants.Any())
+
+					@if (Model.Participants != null)
 					{
 						<div class="list-group">
 							@foreach (var user in Model.Participants)
@@ -59,7 +52,7 @@
 												 class="rounded-circle me-2"
 												 style="width:40px; height:40px;"/>
 										</div>
-								
+							
 										<span class="ms-1">
 											@user.FirstName @user.LastName
 										</span>
@@ -72,7 +65,7 @@
 			</div>
 
 			@{
-				if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
+				if (User.Identity?.IsAuthenticated == true && User.HasClaim("IsActive", "true"))
 				{
 					bool isParticipant = Model.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 					bool isOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId;
