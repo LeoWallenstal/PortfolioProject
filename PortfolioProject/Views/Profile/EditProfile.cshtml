@@ -65,8 +65,8 @@
         </div>
 
         <div class="form-row">
-            <div class="checkbox-row">
-                <label asp-for="Profile.ProfileImageUrl">Profilbild(URL):</label>
+            <label asp-for="Profile.ProfileImageUrl">Profilbild(URL):</label>
+            <div class="input-wrapper">
                 <input id="profile-pic-input" asp-for="Profile.ProfileImageUrl" />
             </div>
         </div>
@@ -75,8 +75,14 @@
             <div class="button-wrapper">
                 <button type="submit" class="btn btn-primary">Spara profil</button>
             </div>
+            <div class="button-wrapper" id="profile-buttons">
+                <a asp-action="UpdatePassword" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</a>
+            </div>
             <div class="button-wrapper">
                 <button class="btn btn-primary" id="btn-preview" type="button">Förhandsvisa bild</button>
+            </div>
+            <div class="button-wrapper">
+                <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
             </div>
         </div>
 		</section>
@@ -92,8 +98,5 @@
 
     <!-- BUTTONS -->
 
-    <div class="button-wrapper" id="profile-buttons">
-        <a asp-action="UpdatePassword" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</a>
-        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
-    </div>
+
 

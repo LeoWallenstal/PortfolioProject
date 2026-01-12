@@ -1,4 +1,5 @@
-﻿using DataLayer.Data;
+﻿using DataLayer;
+using DataLayer.Data;
 using DataLayer.Models;
 using DataLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -109,6 +110,16 @@ namespace PortfolioProject.Controllers
                 vm.ConfirmPassword, 
                 vm.ConfirmNewPassword
             );
+
+            if (!result.Succeeded) { 
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(
+                        nameof(RegisterViewModel.Password),
+                        error.Description
+                    );
+                }
+            }
 
             Debug.WriteLine($"\nDEBUG\n\nPassword should be changed from {vm.ConfirmPassword} to {vm.ConfirmNewPassword}");
             Debug.WriteLine(user.PasswordHash);
@@ -455,6 +466,17 @@ namespace PortfolioProject.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost] 
+        public async Task<IActionResult> ExportProfile() {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            ExportPlaceholder exporter = new ExportPlaceholder(_dbContext, _userManager);
+
+            ExportFileResult? toReturn =  await exporter.ExportProfileXmlAsync(user.Id);
+            return File(toReturn.Bytes, toReturn.ContentType, toReturn.FileName);
+        }
 
     }
 }

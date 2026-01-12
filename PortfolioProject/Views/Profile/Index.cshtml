@@ -6,7 +6,13 @@
 
 <!-- PROFILBILD NÅNSTANS -->
 <section class="horizontal-container">
-    <section>
+    <div class="img-container">
+        <img class="img-wrapper"
+             src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                                          ? Url.Content(Model.Cv.ProfileImagePath)
+                                          : Url.Content("../images/default-img.png"))" alt="Profile picture">
+    </div>
+    <section class="vertical-container">
         <div class="label-w-text">
             <p class="label">Namn: </p>
             <p class="text">@($"{Model.FullName}")</p>
@@ -46,13 +52,6 @@
             <a asp-action="EditProfile" class="btn btn-primary">Redigera Profil</a>
         </div>    
     </section>
-    <div class="img-container">
-        <img class="img-wrapper"
-             src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
-                             ? Url.Content(Model.Cv.ProfileImagePath)
-                             : Url.Content("../images/default-img.png"))" alt="Profile picture">
-    </div>
-    
 </section>
 
 <!-- CV -->
@@ -152,6 +151,9 @@
         }
             <div class="button-wrapper">
                 <a asp-action="EditCv" class="btn btn-primary">Redigera CV</a>
+                <form asp-action="ExportProfile" method="post">
+                    <button type="submit" class="btn btn-primary">Exportera Profil</button>
+                </form>
             </div>
         </section>
     }
