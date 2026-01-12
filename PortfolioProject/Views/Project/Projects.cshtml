@@ -9,7 +9,7 @@
 		<i class="bi bi-arrow-left"></i>
 	</a>
 	<h3 class="mx-auto">Projekt</h3>
-	@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
+	@if (User.Identity?.IsAuthenticated == true && User.HasClaim("IsActive", "true"))
 	{
 		<a asp-controller="Project" asp-action="Create" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4 project-btn" style="text-decoration: none">
 			<i class="bi bi-plus-lg"></i>
@@ -31,40 +31,31 @@
 						<p>@projectVM.Project.Description</p>
 
 						<div class="d-flex justify-content-center mt2">
-								@if (projectVM.Owner == null || !projectVM.Owner.IsActive)
-								{
-									<div class="participant-img">
-										<img src="/images/default-profile2.png" />
-									</div>
-								}
-								else
-								{
-									<div class="participant-img">
-										<img src="@projectVM.Owner.ProfileImageUrl" />
-									</div>
-								}
+
+							<div class="participant-img">
+								<img src="@projectVM.OwnerImageUrl" />
+							</div>
 
 							@if (projectVM.Participants != null)
 							{
-									@foreach (var user in projectVM.Participants.Take(4))
+								@foreach (var user in projectVM.Participants.Take(4))
+								{
+									if(user.IsActive && user != null)
 									{
-										if(user.IsActive && user != null)
-										{
-											<div class="participant-img">
-												<img src="@user.ProfileImageUrl" />
-											</div>
-										}
+										<div class="participant-img">
+											<img src="@user.ProfileImageUrl" />
+										</div>
 									}
-									@if (projectVM.Participants.Count() > 4)
-									{
-										<span class="ms-2 small text-muted">+@(@projectVM.Participants.Count() - 4)</span>
-									}
-							
+								}
+								@if (projectVM.Participants.Count() > 4)
+								{
+									<span class="ms-2 small text-muted">+@(@projectVM.Participants.Count() - 4)</span>
+								}
 							}
 						</div>
 					</div>
 				</a>
-				@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
+				@if (User.Identity?.IsAuthenticated == true && User.HasClaim("IsActive", "true"))
 				{
 					bool isParticipant = projectVM.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
 					<div class="card-footer text-center">
