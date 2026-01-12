@@ -20,6 +20,7 @@ namespace PortfolioProject.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Projects()
         {
             bool isLoggedIn = User.Identity?.IsAuthenticated ?? false;
@@ -31,7 +32,16 @@ namespace PortfolioProject.Controllers
                 .Select(p => new ProjectViewModel
                 {
                     Project = p,
-                    Owner = p.Owner,
+                    OwnerImageUrl = !p.Owner.IsActive 
+                        ? "/images/default-profile2.png"
+                        : p.Owner.IsPrivate && !isLoggedIn
+                            ? "/images/default-profile2.png"
+                            : p.Owner.ProfileImageUrl,
+                    OwnerText = !p.Owner.IsActive
+                        ? "Inaktiverat konto"
+                        : p.Owner.IsPrivate && !isLoggedIn
+                            ? "Privat konto"
+                            : p.Owner.FirstName + " " + p.Owner.LastName,
                     Participants = isLoggedIn
                         ? p.Users.Where(u => u.Id != p.OwnerId && u.IsActive).ToList()
                         : p.Users.Where(u => u.Id != p.OwnerId && !u.IsPrivate && u.IsActive).ToList()
@@ -55,6 +65,9 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ProjectViewModel projectVM)
         {
+            if (!User.HasClaim("IsActive", "true"))
+                return Forbid();
+
             ModelState.Remove("Project.OwnerId");
 
             if (!ModelState.IsValid)
@@ -87,6 +100,9 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> JoinProject(Guid pid, string? returnUrl)
         {
+            if (!User.HasClaim("IsActive", "true"))
+                return Forbid();
+
             var userId = _userManager.GetUserId(User);
 
             User? user = await _context.Users
@@ -116,6 +132,9 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> LeaveProject(Guid pid, string? returnUrl)
         {
+            if (!User.HasClaim("IsActive", "true"))
+                return Forbid();
+
             var userId = _userManager.GetUserId(User);
 
             User? user = await _context.Users
@@ -172,6 +191,9 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(ProjectViewModel projectVM)
         {
+            if (!User.HasClaim("IsActive", "true"))
+                return Forbid();
+
             var userId = _userManager.GetUserId(User);
 
             var project = await _context.Projects
@@ -190,6 +212,7 @@ namespace PortfolioProject.Controllers
             return RedirectToAction("Details", new { id = project.Id });
         }
 
+        [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
             bool isLoggedIn = User.Identity?.IsAuthenticated ?? false;
@@ -205,7 +228,16 @@ namespace PortfolioProject.Controllers
             var projectVM = new ProjectViewModel
             {
                 Project = project,
-                Owner = project.Owner,
+                OwnerImageUrl = !project.Owner.IsActive
+                        ? "/images/default-profile2.png"
+                        : project.Owner.IsPrivate && !isLoggedIn
+                            ? "/images/default-profile2.png"
+                            : project.Owner.ProfileImageUrl,
+                OwnerText = !project.Owner.IsActive
+                        ? "Inaktiverat konto"
+                        : project.Owner.IsPrivate && !isLoggedIn
+                            ? "Privat konto"
+                            : project.Owner.FirstName + " " + project.Owner.LastName,
                 Participants = isLoggedIn 
                     ? project.Users.Where(u => u.Id != project.OwnerId && u.IsActive).ToList() 
                     : project.Users.Where(u => u.Id != project.OwnerId && !u.IsPrivate && u.IsActive).ToList()

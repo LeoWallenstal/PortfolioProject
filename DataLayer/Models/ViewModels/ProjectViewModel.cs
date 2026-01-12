@@ -3,7 +3,10 @@
     public class ProjectViewModel
     {
         public Project Project { get; set; } = new Project();
-        public User? Owner { get; set; }
         public IEnumerable<User>? Participants { get; set; }
+        public string OwnerImageUrl { get; set; } = null!;
+        public string OwnerText { get; set; } = null!;
+        public bool OwnerTextIsSpecial =>
+            OwnerText == "Inaktiverat konto" || OwnerText == "Privat konto";
     }
 }
