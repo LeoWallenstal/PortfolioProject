@@ -5,45 +5,157 @@
 <h1>Min Profil</h1>
 
 <!-- PROFILBILD NÅNSTANS -->
+<section class="horizontal-container">
+    <section>
+        <div class="label-w-text">
+            <p class="label">Namn: </p>
+            <p class="text">@($"{Model.FullName}")</p>
+        </div>
 
-<section>
-    <div class="label-w-text">
-        <p class="label">Namn: </p>
-        <p class="text">@($"{Model.FullName}")</p>
+        <div class="label-w-text">
+            <p class="label">Användarnamn: </p>
+            <p class="text">@($"{Model.UserName}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Email: </p>
+            <p>@($"{Model.Profile.Email}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Telefonnummer: </p>
+            <p>@($"{Model.Profile.PhoneNumber}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Adress: </p>
+            <p>@($"{Model.Profile.Adress}")</p>
+        </div>
+
+        <div class="label-w-checkbox">
+            <label asp-for="Profile.IsPrivate">Privat profil:</label>
+            <input type="checkbox" asp-for="Profile.IsPrivate" disabled>
+        </div>
+
+        <div class="label-w-checkbox">
+            <label asp-for="Profile.IsActive">Profil aktiv:</label>
+            <input type="checkbox" asp-for="Profile.IsActive" disabled>
+        </div>
+
+        <div class="button-wrapper">
+            <a asp-action="EditProfile" class="btn btn-primary">Redigera Profil</a>
+        </div>    
+    </section>
+    <div class="img-container">
+        <img class="img-wrapper"
+             src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                             ? Url.Content(Model.Cv.ProfileImagePath)
+                             : Url.Content("../images/default-img.png"))" alt="Profile picture">
     </div>
-
-    <div class="label-w-text">
-        <p class="label">Användarnamn: </p>
-        <p class="text">@($"{Model.UserName}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Email: </p>
-        <p>@($"{Model.Email}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Telefonnummer: </p>
-        <p>@($"{Model.PhoneNumber}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Adress: </p>
-        <p>@($"{Model.Adress}")</p>
-    </div>
-
-    <div class="label-w-checkbox">
-        <label asp-for="IsPrivate">Privat profil:</label>
-        <input type="checkbox" asp-for="IsPrivate" disabled>
-    </div>
-
-    <div class="button-wrapper">
-        <a asp-action="Edit" class="btn btn-primary">Redigera Profil</a>
-    </div>    
+    
 </section>
 
 <!-- CV -->
-<section></section>
+
+    @if (Model.CvIsEmpty())
+    {
+        <section>
+            <p>Ditt cv är tomt just nu!</p>
+            <div class="button-wrapper">
+                <a asp-action="CreateCv" class="btn btn-primary">Skapa CV</a>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section>
+            <h1>@($"{Model.Cv.Title}")</h1>
+            <p>@($"{Model.Cv.Summary}")</p>
+            <p>GitHub: @($"{Model.Cv.GitHubUrl}")</p>
+            <p>LinkedIn: @($"{Model.Cv.LinkedInUrl}")</p>
+            
+            <hr>
+            <p class="section-header">Färdigheter</p>
+            <!-- SKILLS -->
+        @{
+            if (Model.Cv.Skills.Count > 0)
+            {
+                <div class="plaque-section">
+                    @{
+                        foreach (SkillViewModel sVm in Model.Cv.Skills)
+                        {
+                            <div class="plaque">
+                                <img src="@(!string.IsNullOrEmpty(sVm.ImageUrl) ? sVm.ImageUrl : "../images/default-img.png")"
+                                     onerror="this.src='../images/default-img.png'"
+                                     class="thumbnail"
+                                />
+                                <p>@($"{sVm.Name}")</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="nothing-to-show-text">Inga färdigheter att visa!</p>
+            }
+        }
+
+        <hr>
+        <p class="section-header">Färdigheter</p>
+        <!-- EDUCATIONS -->
+        @{
+            if (Model.Cv.Educations.Count > 0)
+            {
+                <div class="plaque-section">
+                    @{
+                        foreach (EducationViewModel eVm in Model.Cv.Educations)
+                        {
+                            <div class="plaque">
+                                <p>@($"{eVm.School}")</p>
+                                <p>@($"{eVm.Degree}")</p>
+                                <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="nothing-to-show-text">Inga utbildningar att visa!</p>
+            }
+        }
+
+        <hr>
+        <p class="section-header">Erfarenheter</p>
+        <!-- EDUCATIONS -->
+        @{
+            if (Model.Cv.Experiences.Count > 0)
+            {
+                <div class="plaque-section">
+                    @{
+                        foreach (ExperienceViewModel eVm in Model.Cv.Experiences)
+                        {
+                            <div class="plaque">
+                                <p>@($"{eVm.Company}")</p>
+                                <p>@($"{eVm.Role}")</p>
+                                <p>@($"{eVm.StartYear.ToString("yyyy-MM-dd")} - {eVm.EndYear.ToString("yyyy-MM-dd")}")</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="nothing-to-show-text">Inga erfarenheter att visa!</p>
+            }
+        }
+            <div class="button-wrapper">
+                <a asp-action="EditCv" class="btn btn-primary">Redigera CV</a>
+            </div>
+        </section>
+    }
+
 
 
 

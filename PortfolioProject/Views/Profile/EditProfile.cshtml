@@ -1,0 +1,99 @@
+﻿@using DataLayer.Models.ViewModels
+@model UserViewModel
+
+<link href="/css/profile.css" rel="stylesheet">
+<script defer src="/js/previewProfilePic.js"></script>
+
+<h1>Min Profil</h1>
+
+<form asp-action="EditProfile" method="post">
+    <div class="horizontal-container">
+    <section class="profile-grid" id="profile-grid">
+
+        <div class="form-row">
+            <label asp-for="Profile.FirstName">*Förnamn:</label>
+            <div class="input-wrapper">
+                <input asp-for="Profile.FirstName" />
+                <span asp-validation-for="Profile.FirstName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Profile.LastName">*Efternamn:</label>
+            <div class="input-wrapper">
+                <input asp-for="Profile.LastName" />
+                <span asp-validation-for="Profile.LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Profile.Email">*Email:</label>
+            <div class="input-wrapper">
+                <input asp-for="Profile.Email" />
+                <span asp-validation-for="Profile.Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Profile.PhoneNumber">Telefonnummer:</label>
+            <div class="input-wrapper">
+                <input asp-for="Profile.PhoneNumber" />
+                <span asp-validation-for="Profile.PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Profile.Adress">Adress:</label>
+            <div class="input-wrapper">
+                <input asp-for="Profile.Adress" />
+                <span asp-validation-for="Profile.Adress" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label asp-for="Profile.IsPrivate">Privat profil:</label>
+                <input type="checkbox" asp-for="Profile.IsPrivate" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label asp-for="Profile.IsActive">Aktiverad profil:</label>
+                <input type="checkbox" asp-for="Profile.IsActive" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label asp-for="Profile.ProfileImageUrl">Profilbild(URL):</label>
+                <input id="profile-pic-input" asp-for="Profile.ProfileImageUrl" />
+            </div>
+        </div>
+
+        <div class="no-border-horizontal">
+            <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary">Spara profil</button>
+            </div>
+            <div class="button-wrapper">
+                <button class="btn btn-primary" id="btn-preview" type="button">Förhandsvisa bild</button>
+            </div>
+        </div>
+		</section>
+        <div class="img-container">
+            <img class="img-wrapper"
+                 id="edit-profile-pic"
+                 src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                                              ? Url.Content(Model.Cv.ProfileImagePath)
+                                              : Url.Content("../wwwroot/images/default-profile2.png"))" alt="Profile picture">
+        </div>
+	</div>
+</form>
+
+    <!-- BUTTONS -->
+
+    <div class="button-wrapper" id="profile-buttons">
+        <a asp-action="UpdatePassword" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</a>
+        <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
+    </div>
+

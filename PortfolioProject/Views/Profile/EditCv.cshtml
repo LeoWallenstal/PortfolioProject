@@ -1,0 +1,188 @@
+﻿@model CvProfileViewModel
+
+<script defer src="~/js/skillPlaques.js"></script>
+<script defer src="~/js/educationPlaques.js"></script>
+<script defer src="~/js/experiencePlaques.js"></script>
+
+<link href="/css/profile.css" rel="stylesheet">
+
+<form asp-action="EditCv" method="post">
+    <h1>Redigera ditt CV</h1>
+
+    <section class="profile-grid">
+
+        <!-- ----------GENERAL INFO---------- -->
+        <p class="section-header">Allmän information</p>
+
+        <div class="form-row">
+            <label asp-for="Title">Title:</label>
+            <div class="input-wrapper">
+                <input asp-for="Title" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Summary">Sammanfattning:</label>
+            <div class="input-wrapper">
+                <textarea asp-for="Summary" id="cv-summary" rows="5" cols="50"></textarea>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="GitHubUrl">Github URL:</label>
+            <div class="input-wrapper">
+                <input asp-for="GitHubUrl" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="LinkedInUrl">LinkedIn URL:</label>
+            <div class="input-wrapper">
+                <input asp-for="LinkedInUrl" />
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- ----------SKILLS---------- -->
+        <section class="skill-section">
+            <p class="section-header">Färdigheter</p>
+
+            <div class="form-row">
+                <label>Färdighet:</label>
+                <input class="input-skill-name" type="text" />
+                <span class="skill-name-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>URL:</label>
+                <input class="skill-img-url" type="text" title="Bild-URL" />
+            </div>
+
+            
+
+            <div class="skill-plaque-section plaque-section">
+                @for (int i = 0; i < Model.Skills.Count; i++)
+                {
+                    <div class="plaque">
+                        <button class="remove-btn" type="button">X</button>
+                        <input type="hidden" name="Skills[@i].Name" value="@Model.Skills[i].Name" />
+                        <input type="hidden" name="Skills[@i].ImageUrl" value="@Model.Skills[i].ImageUrl" />
+                        <img src="@(!string.IsNullOrEmpty(Model.Skills[i].ImageUrl)
+                                                                      ? Model.Skills[i].ImageUrl
+                                                                      : "../images/default-img.png")"
+                         onerror="this.src='../images/default-img.png'"
+                         class="thumbnail" />
+                    <p>@Model.Skills[i].Name</p>
+                </div>
+                }
+            </div>
+            <div class="button-wrapper">
+            <button class="btn-add-skill" disabled>Lägg till</button>
+            </div>
+        </section>
+
+        <hr />
+
+        <!-- ----------EDUCATION---------- -->
+        <section class="education-section">
+            <p class="section-header">Utbildning</p>
+
+            <div class="form-row">
+                <label>Skola:</label>
+                <input class="school-input" type="text" />
+                <span class="school-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Utbildning:</label>
+                <input class="degree-input" type="text" />
+                <span class="degree-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Från År:</label>
+                <input class="from-year-education-input" type="date" />
+                <span class="education-year-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Till År:</label>
+                <input class="to-year-education-input" type="date" />
+            </div>
+
+            <div class="education-plaque-section plaque-section">
+                @for (int i = 0; i < Model.Educations.Count; i++)
+                {
+                    <div class="plaque">
+                        <button class="remove-btn" type="button">X</button>
+                        <input type="hidden" name="Educations[@i].School" value="@Model.Educations[i].School" />
+                        <input type="hidden" name="Educations[@i].Degree" value="@Model.Educations[i].Degree" />
+                        <input type="hidden" name="Educations[@i].StartYear" value="@Model.Educations[i].StartYear" />
+                        <input type="hidden" name="Educations[@i].EndYear" value="@Model.Educations[i].EndYear" />
+                        <p>@Model.Educations[i].School</p>
+                        <p>@Model.Educations[i].Degree</p>
+                        <p>@Model.Educations[i].StartYear.ToString("yyyy-MM-dd") - @Model.Educations[i].EndYear.ToString("yyyy-MM-dd")</p>
+                    </div>
+                }
+            </div>
+            <div class="button-wrapper">
+                <button class="btn-add-education" disabled>Lägg till</button>
+            </div>
+        </section>
+
+        <hr />
+
+        <!-- ----------EXPERIENCES---------- -->
+        <section class="experience-section">
+            <p class="section-header">Erfarenheter</p>
+
+            <div class="form-row">
+                <label>Företag:</label>
+                <input class="company-input" type="text" />
+                <span class="company-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Roll:</label>
+                <input class="role-input" type="text" />
+                <span class="role-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Från År:</label>
+                <input class="from-year-experience-input" type="date" />
+                <span class="experience-year-error error-text"></span>
+            </div>
+
+            <div class="form-row">
+                <label>Till År:</label>
+                <input class="to-year-experience-input" type="date" />
+            </div>
+
+            <div class="experience-plaque-section plaque-section">
+                @for (int i = 0; i < Model.Experiences.Count; i++)
+                {
+                    <div class="plaque">
+                        <button class="remove-btn" type="button">X</button>
+                        <input type="hidden" name="Experiences[@i].Company" value="@Model.Experiences[i].Company" />
+                        <input type="hidden" name="Experiences[@i].Role" value="@Model.Experiences[i].Role" />
+                        <input type="hidden" name="Experiences[@i].StartYear" value="@Model.Experiences[i].StartYear" />
+                        <input type="hidden" name="Experiences[@i].EndYear" value="@Model.Experiences[i].EndYear" />
+                        <p>@Model.Experiences[i].Company</p>
+                        <p>@Model.Experiences[i].Role</p>
+                        <p>@Model.Experiences[i].StartYear.ToString("yyyy-MM-dd") - @Model.Experiences[i].EndYear.ToString("yyyy-MM-dd")</p>
+                    </div>
+                }
+            </div>
+            <div class="button-wrapper">
+            <button class="btn-add-experience" disabled>Lägg till</button>
+            </div>
+        </section>
+
+        <div class="button-wrapper">
+            <button id="save-cv-btn" type="submit" class="btn btn-primary">Spara</button>
+        </div>
+    </section>
+</form>
