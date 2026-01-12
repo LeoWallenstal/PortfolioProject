@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataLayer.Models.ViewModels
 {
@@ -11,38 +7,42 @@ namespace DataLayer.Models.ViewModels
     {
         [Required(ErrorMessage = "Kan inte vara tom!")]
         [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
-        public string? FirstName { get; set; }
+        public string? FirstName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Kan inte vara tom!")]
         [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
-        public string? LastName { get; set; }
+        public string? LastName { get; set; } = string.Empty;
 
         public string FullName => $"{FirstName} {LastName}";
 
-
         [Required(ErrorMessage = "Kan inte vara tom!")]
-        [EmailAddress(ErrorMessage = "Ogilitigt format!")]
-        public string Email { get; set; }
+        [EmailAddress(ErrorMessage = "Ogiltigt format!")]
+        public string? Email { get; set; } = string.Empty;
 
         [Phone(ErrorMessage = "Ogiltigt format!")]
-        public string PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; } = string.Empty;
 
-        [RegularExpression(@"^[0-9+\-()\s]+$", ErrorMessage = "Ogiltigt format!")]
-        public string? Adress { get; set; }
+        public string? Adress { get; set; } = string.Empty;
 
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
+
         public string ProfileImageUrl { get; set; } = "/images/default-profile2.png";
 
-        public ProfileViewModel(User aUser) {
-            FirstName = aUser.FirstName;
-            LastName = aUser.LastName;
-            Email = aUser.Email;
-            PhoneNumber = aUser.PhoneNumber;
-            Adress = aUser.Adress;
+
+        // ---------- CONSTRUCTOR ----------
+        public ProfileViewModel() { } // Parameterless constructor for model binding
+
+        public ProfileViewModel(User aUser)
+        {
+            FirstName = aUser.FirstName ?? string.Empty;
+            LastName = aUser.LastName ?? string.Empty;
+            Email = aUser.Email ?? string.Empty;
+            PhoneNumber = aUser.PhoneNumber ?? string.Empty;
+            Adress = aUser.Adress ?? string.Empty;
             IsPrivate = aUser.IsPrivate;
             IsActive = aUser.IsActive;
-            ProfileImageUrl = aUser.ProfileImageUrl;
+            ProfileImageUrl = aUser.ProfileImageUrl ?? "/images/default-profile2.png";
         }
     }
 }

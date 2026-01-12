@@ -6,10 +6,9 @@ namespace DataLayer.Models.ViewModels
 {
     public class UserViewModel
     {
-
-        public string UserName { get; set; }
+        
+        public string? UserName { get; set; }
         public ProfileViewModel Profile { get; set; }
-        public UpdatePasswordViewModel pwVm { get; set; } = new UpdatePasswordViewModel();
         public CvProfileViewModel? Cv { get; set; } = new CvProfileViewModel();
         public List<ProjectViewModel> Projects { get; set; } = new List<ProjectViewModel>();
         public UserViewModel(User aUser) {

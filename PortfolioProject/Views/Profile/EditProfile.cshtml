@@ -69,38 +69,7 @@
 
     </section>
 </form>
-<form asp-action="UpdatePassword" method="post">
-    <!-- Password section -->
-    <section id="pw-section" class="password-container">
-        <div class="form-row">
-            <label asp-for="pwVm.ConfirmPassword">Ange Nuvarande Lösenord:</label>
-            <div class="input-wrapper">
-                <input type="password" asp-for="pwVm.ConfirmPassword" />
-                <span asp-validation-for="pwVm.ConfirmPassword" class="text-danger"></span>
-            </div>
-        </div>
 
-        <div class="form-row">
-            <label asp-for="pwVm.NewPassword">Nytt Lösenord:</label>
-            <div class="input-wrapper">
-                <input type="password" asp-for="pwVm.NewPassword" />
-                <span asp-validation-for="pwVm.NewPassword" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <label asp-for="pwVm.ConfirmPassword">Ange Igen:</label>
-            <div class="input-wrapper">
-                <input type="password" asp-for="pwVm.ConfirmNewPassword" />
-                <span asp-validation-for="pwVm.ConfirmNewPassword" class="text-danger"></span>
-            </div>
-        </div>
-
-        <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary">Spara lösenord</button>
-        </div>
-    </section>
-</form>
     <!-- BUTTONS -->
 
     <div class="button-wrapper" id="profile-buttons">

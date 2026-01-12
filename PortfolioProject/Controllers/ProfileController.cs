@@ -41,42 +41,70 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditProfile(ProfileViewModel vm)
+        public async Task<IActionResult> EditProfile(UserViewModel vm)
         {
             var user = await _userManager.GetUserAsync(User);
 
             if (!ModelState.IsValid)
             {
+                //DEBUG
+                Debug.WriteLine("\n\nMODEL STATE ERROR\n\n");
+                foreach (var kvp in ModelState)
+                {
+                    var key = kvp.Key; // the property name
+                    var errors = kvp.Value.Errors;
+
+                    foreach (var error in errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+
+                        // For debugging
+                        Debug.WriteLine($"❌ Property: {key}, Error: {errorMessage}");
+                    }
+                }
                 return View(vm);
             }
 
-            user.FirstName = vm.FirstName;
-            user.LastName = vm.LastName;
-            user.Adress = vm.Adress;
-            user.Email = vm.Email;
-            user.PhoneNumber = vm.PhoneNumber;
-            user.IsPrivate = vm.IsPrivate;
-            user.IsActive = vm.IsActive;
+            user.FirstName = vm.Profile.FirstName;
+            user.LastName = vm.Profile.LastName;
+            user.Adress = vm.Profile.Adress;
+            user.Email = vm.Profile.Email;
+            user.PhoneNumber = vm.Profile.PhoneNumber;
+            user.IsPrivate = vm.Profile.IsPrivate;
+            user.IsActive = vm.Profile.IsActive;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
+                Debug.WriteLine("\n\nUPDATE FAILED\n\n");
                 return View(vm);
             }
 
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> UpdatePassword() {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return NotFound();
+            
+            return View(user);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordViewModel vm)
         {
-            if (!ModelState.IsValid)
-                return View(vm);
-
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
+
+            if (!ModelState.IsValid) {
+                return View(vm);
+            }
+
+            
 
             var result = await _userManager.ChangePasswordAsync(
                 user,

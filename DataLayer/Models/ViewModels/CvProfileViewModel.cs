@@ -9,7 +9,7 @@ namespace DataLayer.Models.ViewModels
     public class CvProfileViewModel
     {
         // --- User / profile ---
-        public string UserName { get; set; } = string.Empty;
+        public string? UserName { get; set; } = string.Empty;
         public string? FullName { get; set; } = string.Empty;
         public string? ProfileImagePath { get; set; } = string.Empty;
         public bool IsPrivate { get; set; } = false;

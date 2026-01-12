@@ -15,7 +15,7 @@ namespace DataLayer.Models.ViewModels
         public string NewPassword { get; set; }
 
         [Compare("NewPassword", ErrorMessage = "Lösenorden matchar inte!")]
-        [Required(ErrorMessage = "")]
+        [Required(ErrorMessage = "Får inte vara tom!")]
         [DataType(DataType.Password)]
         [MinLength(6, ErrorMessage = "Lösenorden måste vara minst 6 tecken lång!")]
         public string ConfirmNewPassword { get; set; }
