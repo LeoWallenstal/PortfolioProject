@@ -1,141 +1,119 @@
 ﻿(() => {
 
-    const addEducationBtn = document.getElementById("btn-add-education")
+    document.querySelectorAll(".education-section").forEach(section => {
 
-    //Inputs
-    const schoolInput = document.getElementById("school-input")
-    const degreeInput = document.getElementById("degree-input")
-    const fromDateInput = document.getElementById("from-year-education-input")
-    const toDateInput = document.getElementById("to-year-education-input")
+        const addEducationBtn = section.querySelector(".btn-add-education");
+        const schoolInput = section.querySelector(".school-input");
+        const degreeInput = section.querySelector(".degree-input");
+        const fromDateInput = section.querySelector(".from-year-education-input");
+        const toDateInput = section.querySelector(".to-year-education-input");
+        const educationPlaqueSection = section.querySelector(".education-plaque-section");
 
-    const inputs = [schoolInput, degreeInput, fromDateInput, toDateInput]
-    inputs.forEach((input) => {
-        input.addEventListener("input", () => {
-            const allFilled = inputs.every(inputIsntEmpty)
+        const inputs = [schoolInput, degreeInput, fromDateInput, toDateInput];
 
-            addEducationBtn.disabled = !allFilled
+        const resetError = (errorClass) => {
+            const errorSpan = section.querySelector(`.${errorClass}`);
+            if (!errorSpan) return;
+            errorSpan.innerText = "";
+            errorSpan.style.display = "none";
+        };
 
-        })
-    })
+        const showError = (errorClass, msg) => {
+            const errorSpan = section.querySelector(`.${errorClass}`);
+            if (!errorSpan) return;
+            errorSpan.innerText = msg;
+            errorSpan.style.display = "block";
+        };
 
-    //Plaque Section
-    const educationPlaqueSection = document.getElementById("education-plaque-section")
-
-    addEducationBtn.addEventListener("click", () => {
-        const index = educationPlaqueSection.querySelectorAll(".plaque").length;
-        const educationPlaque = document.createElement("div")
-        educationPlaque.className = "plaque"
-
-        //Kollar efter dubletter
-        const schoolAlreadyExists = Array.from(educationPlaqueSection.children).some(plaque => {
-            const schoolName = plaque.children[1]?.innerText.trim();
-            return schoolName === schoolInput.value.trim()
+        inputs.forEach(input => {
+            input.addEventListener("input", () => {
+                resetError("school-name-error");
+                resetError("education-name-error");
+                addEducationBtn.disabled = !inputs.every(i => i.value.trim() !== "");
+            });
         });
 
-        const educationAlreadyExists = Array.from(educationPlaqueSection.children).some(plaque => {
-            const educationName = plaque.children[2]?.innerText.trim();
-            return educationName === degreeInput.value.trim()
+        addEducationBtn.addEventListener("click", () => {
+            const school = schoolInput.value.trim();
+            const degree = degreeInput.value.trim();
+            const startYear = fromDateInput.value;
+            const endYear = toDateInput.value;
+
+            // Check for duplicates
+            const exists = Array.from(educationPlaqueSection.children).some(plaque => {
+                const pSchool = plaque.querySelector("p.school")?.innerText.trim();
+                const pDegree = plaque.querySelector("p.degree")?.innerText.trim();
+                return pSchool === school && pDegree === degree;
+            });
+
+            if (exists) {
+                showError("school-name-error", "Den skolan finns redan!");
+                return;
+            }
+
+            const index = educationPlaqueSection.querySelectorAll(".plaque").length;
+
+            const plaque = document.createElement("div");
+            plaque.className = "plaque";
+
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "remove-btn";
+            removeBtn.innerText = "X";
+
+            const schoolP = document.createElement("p");
+            schoolP.className = "school";
+            schoolP.innerText = school;
+
+            const degreeP = document.createElement("p");
+            degreeP.className = "degree";
+            degreeP.innerText = degree;
+
+            const yearsP = document.createElement("p");
+            yearsP.className = "years";
+            yearsP.innerText = `${startYear} - ${endYear}`;
+
+            plaque.append(
+                removeBtn,
+                schoolP,
+                degreeP,
+                yearsP,
+                createHidden("Educations", index, "School", school),
+                createHidden("Educations", index, "Degree", degree),
+                createHidden("Educations", index, "StartYear", startYear),
+                createHidden("Educations", index, "EndYear", endYear)
+            );
+
+            educationPlaqueSection.appendChild(plaque);
+
+            // Reset inputs
+            inputs.forEach(i => i.value = "");
+            addEducationBtn.disabled = true;
         });
 
-        const validityChecksPassed = !schoolAlreadyExists && !educationAlreadyExists
+        educationPlaqueSection.addEventListener("click", e => {
+            if (!e.target.classList.contains("remove-btn")) return;
+            e.target.closest(".plaque").remove();
+            reindexEducation(educationPlaqueSection);
+        });
 
-        if (schoolAlreadyExists) {
-            showError("school-name-error", "Den skolan finns redan!")
-        }
-        if (educationAlreadyExists) {
-            showError("education-name-error", "Den utbildningen finns redan!")
-        }
-
-        if (!validityChecksPassed) {
-            return
-        }
-
-        //Bygger ihop plaquen här
-
-        const schoolName = document.createElement("p")
-        schoolName.innerText = schoolInput.value.trim()
-
-        const degreeName = document.createElement("p")
-        degreeName.innerText = degreeInput.value.trim()
-
-        const schoolYears = document.createElement("p")
-        schoolYears.innerText = fromDateInput.value.trim() + " - " + toDateInput.value.trim()
-
-        const removeBtn = document.createElement("button")
-        removeBtn.className = "remove-btn"
-        removeBtn.type = "button"
-        removeBtn.innerText = "X"
-
-        //Mappers
-        const mappers = [
-            getInputMapper(schoolInput, "School", index),
-            getInputMapper(degreeInput, "Degree", index),
-            getInputMapper(fromDateInput, "StartYear", index),
-            getInputMapper(toDateInput, "EndYear", index)
-        ]
-
-        mappers.forEach((mapper) => {
-            educationPlaque.appendChild(mapper)
-        })
-
-        educationPlaque.appendChild(removeBtn)
-        educationPlaque.appendChild(schoolName)
-        educationPlaque.appendChild(degreeName)
-        educationPlaque.appendChild(schoolYears)
-
-        educationPlaqueSection.appendChild(educationPlaque)
-        addEducationBtn.disabled = true
-        resetInputs(inputs)
-    })
-
-    educationPlaqueSection.addEventListener("click", (e) => {
-        if (e.target.classList.contains("remove-btn")) {
-            const plaque = e.target.closest(".plaque")
-            plaque.remove()
-            reindexEducations()
-        }
     });
 
-    const inputIsntEmpty = (anInput) => anInput.value.trim().length > 0
-
-    const resetInputs = (inputs) => {
-        inputs.forEach((input) => {
-            input.value = ""
-        })
-    }
-
-    const showError = (errorSpanId, errorMsg) => {
-        const errorSpan = document.getElementById(errorSpanId)
-        errorSpan.style.display = "block"
-        errorSpan.innerText = errorMsg
-    }
-
-    const reindexEducations = () => {
-        const plaques = educationPlaqueSection.querySelectorAll(".plaque");
-
-        plaques.forEach((plaque, index) => {
-            plaque.querySelector('input[name$=".School"]').name =
-                `Educations[${index}].School`
-
-            plaque.querySelector('input[name$=".Degree"]').name =
-                `Educations[${index}].Degree`
-
-            plaque.querySelector('input[name$=".StartYear"]').name =
-                `Educations[${index}].StartYear`
-
-            plaque.querySelector('input[name$=".EndYear"]').name =
-                `Educations[${index}].EndYear`
+    function reindexEducation(container) {
+        container.querySelectorAll(".plaque").forEach((plaque, index) => {
+            plaque.querySelector('input[name$=".School"]').name = `Educations[${index}].School`;
+            plaque.querySelector('input[name$=".Degree"]').name = `Educations[${index}].Degree`;
+            plaque.querySelector('input[name$=".StartYear"]').name = `Educations[${index}].StartYear`;
+            plaque.querySelector('input[name$=".EndYear"]').name = `Educations[${index}].EndYear`;
         });
     }
 
-    const getInputMapper = (inputElement, nameOfProperty, index) => {
-        const inputMapper = document.createElement("input")
-        inputMapper.type = "hidden"
-        inputMapper.name = `Educations[${index}].${nameOfProperty}`
-        inputMapper.value = inputElement.value.trim()
-
-        return inputMapper
+    function createHidden(collection, index, prop, value) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = `${collection}[${index}].${prop}`;
+        input.value = value;
+        return input;
     }
 
-})()
-
+})();

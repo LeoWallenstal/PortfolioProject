@@ -13,10 +13,10 @@ namespace DataLayer.Models.ViewModels
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? StartYear { get; set; }
+        public DateTime StartYear { get; set; }
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime? EndYear { get; set; }
+        public DateTime EndYear { get; set; }
     }
 }

@@ -237,7 +237,6 @@ namespace PortfolioProject.Controllers
         [HttpPost]
         public async Task<IActionResult> EditCv(CvProfileViewModel cvVm)
         {
-            Debug.WriteLine("\n\n\nEditCv[POST] Running!");
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
