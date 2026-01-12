@@ -1,12 +1,15 @@
 ﻿const showOnScroll = () => {
     const cards = document.querySelectorAll('.project-card');
-    const triggerBottom = window.innerHeight * 1.05;
 
     cards.forEach(card => {
-        const cardTop = card.getBoundingClientRect().top;
+        if (card.classList.contains('visible'))
+            return;
 
-        if (cardTop < triggerBottom) {
-            card.classList.add('show');
+        const rectTop = card.getBoundingClientRect().top;
+        const triggerBottom = window.innerHeight * 0.8;
+
+        if (rectTop < triggerBottom) {
+            card.classList.add('visible');
         }
     })
 }

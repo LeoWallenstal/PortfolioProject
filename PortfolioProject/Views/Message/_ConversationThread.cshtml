@@ -34,25 +34,41 @@
 					<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.OtherUsername" class="profile-link">
 						<img src="@Model.OtherUsersProfileImageUrl" />
 					</a>
-					<div class="received">
-						<small class="timestamp">@msg.SentAt.ToString("g")</small>
-						<p>@msg.Body</p>
-					</div>
+					@if (msg.IsDeletedByReceiver)
+					{
+						<p class="deleted-message">Du har raderat meddelandet.</p>
+					}
+					else
+					{
+						<div class="received">
+							<small class="timestamp">@msg.SentAt.ToString("g")</small>
+							<p>@msg.Body</p>
+							@if (!Context.Request.Path.Value!.Contains("/anon/"))
+							{
+								var urlDelete = (Model.OtherUsername == null
+								? Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, conversationId = Model.ConversationId })
+								: Url.Action("DeleteMessage", "Message", new { messageId = msg.MessageId, username = Model.OtherUsername }));
+								<form action=@urlDelete method="post">
+									<button class="msg-delete" aria-label="Ta bort" type="submit">
+										<i class="bi bi-trash3"></i>
+									</button>
+								</form>
+							}
+						</div>
+					}
 				</div>
 			}
 			else
 			{
 				<div class="sent">
 					<small class="timestamp">@msg.SentAt.ToString("g")</small>
+
 					<p>@msg.Body</p>
 					<small class="read-status">
 						@(msg.IsRead ? "Läst" : "Skickat")
 					</small>
 				</div>
 			}
-
-
-
 		}
 	</div>
 
@@ -60,37 +76,79 @@
 		var isLoggedIn = User?.Identity?.IsAuthenticated == true;
 
 
-		var url = !isLoggedIn
+		var urlSend = !isLoggedIn
 		? Url.Action("SendAnonymous", "Message", new { publicId = Model.PublicId })
-		: (Model.OtherUsersId == null
+		: (Model.OtherUsername == null
 		? Url.Action("Send", "Message", new { conversationId = Model.ConversationId })
 		: Url.Action("Send", "Message", new { username = Model.OtherUsername }));
 
 	}
 	<div class="send-area">
-		<form action="@url" method="post" style="display: contents;">
+		<form action="@urlSend" method="post" id="sendForm" style="display: contents;">
 			<div class="text-box">
 				<small id="counter">0/3500</small>
-				@if (TempData["SendError"] is string error)
+
+				@if (isLoggedIn && !User.HasClaim("IsActive", "true"))
 				{
-					<div id="send-error" class="text-danger">@error</div>
+					<i class="bi bi-emoji-smile-fill emoji" style="cursor: default"></i>
+					<textarea maxlength="3500" asp-for="Input.Body" class="input-box" disabled placeholder="Aktivera ditt konto för att kunna skicka meddelanden"></textarea>
+					<button class="send-btn" style="cursor: default" disabled>
+						<i class="bi bi-send"></i>
+					</button>
 				}
-
-				<emoji-picker class="emoji-picker light" hidden></emoji-picker>
-				<i class="bi bi-emoji-smile-fill emoji"></i>
-				<textarea maxlength="3500" name="Body" class="input-box"></textarea>
-
-				<button class="send-btn" type="submit">
-					<i class="bi bi-send"></i>
-				</button>
-
+				else
+				{
+					<emoji-picker class="emoji-picker light" hidden></emoji-picker>
+					<i class="bi bi-emoji-smile-fill emoji"></i>
+					<textarea maxlength="3500" asp-for="Input.Body" class="input-box"></textarea>
+					<span asp-validation-for="Input.Body" id="send-error" class="text-danger"></span>
+					<button class="send-btn" type="submit">
+						<i class="bi bi-send"></i>
+					</button>
+				}
 			</div>
-
 		</form>
 	</div>
 </div>
 
+@if (!Context.Request.Path.Value!.Contains("/anon/"))
+{
+	<!-- Overlay + dialog för att bekräfta innan man raderar ett meddelande. -->
+	<div id="deleteDialogOverlay" class="delete-dialog-overlay d-none" aria-hidden="true">
+		<div class="delete-dialog" tabindex="-1">
+			<div class="delete-dialog-header">
 
+				<div class="delete-dialog-icon">
+					<i class="bi bi-exclamation-triangle"></i>
+				</div>
+
+				<div>
+					<h2 id="deleteDialogTitle" class="delete-dialog-title">Ta bort meddelande</h2>
+					<p class="delete-dialog-subtitle">Det går inte att ångra detta</p>
+				</div>
+
+				<button type="button" class="delete-dialog-close close">×</button>
+			</div>
+
+			<div class="delete-dialog-body">
+				<div class="delete-dialog-warning">
+					<ul class="delete-dialog-list">
+						<li><strong>Du kan inte</strong> återställa ett raderat meddelande.</li>
+						<li>Meddelandet tas bara bort från <strong>din vy</strong>.</li>
+						<li>Avsändaren kan fortfarande <strong>se</strong> meddelandet.</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="delete-dialog-footer">
+				<button type="button" class="btn btn-secondary close">Avbryt</button>
+				<button type="button" class="btn btn-danger" id="deleteDialogConfirm">
+					Ta bort
+				</button>
+			</div>
+		</div>
+	</div>
+}
 
 
 

@@ -25,10 +25,10 @@ namespace DataLayer.Data
                 UserAId = currentUserId!,
                 UserBId = otherUserId
             };
-            
+
             _dbContext.Conversations.Add(convo);
             await _dbContext.SaveChangesAsync();
-            
+
             return convo;
         }
 
@@ -43,6 +43,7 @@ namespace DataLayer.Data
 
             var latestMessages = await _dbContext.Messages
                 .Where(m => convoIds.Contains(m.ConversationId))
+                .Where(m => m.ToUserId != currentUserId || !m.IsDeletedByReceiver)
                 .GroupBy(m => m.ConversationId)
                 .Select(g => g
                     .OrderByDescending(m => m.SentAt)
@@ -52,7 +53,8 @@ namespace DataLayer.Data
                         m.ConversationId,
                         m.SentAt,
                         m.Body,
-                        IsMine = m.FromUserId == currentUserId
+                        IsMine = m.FromUserId == currentUserId,
+                        m.IsDeletedByReceiver
                     })
                     .FirstOrDefault()!)
                 .ToListAsync();
@@ -92,25 +94,34 @@ namespace DataLayer.Data
                 var preview = (msg.Body ?? "");
                 preview = preview.Length > 25 ? preview.Substring(0, 25).Trim() + "…" : preview;
 
+
                 var convoListItem = new ConversationListItemViewModel
                 {
                     ConversationId = msg.ConversationId,
-                    OtherUsersFullName = $"{convo.AnonymousDisplayName}",
                     LastSentAt = msg.SentAt,
                     LastMessageIsMine = msg.IsMine,
                     Preview = preview,
                     UnreadCount = unreadMap.TryGetValue(msg.ConversationId, out var cnt) ? cnt : 0
                 };
 
-                if (!convo.IsAnonymous)
+                if (convo.IsAnonymous)
+                {
+                    convoListItem.OtherUsersFullName = $"{convo.AnonymousDisplayName}";
+                }
+                else
                 {
                     var otherId = convo.UserAId == currentUserId ? convo.UserBId : convo.UserAId;
                     users.TryGetValue(otherId!, out var other);
 
-                    convoListItem.OtherUsersId = other?.Id;
-                    convoListItem.OtherUsersFullName = $"{other?.FirstName} {other?.LastName}";
-                    convoListItem.OtherUsername = other?.UserName;
-                    convoListItem.OtherUsersProfileImageUrl = other?.ProfileImageUrl;
+                    convoListItem.OtherUsersFullName = other.IsActive ? $"{other.FirstName} {other.LastName}" : "Inaktiverat konto";
+                    convoListItem.OtherUsersId = other.Id;
+
+                    if (other.IsActive)
+                    {
+                        convoListItem.OtherUsername = other.UserName;
+                        convoListItem.OtherUsersProfileImageUrl = other.ProfileImageUrl;
+                    }
+
                 }
                 return convoListItem;
             })
@@ -145,10 +156,12 @@ namespace DataLayer.Data
                         .OrderBy(m => m.SentAt)
                         .Select(m => new MessageViewModel
                         {
+                            MessageId = m.MessageId,
                             IsMine = m.FromUserId == currentUserId,
                             SentAt = m.SentAt,
                             Body = m.Body,
-                            IsRead = m.IsRead
+                            IsRead = m.IsRead,
+                            IsDeletedByReceiver = m.IsDeletedByReceiver
                         })
                         .ToList()
                 })
@@ -172,14 +185,16 @@ namespace DataLayer.Data
                 await _dbContext.SaveChangesAsync();
             }
 
+            var convoVm = new ConversationViewModel
+            {
+                ConversationId = conversationId,
+                Messages = convo.Messages
+            };
+
             if (convo.IsAnonymous)
             {
-                return new ConversationViewModel
-                {
-                    ConversationId = conversationId,
-                    OtherUsersFullName = convo.AnonymousDisplayName,
-                    Messages = convo.Messages
-                };
+                convoVm.OtherUsersFullName = convo.AnonymousDisplayName;
+
             }
             else
             {
@@ -189,16 +204,15 @@ namespace DataLayer.Data
                 if (otherUser is null)
                     return null;
 
-                return new ConversationViewModel
-                {
-                    ConversationId = conversationId,
-                    OtherUsersId = otherUser.Id,
-                    OtherUsersFullName = $"{otherUser.FirstName}  {otherUser.LastName}",
-                    OtherUsername = otherUser.UserName,
-                    OtherUsersProfileImageUrl = otherUser.ProfileImageUrl,
-                    Messages = convo.Messages
-                };
+                convoVm.OtherUsersFullName = otherUser.IsActive ? $"{otherUser.FirstName} {otherUser.LastName}" : "Inaktiverat konto";
+                convoVm.OtherUsersId = otherUser.Id;
+
+                if (otherUser.IsActive) {
+                    convoVm.OtherUsername = otherUser.UserName;
+                    convoVm.OtherUsersProfileImageUrl = otherUser.ProfileImageUrl;
+                }
             }
+            return convoVm;
         }
 
         public async Task<Conversation?> GetConversationByIdAsync(Guid conversationId)
@@ -208,10 +222,24 @@ namespace DataLayer.Data
         }
 
 
-        public async Task InsertMessage(Message msg)
+        public async Task InsertMessageAsync(Message msg)
         {
             _dbContext.Messages.Add(msg);
             await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> MarkReceivedMessageAsDeletedAsync(Guid messageId, string currentUserId)
+        {
+            var msg = await _dbContext.Messages
+                .FirstOrDefaultAsync(m => m.MessageId == messageId);
+
+            if (msg == null) return false;
+
+            if (msg.ToUserId != currentUserId) return false;
+
+            msg.IsDeletedByReceiver = true;
+            await _dbContext.SaveChangesAsync();
+            return true;
         }
 
         public async Task<int> GetTotalUnreadAsync(string userId)
@@ -249,6 +277,7 @@ namespace DataLayer.Data
                         .OrderBy(m => m.SentAt)
                         .Select(m => new MessageViewModel
                         {
+                            MessageId = m.MessageId,
                             IsMine = m.FromUserId == null,
                             SentAt = m.SentAt,
                             Body = m.Body,

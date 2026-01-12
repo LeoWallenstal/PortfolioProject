@@ -1,0 +1,18 @@
+﻿html, body {
+    margin: 0;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    margin-top: 5em;
+}
+
+.link_403 {
+    color: #fff !important;
+    padding: 10px 20px;
+    background: #3B82F6;
+    display: inline-block;
+    margin: 0;
+    text-decoration: none;
+}

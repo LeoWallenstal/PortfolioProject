@@ -34,9 +34,7 @@
 
 <section class="cv-section">
 	<div class="container" id="cvSection">
-		<div id="cvCarousel"
-			 class="carousel slide"
-			 data-bs-interval="false">
+		<div id="cvCarousel" class="carousel slide" data-bs-interval="false">
 
 				@await Html.PartialAsync("CvCarouselPartial", Model.Cvs)
 			
@@ -53,72 +51,97 @@
 					data-bs-slide="next">
 				<span class="carousel-control-next-icon"></span>
 			</button>
-	</div>
-</section>
-
-<section class="project-section" id="recentProjects">
-	<h3 class="text-center my-4">Nyligen tillagda projekt</h3>
-	@* vill vi ha fler projekt eller bara senaste? 
-	ska man kunna klicka på projekt och se mer, 
-	typ vilka som är med, skapat av vem osv*@
-	<div>
-		<div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
-			@foreach (var project in Model.Projects)
-			{
-					<div class="card text-center project-card">
-						<div class="card-header align-items-center">
-						<a asp-controller="Project"
-						   asp-action="Details"
-						   asp-route-id="@project.Id" class="text-decoration-none text-dark">
-						   <p>@project.Title</p>
-					   </a>
-						</div>
-						<div class="card-body">
-							<p class="project-meta">Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
-							<p>@project.Description</p>
-
-						<div class="d-flex justify-content-center mt-2">
-							@foreach (var user in project.Users.Take(5))
-							{
-								<div class="participant-img">
-									<img src="@user.ProfileImageUrl" />
-								</div>
-							}
-							@if (project.Users.Count > 5)
-							{
-								<span class="ms-2 small text-muted">+@(@project.Users.Count - 5)</span>
-							}
-						</div>
-						</div>
-						@if (User.Identity.IsAuthenticated)
-						{
-							@*Jämför användarens ID hämtat från inloggnings-claims med ID:n på användare 
-							som är kopplade till projektet. Inloggnings-claims är information om den inloggade 
-							användaren som systemet sparar och gör tillgänglig under hela sessionen.
-							FindFirstValue innebär gå igenom alla claims och hitta den som har Id och ge dess värde*@
-							var isParticipant = project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-							<div class="card-footer">
-
-							@if(!isParticipant)
-							{
-								<form asp-action="JoinProject" asp-controller="Home" method="post">
-									<input type="hidden" name="pid" value="@project.Id" />
-									<input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString + "#recentProjects")"/>
-									<button class="border-0"> Delta </button>
-								</form>
-							}
-							else
-							{
-									<button disabled class="border-0"> Deltar ✔ </button>
-							}
-							</div>
-
-						}
-					</div>
-			}
 		</div>
 	</div>
 </section>
+
+@if (Model.Projects.Any())
+{
+	<section class="project-section" id="recentProjects">
+		<header class="project-header">
+			<h3>Projekt</h3>
+			<p>Utforska de senaste projekten!</p>
+		</header>
+		@* vill vi ha fler projekt eller bara senaste? 
+	ska man kunna klicka på projekt och se mer, 
+	typ vilka som är med, skapat av vem osv*@
+		<div>
+			<div class="projectcards row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
+				@foreach (var project in Model.Projects)
+				{
+					<div class="card text-center mt-2 project-card pc">
+						<a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="text-decoration-none text-reset">
+							<div class="card-header align-items-center">
+								<h5>@project.Title</h5>
+							</div>
+							<div class="card-body">
+								<p class="project-meta">Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
+								<p>@project.Description</p>
+
+								<div class="d-flex justify-content-center mt2">
+									@if (project.Owner == null || !project.Owner.IsActive)
+									{
+										<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+											<img src="/images/default-profile2.png" />
+										</div>
+									}
+									else
+									{
+										<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+											<img src="@project.Owner.ProfileImageUrl" />
+										</div>
+									}
+
+									@if (project.Users.Any())
+									{
+										@foreach (var user in project.Users.Take(4))
+										{
+											if (user.IsActive && user != null)
+											{
+												<div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+													<img src="@user.ProfileImageUrl" />
+												</div>
+											}
+										}
+										@if (project.Users.Count() > 4)
+										{
+											<span class="ms-2 small text-muted">+@(@project.Users.Count() - 4)</span>
+										}
+
+									}
+								</div>
+							</div>
+						</a>
+						@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
+						{
+							bool isParticipant = project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+							<div class="card-footer text-center">
+
+								@if (!isParticipant)
+								{
+									<form asp-action="JoinProject" asp-controller="Project" method="post">
+										<input type="hidden" name="pid" value="@project.Id" />
+										@* skickar med url för sidan användaren är på *@
+										<input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString + "#recentProjects")" />
+										<button class="border-0"> Delta </button>
+									</form>
+								}
+								else
+								{
+									<button disabled class="border-0"> Deltar ✔ </button>
+								}
+							</div>
+						}
+					</div>
+
+				}
+			</div>
+		</div>
+
+		<a asp-controller="Project" asp-action="Projects" class="show-all-btn"> Visa alla <span class="arrow">→</span> </a>
+	</section>
+}
+
 
 
 

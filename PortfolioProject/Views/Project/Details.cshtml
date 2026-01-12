@@ -2,14 +2,14 @@
 @model ProjectViewModel
 
 <section class="search-section d-flex align-items-center position-relative my-2">
-	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">
 		<i class="bi bi-arrow-left"></i>
 	</a>
 	<h3 class="mx-auto">@Model.Project.Title</h3>
 
-	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId)
+	@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId && User.HasClaim("IsActive", "true"))
 	{
-		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4">
+		<a asp-action="Edit" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute end-0 me-4 project-btn">
 			<i class="bi bi-pencil"></i>
 		</a>
 	}
@@ -25,18 +25,17 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 mt-3 mt-md-0">
 			<div class="card mt-2">
 				<div class="card-body details-card">
-					<p><strong>Deltagare (@Model.Project.Users.Count):</strong></p>
+					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
 						<div class="d-flex align-items-center mb-2">
 							@if (Model.Owner == null || !Model.Owner.IsActive)
 							{
 								<img src="/images/default-profile2.png"
 										class="rounded-circle me-2"
 										style="width:40px; height:40px;" />
-								<span class="ms-1 fst-italic">Inaktiverat konto</span>
-									
+								<span class="ms-1 fst-italic">Inaktiverat konto</span>	
 							}
 							else
 							{
@@ -73,29 +72,33 @@
 			</div>
 
 			@{
-				bool isParticipant = Model.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
-				bool isOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId;
+				if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
+				{
+					bool isParticipant = Model.Project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+					bool isOwner = User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.Project.OwnerId;
 
-				if (User.Identity.IsAuthenticated && isParticipant && !isOwner)
-				{
-					<div class="text-center mt-2">
-						<form asp-action="LeaveProject" method="post">
-							<input type="hidden" name="pid" value="@Model.Project.Id" />
-							<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-							<button class="border-0 leave-btn">Lämna projekt</button>
-						</form>
-					</div>
+					if (isParticipant && !isOwner)
+					{
+						<div class="text-center mt-2">
+							<form asp-action="LeaveProject" method="post">
+								<input type="hidden" name="pid" value="@Model.Project.Id" />
+								<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+								<button class="border-0 leave-btn">Lämna projekt</button>
+							</form>
+						</div>
+					}
+					else if (!isParticipant)
+					{
+						<div class="text-center mt-2">
+							<form asp-action="JoinProject" method="post">
+								<input type="hidden" name="pid" value="@Model.Project.Id" />
+								<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+								<button class="border-0 participate-btn">Delta i projekt</button>
+							</form>
+						</div>
+					}
 				}
-				else if (User.Identity.IsAuthenticated && !isParticipant)
-				{
-					<div class="text-center mt-2">
-						<form asp-action="JoinProject" method="post">
-							<input type="hidden" name="pid" value="@Model.Project.Id" />
-							<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-							<button class="border-0 participate-btn">Delta i projekt</button>
-						</form>
-					</div>
-				}
+				
 			}
 		</div>
 	</div>

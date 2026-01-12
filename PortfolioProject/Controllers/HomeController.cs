@@ -20,20 +20,34 @@ namespace PortfolioProject.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var cvList = new List<Cv>();
-            var projectList = new List<Project>();
-            var skills = new List<Skill>();
+            bool isAuthenticated = User.Identity.IsAuthenticated;
 
-            if (User.Identity.IsAuthenticated) {
-                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsActive == true).ToListAsync();
-            }
-            else
+
+            //om användaren är inloggad hämtas de cvn med aktiv användare
+            //om användaren inte är inloggad hämtas de cvn som har icke privata och aktiva användare
+            var cvList = isAuthenticated ? 
+                await _dbContext.Cvs
+                    .Where(cv => cv.User.IsActive == true)
+                    .ToListAsync() : 
+                await _dbContext.Cvs
+                    .Where(cv => cv.User.IsPrivate == false 
+                        && cv.User.IsActive == true)
+                    .ToListAsync();
+
+            var projectList = await _dbContext.Projects
+                    .Include(p => p.Users)
+                    .OrderByDescending(p => p.CreatedDate)
+                    .Take(3)
+                    .ToListAsync();
+
+            foreach(var project in projectList)
             {
-                cvList = await _dbContext.Cvs.Where(cv => cv.User.IsPrivate == false && cv.User.IsActive == true).ToListAsync();
+                project.Users = isAuthenticated ?
+                    project.Users.Where(u => u.Id != project.OwnerId && u.IsActive).ToList() :
+                    project.Users.Where(u => u.Id != project.OwnerId && !u.IsPrivate && u.IsActive).ToList();
             }
-
-            projectList = await _dbContext.Projects.Include(p => p.Users).OrderByDescending(p => p.CreatedDate).Take(3).ToListAsync();
-            skills = await _dbContext.Skills.ToListAsync();
+            
+            var skills = await _dbContext.Skills.ToListAsync();
 
             var mv = new HomeViewModel
             {

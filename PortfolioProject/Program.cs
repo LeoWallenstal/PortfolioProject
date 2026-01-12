@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using DataLayer.Data;
 using DataLayer.Models;
+using DataLayer;
 
 namespace PortfolioProject
 {
@@ -26,6 +27,17 @@ namespace PortfolioProject
 
             builder.Services.AddScoped<IMessagesService, MessagesService>();
 
+            //!!!!!! Notis till James !!!!!!
+            //Om du väljer att ha kvar den separata klassen, ändra namnet här också
+            //Om du istället gör det direkt i controllern så kan du ta bort denna rad
+            builder.Services.AddScoped<ExportPlaceholder, ExportPlaceholder>();
+
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Error/403";
+            });
 
             var app = builder.Build();
 
@@ -45,13 +57,16 @@ namespace PortfolioProject
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseStatusCodePagesWithReExecute("/Error/{0}");
+            
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}"
             );
 
             SeedData.SeedAsync(app.Services);
-            app.Run();
+            app.Run();            
         }
     }
 }

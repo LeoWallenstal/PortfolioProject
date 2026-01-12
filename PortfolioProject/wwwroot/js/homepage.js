@@ -2,10 +2,11 @@
 function init() {
     const name = document.getElementById("nameSearch");
     const skill = document.getElementById("skillSearch");
-    name.addEventListener("input", searchCvs)
-    skill.addEventListener("change", searchCvs)
+    name.addEventListener("input", searchCvs);
+    skill.addEventListener("change", searchCvs);
 
     window.addEventListener("scroll", onScrollEventProjects);
+    onScrollEventProjects();
 
     toggleButtons();
 
@@ -42,8 +43,8 @@ function animateProjectCards() {
     const cards = document.querySelectorAll(".project-card");
     cards.forEach((card, index) => {
         setTimeout(() => {
-            card.classList.add("show");
-        }, index * 1000);
+            card.classList.add("visible");
+        }, index * 500);
     });
 }
 
@@ -53,6 +54,11 @@ function onScrollEventProjects() {
         return;
     }
     const projectsection = document.getElementById("recentProjects");
+    if (!projectsection) 
+    {
+        return;
+    }
+
     const rect = projectsection.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 
@@ -61,7 +67,7 @@ function onScrollEventProjects() {
     if (rect.top < triggerPoint) {
         animateProjectCards();
         projectsAnimated = true;
-        window.removeEventListener("scroll", onScrollAnimateProjects);
+        window.removeEventListener("scroll", onScrollEventProjects);
     }
 }
 

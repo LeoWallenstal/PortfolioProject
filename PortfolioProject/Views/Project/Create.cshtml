@@ -4,7 +4,7 @@
 }
 
 <section class="search-section d-flex align-items-center position-relative my-2">
-	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4" style="text-decoration: none">
+	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">
 		<i class="bi bi-arrow-left"></i>
 	</a>
 	<h3 class="mx-auto">Skapa nytt projekt</h3>
@@ -26,7 +26,7 @@
 						<label class="form-label mb-2 me-2">Beskrivning: </label>
 						<span asp-validation-for="Project.Description" class="text-danger mb-2"></span>
 					</div>
-					<textarea asp-for="Project.Description" class="form-control" rows="5" style="resize: none;"></textarea>
+					<textarea asp-for="Project.Description" class="form-control project-textarea" rows="5" style="resize: none;"></textarea>
 				</div>
 					<button type="submit" class="save-changes-btn border-0" disabled>Spara ändringar</button>
 			</form>

@@ -46,7 +46,7 @@ namespace PortfolioProject
                     FirstName = "Leo",
                     LastName = "Student",
                     ProfileImageUrl = "/cv/images/hero.png",
-                    IsActive = false,
+                    IsActive = true,
                     IsPrivate = false
                 };
 
@@ -273,8 +273,9 @@ namespace PortfolioProject
 
             // many-to-many user<->project (if your model has it)
             p1.Users.Add(leo);
-            p2.Users.Add(leo);
             p2.Users.Add(admin);
+            p1.Users.Add(admin);
+            p2.Users.Add(leo);
 
             db.Projects.AddRange(p1, p2);
 
