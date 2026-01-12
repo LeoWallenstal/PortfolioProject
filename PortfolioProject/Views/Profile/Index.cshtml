@@ -5,46 +5,54 @@
 <h1>Min Profil</h1>
 
 <!-- PROFILBILD NÅNSTANS -->
+<section class="horizontal-container">
+    <section>
+        <div class="label-w-text">
+            <p class="label">Namn: </p>
+            <p class="text">@($"{Model.FullName}")</p>
+        </div>
 
-<section>
-    <div class="label-w-text">
-        <p class="label">Namn: </p>
-        <p class="text">@($"{Model.FullName}")</p>
+        <div class="label-w-text">
+            <p class="label">Användarnamn: </p>
+            <p class="text">@($"{Model.UserName}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Email: </p>
+            <p>@($"{Model.Profile.Email}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Telefonnummer: </p>
+            <p>@($"{Model.Profile.PhoneNumber}")</p>
+        </div>
+
+        <div class="label-w-text">
+            <p>Adress: </p>
+            <p>@($"{Model.Profile.Adress}")</p>
+        </div>
+
+        <div class="label-w-checkbox">
+            <label asp-for="Profile.IsPrivate">Privat profil:</label>
+            <input type="checkbox" asp-for="Profile.IsPrivate" disabled>
+        </div>
+
+        <div class="label-w-checkbox">
+            <label asp-for="Profile.IsActive">Profil aktiv:</label>
+            <input type="checkbox" asp-for="Profile.IsActive" disabled>
+        </div>
+
+        <div class="button-wrapper">
+            <a asp-action="EditProfile" class="btn btn-primary">Redigera Profil</a>
+        </div>    
+    </section>
+    <div class="img-container">
+        <img class="img-wrapper"
+             src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                             ? Url.Content(Model.Cv.ProfileImagePath)
+                             : Url.Content("../images/default-img.png"))" alt="Profile picture">
     </div>
-
-    <div class="label-w-text">
-        <p class="label">Användarnamn: </p>
-        <p class="text">@($"{Model.UserName}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Email: </p>
-        <p>@($"{Model.Profile.Email}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Telefonnummer: </p>
-        <p>@($"{Model.Profile.PhoneNumber}")</p>
-    </div>
-
-    <div class="label-w-text">
-        <p>Adress: </p>
-        <p>@($"{Model.Profile.Adress}")</p>
-    </div>
-
-    <div class="label-w-checkbox">
-        <label asp-for="Profile.IsPrivate">Privat profil:</label>
-        <input type="checkbox" asp-for="Profile.IsPrivate" disabled>
-    </div>
-
-    <div class="label-w-checkbox">
-        <label asp-for="Profile.IsActive">Profil aktiv:</label>
-        <input type="checkbox" asp-for="Profile.IsActive" disabled>
-    </div>
-
-    <div class="button-wrapper">
-        <a asp-action="EditProfile" class="btn btn-primary">Redigera Profil</a>
-    </div>    
+    
 </section>
 
 <!-- CV -->
@@ -79,7 +87,7 @@
                             <div class="plaque">
                                 <img src="@(!string.IsNullOrEmpty(sVm.ImageUrl) ? sVm.ImageUrl : "../images/default-img.png")"
                                      onerror="this.src='../images/default-img.png'"
-                                    class="thumbnail"
+                                     class="thumbnail"
                                 />
                                 <p>@($"{sVm.Name}")</p>
                             </div>

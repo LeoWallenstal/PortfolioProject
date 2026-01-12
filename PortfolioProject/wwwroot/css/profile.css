@@ -126,6 +126,8 @@ span.text-danger {
     display: flex;
     gap: 1rem;
     margin-top: 1rem;
+
+    width: fit-content;
 }
 
 #pw-section {
@@ -235,4 +237,30 @@ span.text-danger {
     text-align: center;
     font-style: italic;
     opacity: 0.75;
+}
+
+.img-container {
+    width: 128px; /* fixed size */
+    height: 128px; /* fixed size */
+    overflow: hidden; /* crop anything outside */
+    flex-shrink: 0; /* prevent flex from shrinking/growing */
+}
+
+.no-border-horizontal {
+    display: flex;
+    flex-direction: row;
+
+    gap: 1rem;
+    
+    border: none;
+
+    padding: 0;
+    margin: 0;
+}
+
+.img-wrapper {
+    width: 100%; /* fill container */
+    height: 100%; /* fill container */
+    object-fit: cover; /* crop/fit nicely */
+    border-radius: 6px;
 }

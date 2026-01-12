@@ -71,6 +71,7 @@ namespace PortfolioProject.Controllers
             user.Adress = vm.Profile.Adress;
             user.Email = vm.Profile.Email;
             user.PhoneNumber = vm.Profile.PhoneNumber;
+            user.ProfileImageUrl = vm.Profile.ProfileImageUrl;
             user.IsPrivate = vm.Profile.IsPrivate;
             user.IsActive = vm.Profile.IsActive;
 
@@ -88,10 +89,8 @@ namespace PortfolioProject.Controllers
 
         [HttpGet]
         public async Task<IActionResult> UpdatePassword() {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return NotFound();
             
-            return View(user);
+            return View(new UpdatePasswordViewModel());
         }
 
         [HttpPost]
@@ -99,18 +98,20 @@ namespace PortfolioProject.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
+            Debug.WriteLine(user.PasswordHash);
 
             if (!ModelState.IsValid) {
                 return View(vm);
             }
-
-            
 
             var result = await _userManager.ChangePasswordAsync(
                 user,
                 vm.ConfirmPassword, 
                 vm.ConfirmNewPassword
             );
+
+            Debug.WriteLine($"\nDEBUG\n\nPassword should be changed from {vm.ConfirmPassword} to {vm.ConfirmNewPassword}");
+            Debug.WriteLine(user.PasswordHash);
 
             return RedirectToAction("Index");
         }
@@ -354,6 +355,7 @@ namespace PortfolioProject.Controllers
                         Name = sVm.Name.Trim(),
                         ImageUrl = sVm.ImageUrl?.Trim() ?? ""
                     };
+                    _dbContext.Skills.Add(newSkill);
                     cv.Skills.Add(newSkill);
                 }
             }
@@ -401,6 +403,7 @@ namespace PortfolioProject.Controllers
                         StartYear = eVm.StartYear,
                         EndYear = eVm.EndYear
                     };
+                    _dbContext.Educations.Add(newEdu);
                     cv.Educations.Add(newEdu);
                 }
             }
@@ -442,6 +445,7 @@ namespace PortfolioProject.Controllers
                         StartYear = eVm.StartYear,
                         EndYear = eVm.EndYear
                     };
+                    _dbContext.Experiences.Add(newExp);
                     cv.Experiences.Add(newExp);
                 }
             }

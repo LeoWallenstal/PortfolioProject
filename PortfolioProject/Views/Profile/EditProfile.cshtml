@@ -2,11 +2,12 @@
 @model UserViewModel
 
 <link href="/css/profile.css" rel="stylesheet">
-<script defer src="/js/togglePwSection.js"></script>
+<script defer src="/js/previewProfilePic.js"></script>
 
 <h1>Min Profil</h1>
 
 <form asp-action="EditProfile" method="post">
+    <div class="horizontal-container">
     <section class="profile-grid" id="profile-grid">
 
         <div class="form-row">
@@ -63,17 +64,36 @@
             </div>
         </div>
 
-        <div class="button-wrapper">
-            <button type="submit" class="btn btn-primary">Spara profil</button>
+        <div class="form-row">
+            <div class="checkbox-row">
+                <label asp-for="Profile.ProfileImageUrl">Profilbild(URL):</label>
+                <input id="profile-pic-input" asp-for="Profile.ProfileImageUrl" />
+            </div>
         </div>
 
-    </section>
+        <div class="no-border-horizontal">
+            <div class="button-wrapper">
+                <button type="submit" class="btn btn-primary">Spara profil</button>
+            </div>
+            <div class="button-wrapper">
+                <button class="btn btn-primary" id="btn-preview" type="button">Förhandsvisa bild</button>
+            </div>
+        </div>
+		</section>
+        <div class="img-container">
+            <img class="img-wrapper"
+                 id="edit-profile-pic"
+                 src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                                              ? Url.Content(Model.Cv.ProfileImagePath)
+                                              : Url.Content("../wwwroot/images/default-profile2.png"))" alt="Profile picture">
+        </div>
+	</div>
 </form>
 
     <!-- BUTTONS -->
 
     <div class="button-wrapper" id="profile-buttons">
-        <button type="button" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</button>
+        <a asp-action="UpdatePassword" id="change-pw-btn" class="btn btn-primary">Ändra Lösenord</a>
         <a asp-action="Index" class="btn btn-secondary">Tillbaka</a>
     </div>
 
