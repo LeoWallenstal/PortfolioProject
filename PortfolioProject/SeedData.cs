@@ -283,7 +283,6 @@ namespace PortfolioProject
             var adminCv = new Cv
             {
                 UserId = admin.Id,
-                ViewCount = 14,
                 Title = "Administrator / Platform Owner",
                 Summary = "Maintains the platform, manages users, and verifies data integrity. Focus: moderation, stability, and architecture."
             };
@@ -291,7 +290,6 @@ namespace PortfolioProject
             var leoCv = new Cv
             {
                 UserId = leo.Id,
-                ViewCount = 6,
                 Title = "Systemvetenskap Student",
                 Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
                           "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
@@ -303,7 +301,6 @@ namespace PortfolioProject
                 UserId = anna.Id,
                 Title = "Frontend Developer (UI/UX focus)",
                 Summary = "Frontend developer passionate about accessibility and responsive UI. I enjoy building design systems and polished component libraries.",
-                ViewCount = 46
             };
 
             var aliceCv = new Cv
@@ -311,7 +308,6 @@ namespace PortfolioProject
                 UserId = alice.Id,
                 Title = "Backend Developer (.NET) • Data & APIs",
                 Summary = "Backend-focused developer building clean APIs and robust data layers. I enjoy optimizing queries and designing maintainable domain models.",
-                ViewCount = 61
             };
 
             var bobCv = new Cv
@@ -319,7 +315,6 @@ namespace PortfolioProject
                 UserId = bob.Id,
                 Title = "Private Profile • Fullstack Consultant",
                 Summary = "Consultant profile (private). Experience across frontend and backend. This profile exists to demo privacy rules and access control.",
-                ViewCount = 27
             };
 
             var claraCv = new Cv
@@ -327,7 +322,6 @@ namespace PortfolioProject
                 UserId = clara.Id,
                 Title = "Junior Developer • React + ASP.NET Core",
                 Summary = "Junior fullstack developer working on portfolio projects. Strong interest in learning by shipping features end-to-end.",
-                ViewCount = 19
             };
 
             var davidCv = new Cv
@@ -335,7 +329,6 @@ namespace PortfolioProject
                 UserId = david.Id,
                 Title = "Inactive Account • Example CV",
                 Summary = "This user is seeded as inactive to demonstrate filters (IsActive) and edge cases in visibility/search.",
-                ViewCount = 5
             };
 
             var erikCv = new Cv
@@ -343,21 +336,18 @@ namespace PortfolioProject
                 UserId = erik.Id,
                 Title = "Frontend Engineer • Performance & Testing",
                 Summary = "Frontend engineer focused on performance, testing, and maintainable UI code. Likes TypeScript, component patterns, and CI.",
-                ViewCount = 38
             };
 
             var fridaCv = new Cv { 
                 UserId = frida.Id,
                 Title = "Software Engineer • .NET + Cloud",
                 Summary = "Software engineer building services with .NET and cloud tooling. Enjoys automation, deployments, and clean DevOps workflows.",
-                ViewCount = 52
             };
 
             var gustavCv = new Cv { 
                 UserId = gustav.Id,
                 Title = "Backend Engineer • EF Core + SQL",
                 Summary = "Backend engineer with strong database interest. Builds reliable systems with EF Core, SQL, and background processing.",
-                ViewCount = 33
             };
 
             var helenaCv = new Cv { 
@@ -371,14 +361,12 @@ namespace PortfolioProject
                 UserId = isak.Id,
                 Title = "Student • Internship-ready",
                 Summary = "Student profile to demo “early career” CVs. Focus on learning fundamentals, building small apps, and contributing to team projects.",
-                ViewCount = 11
             };
 
             var juliaCv = new Cv { 
                 UserId = julia.Id,
                 Title = "Fullstack Developer • MVC + React",
                 Summary = "Fullstack developer comfortable in MVC and modern frontend. Likes writing readable code, strong naming, and clear UI states.",
-                ViewCount = 57
             };
 
             db.Cvs.AddRange(
@@ -530,9 +518,6 @@ namespace PortfolioProject
 
                 convo = new Conversation
                 {
-                    // If your Conversation model already has: Guid Id {get;set;} = Guid.NewGuid();
-                    // you can remove the next line.
-                    Id = Guid.NewGuid(),
                     UserAId = a,
                     UserBId = b
                 };
