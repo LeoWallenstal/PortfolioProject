@@ -64,6 +64,7 @@ namespace PortfolioProject
                     Email = "anna@demo.local",
                     FirstName = "Anna",
                     LastName = "Student",
+                    ProfileImageUrl = "/images/anna.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -83,6 +84,7 @@ namespace PortfolioProject
                     Email = "alice@demo.local",
                     FirstName = "Alice",
                     LastName = "Andersson",
+                    ProfileImageUrl = "/images/alice.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -102,6 +104,7 @@ namespace PortfolioProject
                     Email = "bob@demo.local",
                     FirstName = "Bob",
                     LastName = "Berg",
+                    ProfileImageUrl = "/images/bob.jpg",
                     IsActive = true,
                     IsPrivate = true   // private profile example
                 };
@@ -121,6 +124,7 @@ namespace PortfolioProject
                     Email = "clara@demo.local",
                     FirstName = "Clara",
                     LastName = "Carlsson",
+                    ProfileImageUrl = "/images/clara.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -140,7 +144,8 @@ namespace PortfolioProject
                     Email = "david@demo.local",
                     FirstName = "David",
                     LastName = "Dahl",
-                    IsActive = false,   // inactive account example
+                    ProfileImageUrl = "/images/david.jpg",
+                    IsActive = false,  
                     IsPrivate = false
                 };
 
@@ -159,6 +164,7 @@ namespace PortfolioProject
                     Email = "erik@demo.local",
                     FirstName = "Erik",
                     LastName = "Eklund",
+                    ProfileImageUrl = "/images/erik.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -178,6 +184,7 @@ namespace PortfolioProject
                     Email = "frida@demo.local",
                     FirstName = "Frida",
                     LastName = "Forsberg",
+                    ProfileImageUrl = "/images/frida.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -197,6 +204,7 @@ namespace PortfolioProject
                     Email = "gustav@demo.local",
                     FirstName = "Gustav",
                     LastName = "Gunnarsson",
+                    ProfileImageUrl = "/images/gustav.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -216,6 +224,7 @@ namespace PortfolioProject
                     Email = "helena@demo.local",
                     FirstName = "Helena",
                     LastName = "Holm",
+                    ProfileImageUrl = "/images/helena.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -235,6 +244,7 @@ namespace PortfolioProject
                     Email = "isak@demo.local",
                     FirstName = "Isak",
                     LastName = "Ivarsson",
+                    ProfileImageUrl = "/images/isak.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -254,6 +264,7 @@ namespace PortfolioProject
                     Email = "julia@demo.local",
                     FirstName = "Julia",
                     LastName = "Jonsson",
+                    ProfileImageUrl = "/images/julia.jpg",
                     IsActive = true,
                     IsPrivate = false
                 };

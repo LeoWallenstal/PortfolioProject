@@ -144,6 +144,9 @@ p {
     padding: 0;
 }
 
+.cv-section p {
+    font-size: 0.7rem;
+}
 
 
 @media (max-width: 768px) {
