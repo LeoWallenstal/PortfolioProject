@@ -145,7 +145,7 @@ namespace PortfolioProject
                     FirstName = "David",
                     LastName = "Dahl",
                     ProfileImageUrl = "/images/david.jpg",
-                    IsActive = false,  
+                    IsActive = false,
                     IsPrivate = false
                 };
 
@@ -280,49 +280,111 @@ namespace PortfolioProject
                 return;
 
             // --- CVs (FK to users) ---
-            var adminCv = new Cv { UserId = admin.Id, ViewCount = 0 };
+            var adminCv = new Cv
+            {
+                UserId = admin.Id,
+                ViewCount = 14,
+                Title = "Administrator / Platform Owner",
+                Summary = "Maintains the platform, manages users, and verifies data integrity. Focus: moderation, stability, and architecture."
+            };
 
             var leoCv = new Cv
             {
                 UserId = leo.Id,
-                ViewCount = 0,
+                ViewCount = 6,
                 Title = "Systemvetenskap Student",
                 Summary = "I'm a frontend web developer dedicated to turning ideas into creative solutions. I specialize in creating seamless and intuitive user experiences.\r\n\t\t\t" +
                           "My approach focuses on creating scalable, high-performing solutions tailored to both user needs and business objectives. By prioritizing performance, accessibility, " +
                           "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
             };
 
-            // Same-ish CV template for all demo users (you can tweak later)
-            Cv MakeCv(User u)
+            var annaCv = new Cv
             {
-                return new Cv
-                {
-                    UserId = u.Id,
-                    ViewCount = 0,
-                    Title = "Exemepel på titel",
-                    Summary =
-                        "I'm a frontend web developer dedicated to turning ideas into creative solutions. " +
-                        "I specialize in creating seamless and intuitive user experiences. " +
-                        "My approach focuses on performance, accessibility, and responsiveness."
-                };
-            }
+                UserId = anna.Id,
+                Title = "Frontend Developer (UI/UX focus)",
+                Summary = "Frontend developer passionate about accessibility and responsive UI. I enjoy building design systems and polished component libraries.",
+                ViewCount = 46
+            };
 
-            var aliceCv = MakeCv(alice);
-            var bobCv = MakeCv(bob);
-            var claraCv = MakeCv(clara);
-            var davidCv = MakeCv(david);
-            var erikCv = MakeCv(erik);
-            var fridaCv = MakeCv(frida);
-            var gustavCv = MakeCv(gustav);
-            var helenaCv = MakeCv(helena);
-            var isakCv = MakeCv(isak);
-            var juliaCv = MakeCv(julia);
+            var aliceCv = new Cv
+            {
+                UserId = alice.Id,
+                Title = "Backend Developer (.NET) • Data & APIs",
+                Summary = "Backend-focused developer building clean APIs and robust data layers. I enjoy optimizing queries and designing maintainable domain models.",
+                ViewCount = 61
+            };
 
+            var bobCv = new Cv
+            {
+                UserId = bob.Id,
+                Title = "Private Profile • Fullstack Consultant",
+                Summary = "Consultant profile (private). Experience across frontend and backend. This profile exists to demo privacy rules and access control.",
+                ViewCount = 27
+            };
+
+            var claraCv = new Cv
+            {
+                UserId = clara.Id,
+                Title = "Junior Developer • React + ASP.NET Core",
+                Summary = "Junior fullstack developer working on portfolio projects. Strong interest in learning by shipping features end-to-end.",
+                ViewCount = 19
+            };
+
+            var davidCv = new Cv
+            {
+                UserId = david.Id,
+                Title = "Inactive Account • Example CV",
+                Summary = "This user is seeded as inactive to demonstrate filters (IsActive) and edge cases in visibility/search.",
+                ViewCount = 5
+            };
+
+            var erikCv = new Cv
+            {
+                UserId = erik.Id,
+                Title = "Frontend Engineer • Performance & Testing",
+                Summary = "Frontend engineer focused on performance, testing, and maintainable UI code. Likes TypeScript, component patterns, and CI.",
+                ViewCount = 38
+            };
+
+            var fridaCv = new Cv { 
+                UserId = frida.Id,
+                Title = "Software Engineer • .NET + Cloud",
+                Summary = "Software engineer building services with .NET and cloud tooling. Enjoys automation, deployments, and clean DevOps workflows.",
+                ViewCount = 52
+            };
+
+            var gustavCv = new Cv { 
+                UserId = gustav.Id,
+                Title = "Backend Engineer • EF Core + SQL",
+                Summary = "Backend engineer with strong database interest. Builds reliable systems with EF Core, SQL, and background processing.",
+                ViewCount = 33
+            };
+
+            var helenaCv = new Cv { 
+                UserId = helena.Id,
+                Title = "Product-minded Developer • UX & API integration",
+                Summary = "Product-minded developer bridging UX and backend integration. Enjoys building features that are measurable and user-friendly.",
+                ViewCount = 24
+            };
+
+            var isakCv = new Cv { 
+                UserId = isak.Id,
+                Title = "Student • Internship-ready",
+                Summary = "Student profile to demo “early career” CVs. Focus on learning fundamentals, building small apps, and contributing to team projects.",
+                ViewCount = 11
+            };
+
+            var juliaCv = new Cv { 
+                UserId = julia.Id,
+                Title = "Fullstack Developer • MVC + React",
+                Summary = "Fullstack developer comfortable in MVC and modern frontend. Likes writing readable code, strong naming, and clear UI states.",
+                ViewCount = 57
+            };
 
             db.Cvs.AddRange(
-            adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv,
-            erikCv, fridaCv, gustavCv, helenaCv, isakCv, juliaCv
-        );
+                adminCv, leoCv, annaCv, aliceCv, bobCv, claraCv, davidCv,
+                erikCv, fridaCv, gustavCv, helenaCv, isakCv, juliaCv
+            );
 
 
             // --- EDUCATIONS ---
@@ -489,12 +551,13 @@ namespace PortfolioProject
 
             // --- Messages ---
             db.Messages.AddRange(
+                // ===== Conversation: ADMIN <-> LEO =====
                 new Message
                 {
                     ConversationId = convoAdminLeo.Id,
                     FromUserId = admin.Id,
                     ToUserId = leo.Id,
-                    Body = "Welcome to the platform!",
+                    Body = "Hey Leo! How’s it going?",
                     SentAt = DateTime.UtcNow,
                     IsRead = false
                 },
@@ -503,27 +566,29 @@ namespace PortfolioProject
                     ConversationId = convoAdminLeo.Id,
                     FromUserId = leo.Id,
                     ToUserId = admin.Id,
-                    Body = "Thanks!",
+                    Body = "Pretty good! Just taking it easy today. You?",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
                 },
+
+                // ===== Conversation: ADMIN <-> ANNA =====
                 new Message
                 {
                     ConversationId = convoAdminAnna.Id,
                     FromUserId = admin.Id,
                     ToUserId = anna.Id,
-                    Body = "Hello!",
+                    Body = "Hi Anna 🙂 How are things?",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
                 },
 
-                // ===== Conversation: DAVID <-> ADMIN (requested) =====
+                // ===== Conversation: DAVID <-> ADMIN =====
                 new Message
                 {
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
                     ToUserId = admin.Id,
-                    Body = "Hey admin, I think my profile is marked inactive by mistake. Can you check?",
+                    Body = "Hey! Long time no talk — how have you been?",
                     SentAt = t0.AddMinutes(0),
                     IsRead = true
                 },
@@ -532,7 +597,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = admin.Id,
                     ToUserId = david.Id,
-                    Body = "Hi David! I can see your account is inactive in the demo seed. Want me to activate it?",
+                    Body = "Hey David! I’ve been good, just busy lately. What about you?",
                     SentAt = t0.AddMinutes(2),
                     IsRead = false
                 },
@@ -541,7 +606,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
                     ToUserId = admin.Id,
-                    Body = "Yes please — also, does being private affect messaging?",
+                    Body = "Same here. Work’s been a bit hectic but nothing crazy.",
                     SentAt = t0.AddMinutes(4),
                     IsRead = false
                 },
@@ -550,7 +615,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = admin.Id,
                     ToUserId = david.Id,
-                    Body = "Private affects profile visibility, not direct messages (in our demo rules).",
+                    Body = "Yeah, I feel that. Hopefully things calm down soon.",
                     SentAt = t0.AddMinutes(6),
                     IsRead = false
                 },
@@ -561,7 +626,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminAlice.Id,
                     FromUserId = admin.Id,
                     ToUserId = alice.Id,
-                    Body = "Welcome Alice! Try sending a message back to test the inbox.",
+                    Body = "Hi Alice! Hope you’re having a good day 😊",
                     SentAt = t0.AddMinutes(10),
                     IsRead = true
                 },
@@ -570,7 +635,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminAlice.Id,
                     FromUserId = alice.Id,
                     ToUserId = admin.Id,
-                    Body = "Thanks! This UI is super clean 👌",
+                    Body = "Thanks! Yeah, it’s been pretty nice so far.",
                     SentAt = t0.AddMinutes(12),
                     IsRead = false
                 },
@@ -581,7 +646,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminBob.Id,
                     FromUserId = bob.Id,
                     ToUserId = admin.Id,
-                    Body = "Hi! My profile is private — can you still see my CV?",
+                    Body = "Hey! Just wanted to say hi 👋",
                     SentAt = t0.AddMinutes(14),
                     IsRead = false
                 },
@@ -590,7 +655,7 @@ namespace PortfolioProject
                     ConversationId = convoAdminBob.Id,
                     FromUserId = admin.Id,
                     ToUserId = bob.Id,
-                    Body = "As admin I can, but other users might be blocked depending on your privacy logic.",
+                    Body = "Hey Bob! Nice to hear from you.",
                     SentAt = t0.AddMinutes(15),
                     IsRead = false
                 },
@@ -601,11 +666,12 @@ namespace PortfolioProject
                     ConversationId = convoAdminClara.Id,
                     FromUserId = admin.Id,
                     ToUserId = clara.Id,
-                    Body = "Hi Clara! Reminder: update your summary and add a project.",
+                    Body = "Hi Clara! How’s your week been?",
                     SentAt = t0.AddMinutes(18),
                     IsRead = false
                 }
             );
+
 
             await db.SaveChangesAsync();
         }
