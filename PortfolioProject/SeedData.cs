@@ -518,9 +518,6 @@ namespace PortfolioProject
 
                 convo = new Conversation
                 {
-                    // If your Conversation model already has: Guid Id {get;set;} = Guid.NewGuid();
-                    // you can remove the next line.
-                    Id = Guid.NewGuid(),
                     UserAId = a,
                     UserBId = b
                 };
