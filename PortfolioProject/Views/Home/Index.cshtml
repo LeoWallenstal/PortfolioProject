@@ -3,6 +3,9 @@
 @section Scripts {
 	<script src="~/js/homepage.js" defer></script>
 }
+@{
+    ViewData["Title"] = "Hem";
+}
 
 <section class="search-section">
 
@@ -62,11 +65,7 @@
 			<h3>Projekt</h3>
 			<p>Utforska de senaste projekten!</p>
 		</header>
-		@* vill vi ha fler projekt eller bara senaste? 
-	ska man kunna klicka på projekt och se mer, 
-	typ vilka som är med, skapat av vem osv*@
-		<div>
-			<div class="projectcards row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
+		<div class="projectcards row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
 				@foreach (var project in Model.Projects)
 				{
 					<div class="card text-center mt-2 project-card pc">
@@ -136,7 +135,7 @@
 
 				}
 			</div>
-		</div>
+		
 
 		<a asp-controller="Project" asp-action="Projects" class="show-all-btn"> Visa alla <span class="arrow">→</span> </a>
 	</section>

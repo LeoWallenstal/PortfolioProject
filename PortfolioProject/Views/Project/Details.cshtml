@@ -1,5 +1,8 @@
 ﻿@using System.Security.Claims
 @model ProjectViewModel
+@{
+	ViewData["Title"] = @Model.Project.Title;
+}
 
 <section class="search-section d-flex align-items-center position-relative my-2">
 	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">
@@ -59,23 +62,20 @@
 					{
 						<div class="list-group">
 							@foreach (var user in Model.Participants)
-							{
-								<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
-								@if(user.IsActive)
-								{
-									<div class="d-flex align-items-center mb-2">
+							{								
+								<div class="d-flex align-items-center mb-2">
+									<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
 										<div>
 											<img src="@user.ProfileImageUrl"
-												 class="rounded-circle me-2"
-												 style="width:40px; height:40px;"/>
+													class="rounded-circle me-2"
+													style="width:40px; height:40px;"/>
 										</div>
 							
 										<span class="ms-1">
 											@user.FirstName @user.LastName
 										</span>
-									</div>
-								}
-								</a>
+									</a>
+								</div>
 							}
 						</div>
 					}

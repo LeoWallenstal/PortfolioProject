@@ -261,6 +261,12 @@
         .show-all-btn:hover .arrow {
             transform: translateX(3px);
         }
+    
+    .my-projects{
+        position:relative;
+        padding-bottom: 3rem;
+    }
+
 }
 
 
@@ -302,4 +308,9 @@
         display: inline-flex;
     }
 
+}
+
+.project-meta {
+    font-size: 0.7rem;
+    color: #777;
 }

@@ -1,5 +1,9 @@
 ﻿@model UserViewModel
 
+@{
+    ViewData["Title"] = "Din profil";
+}
+
 <link href="/css/profile.css" rel="stylesheet">
 
 <h1>Min Profil</h1>
@@ -42,11 +46,6 @@
         <div class="label-w-checkbox">
             <label asp-for="Profile.IsPrivate">Privat profil:</label>
             <input type="checkbox" asp-for="Profile.IsPrivate" disabled>
-        </div>
-
-        <div class="label-w-checkbox">
-            <label asp-for="Profile.IsActive">Profil aktiv:</label>
-            <input type="checkbox" asp-for="Profile.IsActive" disabled>
         </div>
 
         <div class="button-wrapper">
@@ -150,6 +149,79 @@
                 <p class="nothing-to-show-text">Inga erfarenheter att visa!</p>
             }
         }
+
+        <hr>
+        <p class="section-header">Projekt</p>
+
+        <div class="my-projects">
+        <!-- PROJECTS -->
+        @{
+            if (Model.Projects.Count > 0)
+            {
+                <div class="projectcards row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3 g-3 m-1 justify-content-center">
+                    @foreach (var project in Model.Projects)
+                    {
+                        <div class="card text-center mt-2 project-card pc visible">
+                            <a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="text-decoration-none text-reset">
+                                <div class="card-header align-items-center">
+                                    <h5>@project.Title</h5>
+                                </div>
+                                <div class="card-body">
+                                    <p class="project-meta">Skapat: @project.CreatedDate.ToString("yyyy-MM-dd")</p>
+                                    <p>@project.Description</p>
+
+                                    <div class="d-flex justify-content-center mt2">
+                                        @if (project.Owner == null || !project.Owner.IsActive)
+                                        {
+                                            <div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+                                                <img src="/images/default-profile2.png" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+                                                <img src="@project.Owner.ProfileImageUrl" />
+                                            </div>
+                                        }
+
+                                        @if (project.Users.Any())
+                                        {
+                                            @foreach (var user in project.Users.Take(4))
+                                            {
+                                                if (user.IsActive && user != null)
+                                                {
+                                                    <div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
+                                                        <img src="@user.ProfileImageUrl" />
+                                                    </div>
+                                                }
+                                            }
+                                            @if (project.Users.Count() > 4)
+                                            {
+                                                <span class="ms-2 small text-muted">+@(@project.Users.Count() - 4)</span>
+                                            }
+
+                                        }
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    }
+                </div>
+               
+            }
+            else
+            {
+                <p class="nothing-to-show-text">Inga projekt att visa!</p>
+            }
+            
+        }
+        <a asp-controller="Project" asp-action="Projects" class="show-all-btn"> Hantera <span class="arrow">→</span> </a>
+
+
+        </div>
+        <hr>
+
             <div class="button-wrapper">
                 <a asp-action="EditCv" class="btn btn-primary">Redigera CV</a>
                 <form asp-action="ExportProfile" method="post">

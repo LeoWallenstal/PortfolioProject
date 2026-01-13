@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProfileExport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ExportDate>2026-01-13T13:07:30.2564551Z</ExportDate>
+  <UserName>admin</UserName>
+  <FirstName>Ada</FirstName>
+  <LastName>Admin</LastName>
+  <Cv>
+    <ViewCount>14</ViewCount>
+    <Title>Administrator / Platform Owner</Title>
+    <Summary>Maintains the platform, manages users, and verifies data integrity. Focus: moderation, stability, and architecture.</Summary>
+    <XUrl />
+    <Skills>
+      <Skill>
+        <Name>C#</Name>
+      </Skill>
+      <Skill>
+        <Name>ASP.NET Core</Name>
+      </Skill>
+    </Skills>
+    <Educations>
+      <Education>
+        <School>Linnéuniversitetet</School>
+        <Degree>BSc Computer Science</Degree>
+        <StartYear>2020-01-01T00:00:00</StartYear>
+        <EndYear>2023-01-01T00:00:00</EndYear>
+      </Education>
+    </Educations>
+    <Experiences>
+      <Experience>
+        <Company>Spotify</Company>
+        <Role>Backend Developer</Role>
+        <StartYear>2023-01-01T00:00:00</StartYear>
+        <EndYear>2026-01-13T10:30:38</EndYear>
+      </Experience>
+      <Experience>
+        <Company>Spotify</Company>
+        <Role>Backend Developer</Role>
+        <StartYear>2023-01-01T00:00:00</StartYear>
+        <EndYear>2026-01-13T10:30:38.5757627</EndYear>
+      </Experience>
+    </Experiences>
+  </Cv>
+  <Projects>
+    <Project>
+      <Title>Portfolio Website</Title>
+      <Description>MVC + EF Core</Description>
+      <CreatedDate>2026-01-13T10:30:38.7604226</CreatedDate>
+    </Project>
+    <Project>
+      <Title>Messaging System</Title>
+      <Description>User-to-user chat</Description>
+      <CreatedDate>2026-01-13T10:30:38.7605999</CreatedDate>
+    </Project>
+  </Projects>
+</ProfileExport>

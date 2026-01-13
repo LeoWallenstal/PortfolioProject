@@ -26,7 +26,7 @@ namespace PortfolioProject
                     UserName = "admin",
                     Email = "admin@demo.local",
                     FirstName = "Ada",
-                    LastName = "Admin",
+                    LastName = "Adminsson",
                     IsActive = true,
                     IsPrivate = false
                 };
@@ -44,7 +44,7 @@ namespace PortfolioProject
                     UserName = "leo",
                     Email = "leo@demo.local",
                     FirstName = "Leo",
-                    LastName = "Student",
+                    LastName = "Leosson",
                     ProfileImageUrl = "/cv/images/hero.png",
                     IsActive = true,
                     IsPrivate = false
@@ -63,7 +63,7 @@ namespace PortfolioProject
                     UserName = "anna",
                     Email = "anna@demo.local",
                     FirstName = "Anna",
-                    LastName = "Student",
+                    LastName = "Studenta",
                     ProfileImageUrl = "/images/anna.jpg",
                     IsActive = true,
                     IsPrivate = false
@@ -296,12 +296,6 @@ namespace PortfolioProject
                           "and responsiveness, I strive to deliver experiences that not only engage users but also drive tangible results.\r\n\t\t"
             };
 
-            var annaCv = new Cv
-            {
-                UserId = anna.Id,
-                Title = "Frontend Developer (UI/UX focus)",
-                Summary = "Frontend developer passionate about accessibility and responsive UI. I enjoy building design systems and polished component libraries.",
-            };
 
             var aliceCv = new Cv
             {
@@ -370,7 +364,7 @@ namespace PortfolioProject
             };
 
             db.Cvs.AddRange(
-                adminCv, leoCv, annaCv, aliceCv, bobCv, claraCv, davidCv,
+                adminCv, leoCv, aliceCv, bobCv, claraCv, davidCv,
                 erikCv, fridaCv, gustavCv, helenaCv, isakCv, juliaCv
             );
 
@@ -526,7 +520,7 @@ namespace PortfolioProject
                 return convo;
             }
 
-            // --- Conversations ---
+            // --- Conversations ---   
             var convoAdminLeo = await GetOrCreateConversationAsync(admin.Id, leo.Id);
             var convoAdminAnna = await GetOrCreateConversationAsync(admin.Id, anna.Id);
             var convoAdminDavid = await GetOrCreateConversationAsync(admin.Id, david.Id);

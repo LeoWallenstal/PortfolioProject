@@ -9,4 +9,6 @@
         public bool IsOwnerHidden =>
             OwnerText == "Inaktiverat konto" || OwnerText == "Privat konto";
     }
+
+    
 }
