@@ -6,7 +6,7 @@
 
 <h1>Min Profil</h1>
 
-<form asp-action="EditProfile" method="post">
+<form asp-action="EditProfile" method="post" enctype="multipart/form-data">
     <div class="horizontal-container">
     <section class="profile-grid" id="profile-grid">
 
@@ -65,9 +65,9 @@
         </div>
 
         <div class="form-row">
-            <label asp-for="Profile.ProfileImageUrl">Profilbild(URL):</label>
+            <label asp-for="Profile.ProfileImagePath">Profilbild:</label>
             <div class="input-wrapper">
-                <input id="profile-pic-input" asp-for="Profile.ProfileImageUrl" />
+                    <input asp-for="Profile.ProfileImageUpload" type="file" id="profile-pic-input" accept="image/*">
             </div>
         </div>
 
@@ -87,11 +87,11 @@
         </div>
 		</section>
         <div class="img-container">
-            <img class="img-wrapper"
-                 id="edit-profile-pic"
-                 src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
-                                              ? Url.Content(Model.Cv.ProfileImagePath)
-                                              : Url.Content("../wwwroot/images/default-profile2.png"))" alt="Profile picture">
+        <img id="edit-profile-pic" class="img-wrapper"
+             src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
+                                   ? Url.Content(Model.Cv.ProfileImagePath)
+                                   : Url.Content("~/images/default-img.png"))"
+             alt="Profile picture">
         </div>
 	</div>
 </form>

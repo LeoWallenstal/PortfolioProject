@@ -9,8 +9,9 @@
     <div class="img-container">
         <img class="img-wrapper"
              src="@(!string.IsNullOrWhiteSpace(Model.Cv?.ProfileImagePath)
-                                          ? Url.Content(Model.Cv.ProfileImagePath)
-                                          : Url.Content("../images/default-img.png"))" alt="Profile picture">
+                                               ? Url.Content(Model.Cv.ProfileImagePath)
+                                               : Url.Content("~/images/default-img.png"))"
+             alt="Profile picture">
     </div>
     <section class="vertical-container">
         <div class="label-w-text">

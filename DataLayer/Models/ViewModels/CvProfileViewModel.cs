@@ -33,6 +33,7 @@ namespace DataLayer.Models.ViewModels
             FullName = $"{user.FirstName} {user.LastName}";
             ProfileImagePath = user.ProfileImageUrl;
             IsPrivate = user.IsPrivate;
+            ViewCount = user.Cv.ViewCount;
 
 
             if (user.Cv != null)
