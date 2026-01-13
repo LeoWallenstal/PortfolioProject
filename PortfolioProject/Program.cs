@@ -27,11 +27,6 @@ namespace PortfolioProject
 
             builder.Services.AddScoped<IMessagesService, MessagesService>();
 
-            //!!!!!! Notis till James !!!!!!
-            //Om du väljer att ha kvar den separata klassen, ändra namnet här också
-            //Om du istället gör det direkt i controllern så kan du ta bort denna rad
-            builder.Services.AddScoped<ExportPlaceholder, ExportPlaceholder>();
-
             builder.Services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
 
             builder.Services.ConfigureApplicationCookie(options =>

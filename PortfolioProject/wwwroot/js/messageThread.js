@@ -72,7 +72,7 @@ async function postThread(form, push) {
         body: new FormData(form)
     });
 
-    //Om det lyckas så ska sidan laddas om istället för att bara byta partial.
+    //Om det lyckas så (return NoContent()) ska sidan laddas om istället för att bara byta partial.
     if (res.status === 204) {
         window.location.href = form.action.replace(/\/send(\?|$)/, "?");
         return;
@@ -83,6 +83,7 @@ async function postThread(form, push) {
 
     initThreadBehaviors(threadView);
 
+    //Unviker att lägga till en ny historik.
     if (push) history.pushState({}, "", form.action);
 }
 

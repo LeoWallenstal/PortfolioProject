@@ -41,6 +41,7 @@ namespace DataLayer.Data
 
             var convoIds = convos.Select(c => c.Id).ToList();
 
+            //Hämtar senaste meddelandet i varje konversation som inte är raderat av mottagaren.
             var latestMessages = await _dbContext.Messages
                 .Where(m => convoIds.Contains(m.ConversationId))
                 .Where(m => m.ToUserId != currentUserId || !m.IsDeletedByReceiver)
@@ -59,7 +60,7 @@ namespace DataLayer.Data
                     .FirstOrDefault()!)
                 .ToListAsync();
 
-
+            //Hämtar användarinfo för andra användarna i konversationerna
             var otherUserIds = convos
                 .Select(c => c.UserAId == currentUserId ? c.UserBId : c.UserAId)
                 .Where(id => id != null)
@@ -71,6 +72,7 @@ namespace DataLayer.Data
                 .AsNoTracking()
                 .ToDictionaryAsync(u => u.Id);
 
+            //Hämtar antal olästa meddelanden per konversation
             var unreadMap = await _dbContext.Messages
                 .Where(m => convoIds.Contains(m.ConversationId))
                 .Where(m => m.FromUserId != currentUserId)
@@ -85,7 +87,7 @@ namespace DataLayer.Data
 
 
 
-
+            //Bygger upp view modellen för inkorgen
             var items = latestMessages
             .OrderByDescending(x => x.SentAt)
             .Select(msg =>
@@ -171,6 +173,7 @@ namespace DataLayer.Data
             if (convo is null)
                 return null;
 
+            //Hämtar olästa meddelanden och markerar dem som lästa
             var unreadMessages = await _dbContext.Messages
                 .Where(m => m.ConversationId == conversationId)
                 .Where(m => m.ToUserId == currentUserId)
@@ -191,6 +194,7 @@ namespace DataLayer.Data
                 Messages = convo.Messages
             };
 
+            //Hämtar info om andra användaren i konversationen. Om anonym konversation används anonymt visningsnamn.
             if (convo.IsAnonymous)
             {
                 convoVm.OtherUsersFullName = convo.AnonymousDisplayName;

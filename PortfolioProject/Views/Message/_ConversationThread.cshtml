@@ -5,6 +5,8 @@
 
 <div class="conversation-content">
 
+	@*Checkar om man läser konversationen från ett anonymt perspektiv. 
+	Om inte så visar man en header i mobilvyn.*@
 	@if (!Context.Request.Path.Value!.Contains("/anon/"))
 	{
 		<div class="thread-header">
@@ -43,6 +45,8 @@
 						<div class="received">
 							<small class="timestamp">@msg.SentAt.ToString("g")</small>
 							<p>@msg.Body</p>
+							@*Checkar om man läser konversationen från ett anonymt perspektiv. 
+							Om inte så visar man en delete ikon på mottagna meddelanden.*@
 							@if (!Context.Request.Path.Value!.Contains("/anon/"))
 							{
 								var urlDelete = (Model.OtherUsername == null
@@ -72,9 +76,10 @@
 		}
 	</div>
 
+	@*Definerar vilken send action och med vilken parameter som ska användas. 
+	Beroende på om man skickar anonymt, via username eller via id:t för konversationen*@
 	@{
 		var isLoggedIn = User?.Identity?.IsAuthenticated == true;
-
 
 		var urlSend = !isLoggedIn
 		? Url.Action("SendAnonymous", "Message", new { publicId = Model.PublicId })
@@ -111,9 +116,11 @@
 	</div>
 </div>
 
+
+@*Checkar om man läser konversationen från ett anonymt perspektiv. 
+Om inte så skapas en dold overlay som visas med javascript för att bekräfta borttagning av meddelanden..*@
 @if (!Context.Request.Path.Value!.Contains("/anon/"))
 {
-	<!-- Overlay + dialog för att bekräfta innan man raderar ett meddelande. -->
 	<div id="deleteDialogOverlay" class="delete-dialog-overlay d-none" aria-hidden="true">
 		<div class="delete-dialog" tabindex="-1">
 			<div class="delete-dialog-header">
