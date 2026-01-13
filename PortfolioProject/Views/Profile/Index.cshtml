@@ -50,7 +50,7 @@
 
         <div class="button-wrapper">
             <a asp-action="EditProfile" class="btn btn-primary">Redigera Profil</a>
-        </div>    
+        </div>
     </section>
 </section>
 
@@ -69,10 +69,10 @@
     {
         <section>
             <h1>@($"{Model.Cv.Title}")</h1>
+            <p class="italic-p">Antal Visningar: @($"{Model.Cv.ViewCount}")</p>
             <p>@($"{Model.Cv.Summary}")</p>
             <p>GitHub: @($"{Model.Cv.GitHubUrl}")</p>
             <p>LinkedIn: @($"{Model.Cv.LinkedInUrl}")</p>
-            
             <hr>
             <p class="section-header">Färdigheter</p>
             <!-- SKILLS -->

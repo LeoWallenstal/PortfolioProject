@@ -51,7 +51,7 @@ section {
     gap: 1rem;
 
     padding: 0.5rem;
-    margin: 1<rem 0;
+    margin: 1rem 0;
 }
 
 
@@ -300,4 +300,9 @@ span.text-danger {
 .skill-section {
     padding: 0;
     border: none;
+}
+
+.italic-p {
+    font-style: italic;
+    font-weight: 300;
 }
