@@ -114,7 +114,7 @@
 						</a>
 						@if (User.Identity.IsAuthenticated && User.HasClaim("IsActive", "true"))
 						{
-							bool isParticipant = project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier));
+							bool isParticipant = project.Users.Any(u => u.Id == User.FindFirstValue(ClaimTypes.NameIdentifier)) || project.OwnerId == User.FindFirstValue(ClaimTypes.NameIdentifier);
 							<div class="card-footer text-center">
 
 								@if (!isParticipant)
