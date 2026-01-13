@@ -6,11 +6,11 @@ namespace DataLayer.Models.ViewModels
     public class ProfileViewModel
     {
         [Required(ErrorMessage = "Kan inte vara tom!")]
-        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
+        [RegularExpression(@"^[A-Za-zÅÄÖåäö]+([ -][A-Za-zÅÄÖåäö]+)*$", ErrorMessage = "Endast A-Z och -")]
         public string? FirstName { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Kan inte vara tom!")]
-        [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
+        [RegularExpression(@"^[A-Za-zÅÄÖåäö]+([ -][A-Za-zÅÄÖåäö]+)*$", ErrorMessage = "Endast A-Z och -")]
         public string? LastName { get; set; } = string.Empty;
 
         public string FullName => $"{FirstName} {LastName}" ?? string.Empty;
