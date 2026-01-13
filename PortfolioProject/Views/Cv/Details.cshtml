@@ -1,5 +1,10 @@
 ﻿@model CvDetailsViewModel
 
+@{
+    ViewData["Title"] = @Model.User.FirstName;
+}
+
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 <link href="/cv/cv.css" rel="stylesheet" />
@@ -43,7 +48,12 @@
 
             <ul class="socials">
                 <li>
-                    <a href="@Model.Cv.GitHubUrl"
+                    @{
+                        var gitUrl = Model.Cv.GitHubUrl ?? "https://github.com";
+                        var linkedInUrl = Model.Cv.LinkedInUrl ?? "https://www.linkedin.com";
+                        var xUrl = Model.Cv.XUrl ?? "https://twitter.com";
+                    }
+                    <a href="@gitUrl"
                        target="_blank"
                        rel="noopener noreferrer"
                        aria-label="GitHub profile">
@@ -52,7 +62,7 @@
                 </li>
 
                 <li>
-                    <a href="@Model.Cv.LinkedInUrl"
+                    <a href="@linkedInUrl"
                        target="_blank"
                        rel="noopener noreferrer"
                        aria-label="LinkedIn profile">
@@ -61,7 +71,7 @@
                 </li>
 
                 <li>
-                    <a href="@Model.Cv.XUrl"
+                    <a href="@xUrl"
                        target="_blank"
                        rel="noopener noreferrer"
                        aria-label="X profile">

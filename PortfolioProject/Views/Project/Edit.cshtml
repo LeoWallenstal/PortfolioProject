@@ -2,6 +2,9 @@
 @section Scripts {
 	<script src="~/js/projects.js" defer></script>
 }
+@{
+	ViewData["Title"] = "Redigera";
+}
 
 <section class="search-section d-flex align-items-center position-relative my-2">
 	<a asp-controller="Project" asp-action="Details" asp-route-id="@Model.Project.Id" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">

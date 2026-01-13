@@ -1,5 +1,8 @@
 ﻿@using System.Security.Claims
 @model ProjectViewModel
+@{
+	ViewData["Title"] = @Model.Project.Title;
+}
 
 <section class="search-section d-flex align-items-center position-relative my-2">
 	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">

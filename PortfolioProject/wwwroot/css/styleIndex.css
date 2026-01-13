@@ -308,10 +308,9 @@
         display: inline-flex;
     }
 
-    .handle-btn {
-        position: static;
-        margin: 1rem auto 0;
-        display: inline-flex;
-    }
+}
 
+.project-meta {
+    font-size: 0.7rem;
+    color: #777;
 }
