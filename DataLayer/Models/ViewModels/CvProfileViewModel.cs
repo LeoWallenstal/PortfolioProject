@@ -20,6 +20,8 @@ namespace DataLayer.Models.ViewModels
         public string? GitHubUrl { get; set; } = string.Empty;
         public string? LinkedInUrl { get; set; } = string.Empty;
         public string? XUrl { get; set; } = string.Empty;
+
+        public int ViewCount { get; set; } = 0;
         public List<SkillViewModel> Skills { get; set; } = new List<SkillViewModel>();
         public List<EducationViewModel> Educations { get; set; } = new List<EducationViewModel>();
         public List<ExperienceViewModel> Experiences { get; set; } = new List<ExperienceViewModel>();
@@ -38,6 +40,7 @@ namespace DataLayer.Models.ViewModels
                 //CV
                 Title = user.Cv.Title ?? "";
                 Summary = user.Cv.Summary ?? "";
+                ViewCount = user.Cv.ViewCount;
 
                 Skills = user.Cv.Skills
                     .Select(s => new SkillViewModel

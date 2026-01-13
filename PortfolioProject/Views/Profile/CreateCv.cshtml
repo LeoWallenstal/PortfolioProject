@@ -45,120 +45,123 @@
 
         <!-- ----------SKILLS---------- -->
 
-        <p class="section-header">Färdigheter</p>
+        <section class="skill-section">
+            <p class="section-header">Färdigheter</p>
 
-        <div class="form-row">
-            <label>Färdighet:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="input-skill-name" type="text"/>
-                <span class="error-text" id="skill-name-error"></span>
+            <div class="form-row">
+                <label>Färdighet:</label>
+                <div class="input-wrapper">
+                    <input class="input-skill-name" type="text"/>
+                    <span class="error-text" id="skill-name-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>URL:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="skill-img-url" type="text" title="Bild-URL" />
-                <span class="error-text"></span>
+            <div class="form-row">
+                <label>URL:</label>
+                <div class="input-wrapper">
+                    <input class="skill-img-url" type="text" title="Bild-URL" />
+                    <span class="error-text"></span>
+                </div>
             </div>
-        </div>
 
-        <section class="button-wrapper" data-mode="edit">
-            <button class="btn-add-skill" disabled>Lägg till</button>
+            <section class="button-wrapper" data-mode="edit">
+                <button type="button" class="btn-add-skill" disabled>Lägg till</button>
+            </section>
+
+            <div id ="skill-plaque-section">
+
+            </div>
         </section>
-
-        <div id ="skill-plaque-section">
-
-        </div>
 
         <hr>
 
         <!-- ----------EDUCATION---------- -->
 
-        <p class="section-header">Utbildning</p>
-
-        <div class="form-row">
-            <label>Skola:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="school-input" type="text" />
-                <span class="error-text" id="school-error"></span>
+        <section class="education-section">
+            <p class="section-header">Utbildning</p>
+            <div class="form-row">
+                <label>Skola:</label>
+                <div class="input-wrapper">
+                    <input class="school-input" type="text" />
+                    <span class="error-text" id="school-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Utbildning:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="degree-input" type="text" />
-                <span class="error-text" id="degree-error"></span>
+            <div class="form-row">
+                <label>Utbildning:</label>
+                <div class="input-wrapper">
+                    <input class="degree-input" type="text" />
+                    <span class="error-text" id="degree-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Från År:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="from-year-education-input" type="date"/>
-                <span class="error-text" id="education-year-error"></span>
+            <div class="form-row">
+                <label>Från År:</label>
+                <div class="input-wrapper">
+                    <input class="from-year-education-input" type="date"/>
+                    <span class="error-text" id="education-year-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Till År:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="to-year-education-input" type="date"/>
+            <div class="form-row">
+                <label>Till År:</label>
+                <div class="input-wrapper">
+                    <input class="to-year-education-input" type="date"/>
+                </div>
             </div>
-        </div>
 
-        <section class="button-wrapper" data-mode="edit">
-            <button class="btn-add-education" disabled>Lägg till</button>
+            <section class="button-wrapper" data-mode="edit">
+                <button type="button" class="btn-add-education" disabled>Lägg till</button>
+            </section>
+
+            <div id="education-plaque-section" class="plaque-section">
+
+            </div>
         </section>
-
-        <div id="education-plaque-section" class="plaque-section">
-
-        </div>
-
         <hr>
 
         <!-- ----------EXPERIENCES---------- -->
 
-        <p class="section-header">Erfarenheter</p>
-
-        <div class="form-row">
-            <label>Företag:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="company-input" type="text" />
-                <span class="error-text" id="company-error"></span>
+        <section class="experience-section">
+            <p class="section-header">Erfarenheter</p>
+            <div class="form-row">
+                <label>Företag:</label>
+                <div class="input-wrapper">
+                    <input class="company-input" type="text" />
+                    <span class="error-text" id="company-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Roll:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="role-input" type="text" />
-                <span class="error-text" id="role-error"></span>
+            <div class="form-row">
+                <label>Roll:</label>
+                <div class="input-wrapper">
+                    <input class="role-input" type="text" />
+                    <span class="error-text" id="role-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Från År:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="from-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
-                <span class="error-text" id="experience-year-error"></span>
+            <div class="form-row">
+                <label>Från År:</label>
+                <div class="input-wrapper">
+                    <input class="from-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
+                    <span class="error-text" id="experience-year-error"></span>
+                </div>
             </div>
-        </div>
 
-        <div class="form-row">
-            <label>Till År:</label>
-            <div class="input-wrapper">
-                <input class="text-input" id="to-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
+            <div class="form-row">
+                <label>Till År:</label>
+                <div class="input-wrapper">
+                    <input class="to-year-experience-input" type="text" placeholder="yyyy-mm-dd" />
+                </div>
             </div>
-        </div>
 
-        <section class="button-wrapper" data-mode="edit">
-            <button class="btn-add-experience" disabled>Lägg till</button>
+            <section class="button-wrapper" data-mode="edit">
+                <button type="button" class="btn-add-experience" disabled>Lägg till</button>
+            </section>
+
+            <div id="experience-plaque-section" class="plaque-section">
+            </div>
         </section>
-
-        <div id="experience-plaque-section" class="plaque-section">
-        </div>
 
         <hr>
 

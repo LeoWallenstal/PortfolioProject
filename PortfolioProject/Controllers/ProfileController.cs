@@ -48,6 +48,7 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
             {
+                Debug.WriteLine("\n\n\n\n\n");
                 foreach (var kvp in ModelState)
                 {
                     var key = kvp.Key; // the property name
@@ -57,6 +58,7 @@ namespace PortfolioProject.Controllers
                     {
                         var errorMessage = error.ErrorMessage;
                         var exception = error.Exception;
+                        Debug.WriteLine($"{key}, {errors}, {errorMessage}, {exception}");
                     }
                 }
                 return View(vm);
@@ -67,7 +69,7 @@ namespace PortfolioProject.Controllers
             user.Adress = vm.Profile.Adress;
             user.Email = vm.Profile.Email;
             user.PhoneNumber = vm.Profile.PhoneNumber;
-            user.ProfileImageUrl = vm.Profile.ProfileImageUrl;
+            user.ProfileImageUrl = vm.Profile.ProfileImageUrl ?? user.ProfileImageUrl;
             user.IsPrivate = vm.Profile.IsPrivate;
             user.IsActive = vm.Profile.IsActive;
 
