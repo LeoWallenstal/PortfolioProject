@@ -13,10 +13,12 @@ namespace PortfolioProject.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly DatabaseContext _dbContext;
+        private readonly IWebHostEnvironment _env; 
 
-        public ProfileController(DatabaseContext dbContext, UserManager<User> userManager) {
+        public ProfileController(DatabaseContext dbContext, UserManager<User> userManager, IWebHostEnvironment env) {
             _userManager = userManager;
             _dbContext = dbContext;
+            _env = env;
         }
 
         [HttpGet]
@@ -25,6 +27,8 @@ namespace PortfolioProject.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
+
+            user.Cv.ViewCount = await _dbContext.CvVisits.Where(v => v.CvId == user.Cv.Id).CountAsync();
 
             return View(new UserViewModel(user));
         }
@@ -48,10 +52,10 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                Debug.WriteLine("\n\n\n\n\n");
+                // Debug output
                 foreach (var kvp in ModelState)
                 {
-                    var key = kvp.Key; // the property name
+                    var key = kvp.Key;
                     var errors = kvp.Value.Errors;
 
                     foreach (var error in errors)
@@ -69,10 +73,38 @@ namespace PortfolioProject.Controllers
             user.Adress = vm.Profile.Adress;
             user.Email = vm.Profile.Email;
             user.PhoneNumber = vm.Profile.PhoneNumber;
-            user.ProfileImageUrl = vm.Profile.ProfileImageUrl ?? user.ProfileImageUrl;
             user.IsPrivate = vm.Profile.IsPrivate;
             user.IsActive = vm.Profile.IsActive;
 
+            // Profile pic upload
+            if (vm.Profile.ProfileImageUpload != null && vm.Profile.ProfileImageUpload.Length > 0)
+            {
+                // Delete old file if not default
+                if (!string.IsNullOrEmpty(user.ProfileImageUrl) && !user.ProfileImageUrl.Contains("default-profile2.png"))
+                {
+                    var oldFile = Path.Combine(_env.WebRootPath, user.ProfileImageUrl.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFile))
+                        System.IO.File.Delete(oldFile);
+                }
+                    
+                // Save new file
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(vm.Profile.ProfileImageUpload.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await vm.Profile.ProfileImageUpload.CopyToAsync(stream);
+                }
+
+                // Update user profile image path
+                user.ProfileImageUrl = "/uploads/" + fileName;
+            }
+
+            // Update user in database
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {

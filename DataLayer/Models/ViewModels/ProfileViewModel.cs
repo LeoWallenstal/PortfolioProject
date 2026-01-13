@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace DataLayer.Models.ViewModels
 {
@@ -26,9 +27,8 @@ namespace DataLayer.Models.ViewModels
 
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
-
-        public string? ProfileImageUrl { get; set; } = "/images/default-profile2.png";
-
+        public IFormFile? ProfileImageUpload { get; set; }
+        public string ProfileImagePath { get; set; } = "/images/default-profile2.png";
 
         // ---------- CONSTRUCTOR ----------
         public ProfileViewModel() { } // Parameterless constructor for model binding
@@ -42,7 +42,9 @@ namespace DataLayer.Models.ViewModels
             Adress = aUser.Adress ?? string.Empty;
             IsPrivate = aUser.IsPrivate;
             IsActive = aUser.IsActive;
-            ProfileImageUrl = aUser.ProfileImageUrl ?? "/images/default-profile2.png";
+
+            // Set the current image path for display
+            ProfileImagePath = aUser.ProfileImageUrl ?? "/images/default-profile2.png";
         }
     }
 }

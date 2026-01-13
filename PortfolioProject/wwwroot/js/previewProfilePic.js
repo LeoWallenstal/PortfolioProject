@@ -1,15 +1,21 @@
-﻿const previewBtn = document.getElementById("btn-preview")
-const imgElement = document.getElementById("edit-profile-pic")
-const profilePicUrlInput = document.getElementById("profile-pic-input")
+﻿const previewBtn = document.getElementById("btn-preview");
+const imgElement = document.getElementById("edit-profile-pic");
+const profilePicInput = document.getElementById("profile-pic-input");
 
-if (profilePicUrlInput.value === "/images/default-profile2.png") {
-    profilePicUrlInput.value = ""
-}
+// Enable preview button when a file is selected
+profilePicInput.addEventListener("change", () => {
+    const file = profilePicInput.files[0];
+    previewBtn.disabled = !file; // enable if a file is selected
+});
 
-profilePicUrlInput.addEventListener("input", () => {
-    previewBtn.disabled = !profilePicUrlInput.value.trim() > 0
-})
-
+// Preview the selected file when clicking preview button
 previewBtn.addEventListener("click", () => {
-    imgElement.setAttribute("src", profilePicUrlInput.value.trim())
-})
+    const file = profilePicInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+        imgElement.setAttribute("src", e.target.result); // data URL
+    }
+    reader.readAsDataURL(file); // read file as base64
+});
