@@ -72,7 +72,6 @@
 		</div>
 
 		<div class="personal-info">
-			@*Lägga till null-check på namn eller göra namn required?*@
 			<h1>@Model.User.FirstName @Model.User.LastName</h1>
 			@if (Model.Cv.Title != null)
 			{
@@ -100,6 +99,9 @@
 	</section>
 
 </div>
+
+
+
 
 
 
@@ -149,7 +151,7 @@
 		
 		@foreach (var project in Model.User.Projects)
 		{
-			<div class="card text-center mt-2 project-card pc show">
+			<div class="card text-center mt-2 project-card pc visible">
 				<a asp-controller="Project" asp-action="Details" asp-route-id="@project.Id" class="text-decoration-none text-reset">
 					<div class="card-header align-items-center">
 						<h5>@project.Title</h5>
@@ -197,6 +199,51 @@
 		}
 	</div>
 </div>
+
+<section class="cv-section">
+	<h2>Liknande användare</h2>
+	<div class="container" id="cvSection">
+		<div id="cvCarousel"
+			 class="carousel slide"
+			 data-bs-interval="false">
+
+			@await Html.PartialAsync("_CvCarouselPartial", Model.SimilarCvs)
+
+			<button class="carousel-control-prev"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</button>
+
+			<button class="carousel-control-next"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</button>
+		</div>
+	</div>
+</section>
+
+
+<script>
+		document.addEventListener("DOMContentLoaded", () => {
+		const carousel = document.getElementById("cvCarousel");
+		const slides = carousel.querySelectorAll(".carousel-item");
+
+		const prevBtn = carousel.querySelector(".carousel-control-prev");
+		const nextBtn = carousel.querySelector(".carousel-control-next");
+
+		if (slides.length > 1) {
+			prevBtn.style.display = "block";
+			nextBtn.style.display = "block";
+		} else {
+			prevBtn.style.display = "none";
+			nextBtn.style.display = "none";
+		}
+	});
+</script>
 
 
 

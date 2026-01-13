@@ -271,7 +271,6 @@ namespace DataLayer.Data
                 {
                     c.Id,
                     c.AnonymousDisplayName,
-                    c.AnonymousPasswordHash,
                     RecipientUserId = c.UserAId,
                     Messages = c.Messages
                         .OrderBy(m => m.SentAt)

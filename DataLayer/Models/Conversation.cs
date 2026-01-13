@@ -13,8 +13,6 @@
         public bool IsAnonymous { get; set; } = false;
         public Guid? PublicId { get; set; } 
         public string? AnonymousDisplayName { get; set; } 
-        public string? AnonymousPasswordHash { get; set; }
-
         public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
     }
 }
