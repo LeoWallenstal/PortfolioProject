@@ -13,13 +13,12 @@ namespace PortfolioProject.Controllers
     {
         private readonly DatabaseContext _db;
         private readonly UserManager<User> _userManager;
-        private readonly ILogger<CvController> _logger;
 
-        public CvController(DatabaseContext db, UserManager<User> userManager, ILogger<CvController> logger)
+        public CvController(DatabaseContext db, UserManager<User> userManager)
         {
             _db = db;
             _userManager = userManager;
-            _logger = logger;
+
         }
         public IActionResult Index()
         {
@@ -70,13 +69,7 @@ namespace PortfolioProject.Controllers
 
             }
 
-            /*var viewercount = await _db.CvVisits
-                .Where(v => v.CvId == cv.Id)
-                .CountAsync();*/
-
-            //await TestFindSimilar(cv);
-
-            var similarCvIds = await TestFindSimilar2(cv);
+            var similarCvIds = await FindSimilarCv(cv);
   
             var similarCvList = await _db.Cvs.Where(cv => similarCvIds.Contains(cv.Id)).ToListAsync();
 
@@ -89,60 +82,9 @@ namespace PortfolioProject.Controllers
 
             return View("Details", cvVm);
         }
-        private async Task TestFindSimilar(Cv usersCv)
-        {
-            var userSkills = usersCv.Skills.Select(s => s.Name.ToLower()).ToHashSet();
-            var userSchools = usersCv.Educations.Select(e => e.School.ToLower()).ToHashSet();
-            var userDegrees = usersCv.Educations.Select(e => e.Degree.ToLower()).ToHashSet();
-            var userCompanies = usersCv.Experiences.Select(e => e.Company.ToLower()).ToHashSet();
-            var userRoles = usersCv.Experiences.Select(e => e.Role.ToLower()).ToHashSet();
 
 
-            _logger.LogInformation($"Calculating similarityscore for {usersCv.User.FirstName}");
-            var candidates = await _db.Users
-                .AsNoTracking()
-                .Where(u => u.Id != usersCv.UserId && u.Cv != null && !u.IsPrivate && u.IsActive)
-                .Include(u => u.Cv).ThenInclude(cv => cv.Skills)
-                .Include(u => u.Cv).ThenInclude(cv => cv.Educations)
-                .Include(u => u.Cv).ThenInclude(cv => cv.Experiences)
-                .ToListAsync();
-
-
-            foreach (var candidate in candidates)
-            {
-
-                var candidateSkills = candidate.Cv.Skills.Select(s => s.Name.ToLower()).ToHashSet();
-                double skillScore = CalculateJaccard(userSkills, candidateSkills);
-
-
-                var candidateSchools = candidate.Cv.Educations.Select(e => e.School.ToLower()).ToHashSet();
-                double schoolScore = CalculateJaccard(userSchools, candidateSchools);
-
-
-                var candidateDegrees = candidate.Cv.Educations.Select(e => e.Degree.ToLower()).ToHashSet();
-                double degreeScore = CalculateJaccard(userDegrees, candidateDegrees);
-
-
-                var candidateCompanies = candidate.Cv.Experiences.Select(e => e.Company.ToLower()).ToHashSet();
-                double companyScore = CalculateJaccard(userCompanies, candidateCompanies);
-
-
-                var candidateRoles = candidate.Cv.Experiences.Select(e => e.Role.ToLower()).ToHashSet();
-                double roleScore = CalculateJaccard(userRoles, candidateRoles);
-
-                //Decimalerna bestämmer hur många procent av den totala likheten som dem enskilda attributen står för.
-                var totalScore =
-                    0.4 * skillScore +
-                    0.1 * schoolScore +
-                    0.1 * degreeScore +
-                    0.2 * companyScore +
-                    0.2 * roleScore;
-
-                _logger.LogInformation($"User {candidate.UserName} had a total score of {totalScore}");
-            }
-        }
-
-        private async Task<List<Guid>> TestFindSimilar2(Cv usersCv)
+        private async Task<List<Guid>> FindSimilarCv(Cv usersCv)
         {
             var cvIds = await _db.Users
                 .AsNoTracking()
@@ -198,8 +140,6 @@ namespace PortfolioProject.Controllers
                     Roles = x.Roles.ToHashSet()
                 });
 
-            _logger.LogInformation($"Calculating similarityscore for {usersCv.User.FirstName}");
-
             string Norm(string? s) => (s ?? "").Trim().ToLowerInvariant();
 
             var userSkills = usersCv.Skills.Select(s => Norm(s.Name)).Where(x => x != "").ToHashSet();
@@ -231,12 +171,12 @@ namespace PortfolioProject.Controllers
 
                 results[id] = totalScore;
 
-                _logger.LogInformation($"cvId {id} had a total score of {totalScore}");
             }
 
             var topMatches = results
                 .OrderByDescending(result => result.Value)
                 .Select(result => result.Key)
+                .Take(5)
                 .ToList();
 
             return topMatches;

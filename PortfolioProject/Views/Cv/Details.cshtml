@@ -101,31 +101,7 @@
 </div>
 
 
-<section class="cv-section">
-	<h2>Liknande användare</h2>
-	<div class="container" id="cvSection">
-		<div id="cvCarousel"
-			 class="carousel slide"
-			 data-bs-interval="false">
 
-			@await Html.PartialAsync("_CvCarouselPartial", Model.SimilarCvs)
-
-			<button class="carousel-control-prev"
-					type="button"
-					data-bs-target="#cvCarousel"
-					data-bs-slide="prev">
-				<span class="carousel-control-prev-icon"></span>
-			</button>
-
-			<button class="carousel-control-next"
-					type="button"
-					data-bs-target="#cvCarousel"
-					data-bs-slide="next">
-				<span class="carousel-control-next-icon"></span>
-			</button>
-		</div>
-	</div>
-</section>
 
 
 
@@ -223,6 +199,32 @@
 		}
 	</div>
 </div>
+
+<section class="cv-section">
+	<h2>Liknande användare</h2>
+	<div class="container" id="cvSection">
+		<div id="cvCarousel"
+			 class="carousel slide"
+			 data-bs-interval="false">
+
+			@await Html.PartialAsync("_CvCarouselPartial", Model.SimilarCvs)
+
+			<button class="carousel-control-prev"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="prev">
+				<span class="carousel-control-prev-icon"></span>
+			</button>
+
+			<button class="carousel-control-next"
+					type="button"
+					data-bs-target="#cvCarousel"
+					data-bs-slide="next">
+				<span class="carousel-control-next-icon"></span>
+			</button>
+		</div>
+	</div>
+</section>
 
 
 <script>
