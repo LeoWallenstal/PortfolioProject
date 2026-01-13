@@ -490,7 +490,7 @@ namespace PortfolioProject.Controllers
             if (user == null)
                 return NotFound();
 
-            ExportPlaceholder exporter = new ExportPlaceholder(_dbContext, _userManager);
+            Exporter exporter = new Exporter(_dbContext, _userManager);
 
             ExportFileResult? toReturn = await exporter.ExportProfileXmlAsync(user.Id);
             return File(toReturn.Bytes, toReturn.ContentType, toReturn.FileName);

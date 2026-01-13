@@ -11,21 +11,16 @@ using System.Xml.Serialization;
 
 namespace DataLayer
 {
-    public class ExportPlaceholder
+    public class Exporter
     {
         private readonly DatabaseContext _dbContext;
         private readonly UserManager<User> _userManager;
-
-        //!!!!!! Notis till James !!!!!!
-        //Antingen byter du namn på denna klass, flyttar den till din egna db klass om du har en, eller gör allt direkt i din controller
-        public ExportPlaceholder(DatabaseContext dbContext, UserManager<User> userManager)
+        public Exporter(DatabaseContext dbContext, UserManager<User> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
         }
 
-        //!!!!!! Notis till James !!!!!!
-        //Se till innan du anropar denna metod att parametern är kopplad till den inloggade användaren så man inte kan exportera någon annans profil
         public async Task<ExportFileResult?> ExportProfileXmlAsync(string userId)
         {
             var user = await _dbContext.Users

@@ -19,31 +19,11 @@ namespace PortfolioProject.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly IMessagesService _messages;
-        private readonly ExportPlaceholder _exportService;
-
-        public MessageController(UserManager<User> userManager, IMessagesService messages, ExportPlaceholder exportPlaceholder)
+        public MessageController(UserManager<User> userManager, IMessagesService messages)
         {
             _userManager = userManager;
             _messages = messages;
-            _exportService = exportPlaceholder;
         }
-
-        //!!!!!! Notis till James !!!!!!
-        //Ska flyttas till ProfileController.
-        [HttpGet("export")]
-        public async Task<IActionResult> ExportXml()
-        {
-            var userId = _userManager.GetUserId(User);
-            if (string.IsNullOrWhiteSpace(userId))
-                return Unauthorized();
-
-            var result = await _exportService.ExportProfileXmlAsync(userId);
-            if (result is null)
-                return NotFound();
-
-            return File(result.Bytes, result.ContentType, result.FileName);
-        }
-
 
 
         [Authorize]
@@ -90,6 +70,7 @@ namespace PortfolioProject.Controllers
                 Conversation = activeThread
             };
 
+            //Kollar om anropet är gjort via fetch för att returnera partial view och undvika att ladda om sidan helt.
             var isFetch = Request.Headers["X-Requested-With"] == "fetch";
             if (isFetch)
             {
@@ -104,10 +85,13 @@ namespace PortfolioProject.Controllers
 
         [Authorize]
         [HttpPost("send")]
+        //Skickar meddelande antingen till en användare via username eller i en befintlig konversation via conversationId
+        // Prioriterar username om båda är ifyllda. conversationId används främst för anonyma konversationer.
         public async Task<IActionResult> Send(string? username, Guid? conversationId, SendMessageInputModel input)
         {
             var currentUserId = _userManager.GetUserId(User);
 
+            //Skickar meddelande via username (ny konversation eller befintlig)           
             if (!string.IsNullOrWhiteSpace(username))
             {
                 var otherUser = await _userManager.FindByNameAsync(username);
@@ -122,6 +106,7 @@ namespace PortfolioProject.Controllers
 
                 if (convo != null)
                 {
+                    // Validerar input och returnerar partial view med valideringsfel om ogiltig.
                     if (!ModelState.IsValid)
                     {
                         var vm = await _messages.GetConversationVmByIdAsync(convo.Id, currentUserId);
@@ -137,11 +122,13 @@ namespace PortfolioProject.Controllers
                         Body = (input.Body ?? "").Trim()
                     });
                 }
-
+                // Returnerar NoContent för att indikera att meddelandet skickats och inga fel uppstod.
+                //Javascript-koden hanterar uppdatering av UI.
                 return NoContent();
 
             }
 
+            //Skickar meddelande i befintlig konversation via conversationId. Används främst för anonyma konversationer.
             if (conversationId is { } cid && cid != Guid.Empty)
             {
                 var convo = await _messages.GetConversationByIdAsync(cid);
@@ -152,6 +139,7 @@ namespace PortfolioProject.Controllers
 
                 if (convo != null)
                 {
+                    // Validerar input och returnerar partial view med valideringsfel om ogiltig.
                     if (!ModelState.IsValid)
                     {
                         var vm = await _messages.GetConversationVmByIdAsync(convo.Id, currentUserId);
@@ -167,6 +155,8 @@ namespace PortfolioProject.Controllers
                         Body = (input.Body ?? "").Trim()
                     });
                 }
+                // Returnerar NoContent för att indikera att meddelandet skickats och inga fel uppstod.
+                //Javascript-koden hanterar uppdatering av UI.
                 return NoContent();
             }
 
