@@ -149,6 +149,35 @@
                 <p class="nothing-to-show-text">Inga erfarenheter att visa!</p>
             }
         }
+
+        <hr>
+        <p class="section-header">Projekt</p>
+        <!-- PROJECTS -->
+        @{
+            if (Model.Projects.Count > 0)
+            {
+                <div class="plaque-section">
+                    @{
+                        foreach (var projectViewModel in Model.Projects)
+                        {
+                            <div class="plaque">
+                                <p>@($"{projectViewModel.Project.Title}")</p>
+                                <p>@($"{projectViewModel.Project.CreatedDate}")</p>
+                                <p>@($"{projectViewModel.Project.Description}")</p>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="nothing-to-show-text">Inga projekt att visa!</p>
+            }
+
+            <button asp-action="Projects" asp-controller="Project"> Hantera -> </button>
+        }
+
+
             <div class="button-wrapper">
                 <a asp-action="EditCv" class="btn btn-primary">Redigera CV</a>
                 <form asp-action="ExportProfile" method="post">
