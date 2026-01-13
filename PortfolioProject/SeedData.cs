@@ -18,20 +18,20 @@ namespace PortfolioProject
             await db.Database.MigrateAsync();
 
             // --- USERS ---
-            var admin = await userManager.FindByNameAsync("admin");
-            if (admin == null)
+            var johan = await userManager.FindByNameAsync("johan");
+            if (johan == null)
             {
-                admin = new User
+                johan = new User
                 {
-                    UserName = "admin",
-                    Email = "admin@demo.local",
-                    FirstName = "Ada",
-                    LastName = "Adminsson",
+                    UserName = "johan",
+                    Email = "johan@demo.local",
+                    FirstName = "Johan",
+                    LastName = "Johansson",
                     IsActive = true,
                     IsPrivate = false
                 };
 
-                var result = await userManager.CreateAsync(admin, "Admin123!");
+                var result = await userManager.CreateAsync(johan, "Johan123!");
                 if (!result.Succeeded)
                     throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
             }
@@ -282,7 +282,7 @@ namespace PortfolioProject
             // --- CVs (FK to users) ---
             var adminCv = new Cv
             {
-                UserId = admin.Id,
+                UserId = johan.Id,
                 Title = "Administrator / Platform Owner",
                 Summary = "Maintains the platform, manages users, and verifies data integrity. Focus: moderation, stability, and architecture."
             };
@@ -482,13 +482,13 @@ namespace PortfolioProject
             await db.SaveChangesAsync();
 
             // --- Projects ---
-            var p1 = new Project { Title = "Portfolio Website", Description = "MVC + EF Core", OwnerId = admin.Id };
+            var p1 = new Project { Title = "Portfolio Website", Description = "MVC + EF Core", OwnerId = johan.Id };
             var p2 = new Project { Title = "Messaging System", Description = "User-to-user chat", OwnerId = leo.Id };
 
             // many-to-many user<->project (if your model has it)
             p1.Users.Add(leo);
-            p2.Users.Add(admin);
-            p1.Users.Add(admin);
+            p2.Users.Add(johan);
+            p1.Users.Add(johan);
             p2.Users.Add(leo);
 
             db.Projects.AddRange(p1, p2);
@@ -521,12 +521,12 @@ namespace PortfolioProject
             }
 
             // --- Conversations ---   
-            var convoAdminLeo = await GetOrCreateConversationAsync(admin.Id, leo.Id);
-            var convoAdminAnna = await GetOrCreateConversationAsync(admin.Id, anna.Id);
-            var convoAdminDavid = await GetOrCreateConversationAsync(admin.Id, david.Id);
-            var convoAdminAlice = await GetOrCreateConversationAsync(admin.Id, alice.Id);
-            var convoAdminBob = await GetOrCreateConversationAsync(admin.Id, bob.Id);
-            var convoAdminClara = await GetOrCreateConversationAsync(admin.Id, clara.Id);
+            var convoAdminLeo = await GetOrCreateConversationAsync(johan.Id, leo.Id);
+            var convoAdminAnna = await GetOrCreateConversationAsync(johan.Id, anna.Id);
+            var convoAdminDavid = await GetOrCreateConversationAsync(johan.Id, david.Id);
+            var convoAdminAlice = await GetOrCreateConversationAsync(johan.Id, alice.Id);
+            var convoAdminBob = await GetOrCreateConversationAsync(johan.Id, bob.Id);
+            var convoAdminClara = await GetOrCreateConversationAsync(johan.Id, clara.Id);
 
             // --- Messages ---
             db.Messages.AddRange(
@@ -534,7 +534,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminLeo.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = leo.Id,
                     Body = "Hey Leo! How’s it going?",
                     SentAt = DateTime.UtcNow,
@@ -544,7 +544,7 @@ namespace PortfolioProject
                 {
                     ConversationId = convoAdminLeo.Id,
                     FromUserId = leo.Id,
-                    ToUserId = admin.Id,
+                    ToUserId = johan.Id,
                     Body = "Pretty good! Just taking it easy today. You?",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
                     IsRead = false
@@ -554,7 +554,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminAnna.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = anna.Id,
                     Body = "Hi Anna 🙂 How are things?",
                     SentAt = DateTime.UtcNow.AddMinutes(2),
@@ -566,7 +566,7 @@ namespace PortfolioProject
                 {
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
-                    ToUserId = admin.Id,
+                    ToUserId = johan.Id,
                     Body = "Hey! Long time no talk — how have you been?",
                     SentAt = t0.AddMinutes(0),
                     IsRead = true
@@ -574,7 +574,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminDavid.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = david.Id,
                     Body = "Hey David! I’ve been good, just busy lately. What about you?",
                     SentAt = t0.AddMinutes(2),
@@ -584,7 +584,7 @@ namespace PortfolioProject
                 {
                     ConversationId = convoAdminDavid.Id,
                     FromUserId = david.Id,
-                    ToUserId = admin.Id,
+                    ToUserId = johan.Id,
                     Body = "Same here. Work’s been a bit hectic but nothing crazy.",
                     SentAt = t0.AddMinutes(4),
                     IsRead = false
@@ -592,7 +592,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminDavid.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = david.Id,
                     Body = "Yeah, I feel that. Hopefully things calm down soon.",
                     SentAt = t0.AddMinutes(6),
@@ -603,7 +603,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminAlice.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = alice.Id,
                     Body = "Hi Alice! Hope you’re having a good day 😊",
                     SentAt = t0.AddMinutes(10),
@@ -613,7 +613,7 @@ namespace PortfolioProject
                 {
                     ConversationId = convoAdminAlice.Id,
                     FromUserId = alice.Id,
-                    ToUserId = admin.Id,
+                    ToUserId = johan.Id,
                     Body = "Thanks! Yeah, it’s been pretty nice so far.",
                     SentAt = t0.AddMinutes(12),
                     IsRead = false
@@ -624,7 +624,7 @@ namespace PortfolioProject
                 {
                     ConversationId = convoAdminBob.Id,
                     FromUserId = bob.Id,
-                    ToUserId = admin.Id,
+                    ToUserId = johan.Id,
                     Body = "Hey! Just wanted to say hi 👋",
                     SentAt = t0.AddMinutes(14),
                     IsRead = false
@@ -632,7 +632,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminBob.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = bob.Id,
                     Body = "Hey Bob! Nice to hear from you.",
                     SentAt = t0.AddMinutes(15),
@@ -643,7 +643,7 @@ namespace PortfolioProject
                 new Message
                 {
                     ConversationId = convoAdminClara.Id,
-                    FromUserId = admin.Id,
+                    FromUserId = johan.Id,
                     ToUserId = clara.Id,
                     Body = "Hi Clara! How’s your week been?",
                     SentAt = t0.AddMinutes(18),
