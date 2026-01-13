@@ -2,6 +2,7 @@
 using DataLayer.Data;
 using DataLayer.Models;
 using DataLayer.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,20 @@ using System.Diagnostics;
 
 namespace PortfolioProject.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly UserManager<User> _userManager;
         private readonly DatabaseContext _dbContext;
-        private readonly IWebHostEnvironment _env; 
+        private readonly IWebHostEnvironment _env;
+        private readonly SignInManager<User> _signInManager;
 
-        public ProfileController(DatabaseContext dbContext, UserManager<User> userManager, IWebHostEnvironment env) {
+        public ProfileController(DatabaseContext dbContext, UserManager<User> userManager, IWebHostEnvironment env, SignInManager<User> signInManager)
+        {
             _userManager = userManager;
             _dbContext = dbContext;
             _env = env;
+            _signInManager = signInManager;
         }
 
         [HttpGet]
@@ -34,7 +39,8 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditProfile() {
+        public async Task<IActionResult> EditProfile()
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
@@ -86,7 +92,7 @@ namespace PortfolioProject.Controllers
                     if (System.IO.File.Exists(oldFile))
                         System.IO.File.Delete(oldFile);
                 }
-                    
+
                 // Save new file
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
                 if (!Directory.Exists(uploadsFolder))
@@ -117,8 +123,9 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UpdatePassword() {
-            
+        public async Task<IActionResult> UpdatePassword()
+        {
+
             return View(new UpdatePasswordViewModel());
         }
 
@@ -128,17 +135,19 @@ namespace PortfolioProject.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            if (!ModelState.IsValid) {
+            if (!ModelState.IsValid)
+            {
                 return View(vm);
             }
 
             var result = await _userManager.ChangePasswordAsync(
                 user,
-                vm.ConfirmPassword, 
+                vm.ConfirmPassword,
                 vm.ConfirmNewPassword
             );
 
-            if (!result.Succeeded) { 
+            if (!result.Succeeded)
+            {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(
@@ -152,9 +161,10 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> CreateCv(){
+        public async Task<IActionResult> CreateCv()
+        {
             var user = await _userManager.GetUserAsync(User);
-            if(user == null)
+            if (user == null)
                 return NotFound();
 
             ModelState.Clear();
@@ -164,7 +174,8 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCv(CvProfileViewModel cvVm) {
+        public async Task<IActionResult> CreateCv(CvProfileViewModel cvVm)
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
@@ -290,7 +301,8 @@ namespace PortfolioProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> EditCv() {
+        public async Task<IActionResult> EditCv()
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
@@ -471,17 +483,45 @@ namespace PortfolioProject.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost] 
-        public async Task<IActionResult> ExportProfile() {
+        [HttpPost]
+        public async Task<IActionResult> ExportProfile()
+        {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
                 return NotFound();
 
             ExportPlaceholder exporter = new ExportPlaceholder(_dbContext, _userManager);
 
-            ExportFileResult? toReturn =  await exporter.ExportProfileXmlAsync(user.Id);
+            ExportFileResult? toReturn = await exporter.ExportProfileXmlAsync(user.Id);
             return File(toReturn.Bytes, toReturn.ContentType, toReturn.FileName);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Deactivate()
+        {
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+            user.IsActive = false;
+            _dbContext.Update(user);
+            await _dbContext.SaveChangesAsync();
+
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Activate() {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+            user.IsActive = true;
+            
+            _dbContext.Update(user);
+            await _dbContext.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
     }
 }
