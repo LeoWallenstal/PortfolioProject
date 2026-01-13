@@ -102,6 +102,8 @@
     border-radius: 50%;
     background-color: white;
     border: 2px solid lightgrey;
+    object-fit: cover;
+    object-position: center 10%
 }
 
 .profile-link {
@@ -174,6 +176,8 @@
         border-radius: 50%;
         border: 2px solid lightgrey;
         background-color: white;
+        object-fit: cover;
+        object-position: center 10%
     }
 
 .deleted-message {
