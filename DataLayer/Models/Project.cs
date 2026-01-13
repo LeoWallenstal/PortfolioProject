@@ -18,8 +18,7 @@ namespace DataLayer.Models
         public virtual ICollection<User> Users { get; set; } = new List<User>();
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-        [Required]
-        public string OwnerId { get; set; } = null!;
-        public virtual User Owner { get; set; } = null!;
+        public string OwnerId { get; set; }
+        public virtual User? Owner { get; set; }
     }
 }
