@@ -1,4 +1,5 @@
-﻿using DataLayer.Data;
+﻿using DataLayer;
+using DataLayer.Data;
 using DataLayer.Models;
 using DataLayer.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -47,8 +48,6 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
             {
-                //DEBUG
-                Debug.WriteLine("\n\nMODEL STATE ERROR\n\n");
                 foreach (var kvp in ModelState)
                 {
                     var key = kvp.Key; // the property name
@@ -58,9 +57,6 @@ namespace PortfolioProject.Controllers
                     {
                         var errorMessage = error.ErrorMessage;
                         var exception = error.Exception;
-
-                        // For debugging
-                        Debug.WriteLine($"❌ Property: {key}, Error: {errorMessage}");
                     }
                 }
                 return View(vm);
@@ -80,7 +76,6 @@ namespace PortfolioProject.Controllers
             {
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
-                Debug.WriteLine("\n\nUPDATE FAILED\n\n");
                 return View(vm);
             }
 
@@ -98,7 +93,6 @@ namespace PortfolioProject.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
-            Debug.WriteLine(user.PasswordHash);
 
             if (!ModelState.IsValid) {
                 return View(vm);
@@ -110,8 +104,15 @@ namespace PortfolioProject.Controllers
                 vm.ConfirmNewPassword
             );
 
-            Debug.WriteLine($"\nDEBUG\n\nPassword should be changed from {vm.ConfirmPassword} to {vm.ConfirmNewPassword}");
-            Debug.WriteLine(user.PasswordHash);
+            if (!result.Succeeded) { 
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(
+                        nameof(RegisterViewModel.Password),
+                        error.Description
+                    );
+                }
+            }
 
             return RedirectToAction("Index");
         }
@@ -136,11 +137,13 @@ namespace PortfolioProject.Controllers
 
             if (!ModelState.IsValid)
             {
+                Debug.WriteLine("\n\n\n\n[CreateCv][POST][DEBUG]:");
                 // FÖR DEBUG
                 foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
                 {
                     Debug.WriteLine(error.ErrorMessage);
                 }
+                Debug.WriteLine("\n\n\n\n");
                 return View(cvVm);
             }
 
@@ -276,7 +279,7 @@ namespace PortfolioProject.Controllers
                 {
                     foreach (var error in kvp.Value.Errors)
                     {
-                        Debug.WriteLine($"❌ {kvp.Key}: {error.ErrorMessage}");
+                        Debug.WriteLine($"[Error] {kvp.Key}: {error.ErrorMessage}");
                     }
                 }
                 return View(cvVm);
@@ -296,27 +299,6 @@ namespace PortfolioProject.Controllers
                 };
                 _dbContext.Cvs.Add(cv);
             }
-
-            Debug.WriteLine($"\nTitle: {cvVm.Title}" +
-                $"\nSummary: {cvVm.Summary}" +
-                $"\nGitHubUrl: {cvVm.GitHubUrl}" +
-                $"\nLinkedInUrl: {cvVm.LinkedInUrl}" +
-                $"\nXUrl: {cvVm.XUrl}");
-
-            foreach (SkillViewModel sVm in cvVm.Skills) {
-                Debug.WriteLine($"Name:{sVm.Name}");
-            }
-
-            foreach (EducationViewModel eVm in cvVm.Educations)
-            {
-                Debug.WriteLine($"Name:{eVm.School}");
-            }
-
-            foreach (ExperienceViewModel eVm in cvVm.Experiences)
-            {
-                Debug.WriteLine($"Name:{eVm.Company}");
-            }
-            Debug.WriteLine("\n\n\n\n");
 
             cv.Title = cvVm.Title;
             cv.Summary = cvVm.Summary;
@@ -455,6 +437,17 @@ namespace PortfolioProject.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost] 
+        public async Task<IActionResult> ExportProfile() {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return NotFound();
+
+            ExportPlaceholder exporter = new ExportPlaceholder(_dbContext, _userManager);
+
+            ExportFileResult? toReturn =  await exporter.ExportProfileXmlAsync(user.Id);
+            return File(toReturn.Bytes, toReturn.ContentType, toReturn.FileName);
+        }
 
     }
 }

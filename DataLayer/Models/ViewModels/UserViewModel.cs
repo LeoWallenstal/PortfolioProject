@@ -11,13 +11,15 @@ namespace DataLayer.Models.ViewModels
         public ProfileViewModel Profile { get; set; }
         public CvProfileViewModel? Cv { get; set; } = new CvProfileViewModel();
         public List<ProjectViewModel> Projects { get; set; } = new List<ProjectViewModel>();
+        public string FullName => Profile.FullName ?? string.Empty;
+
         public UserViewModel(User aUser) {
             Cv = new CvProfileViewModel(aUser);
             Profile = new ProfileViewModel(aUser);
             UserName = aUser.UserName;
         }
 
-        public string FullName => Profile.FullName;
+
 
         //For modelbinding
         public UserViewModel() { }

@@ -13,7 +13,7 @@ namespace DataLayer.Models.ViewModels
         [RegularExpression(@"^[A-Za-z-]+$", ErrorMessage = "Endast A-Z och -")]
         public string? LastName { get; set; } = string.Empty;
 
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName => $"{FirstName} {LastName}" ?? string.Empty;
 
         [Required(ErrorMessage = "Kan inte vara tom!")]
         [EmailAddress(ErrorMessage = "Ogiltigt format!")]
