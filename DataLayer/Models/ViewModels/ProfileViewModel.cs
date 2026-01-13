@@ -27,7 +27,7 @@ namespace DataLayer.Models.ViewModels
         public bool IsPrivate { get; set; } = false;
         public bool IsActive { get; set; } = true;
 
-        public string ProfileImageUrl { get; set; } = "/images/default-profile2.png";
+        public string? ProfileImageUrl { get; set; } = "/images/default-profile2.png";
 
 
         // ---------- CONSTRUCTOR ----------
