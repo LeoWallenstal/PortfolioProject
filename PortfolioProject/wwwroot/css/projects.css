@@ -11,13 +11,32 @@
     border-radius: 50%;
     background-color: white;
     margin: 0px 3px;
+    overflow: hidden;
+    flex-shrink: 0;
 }
 
     .participant-img img {
         width: 30px;
         height: 30px;
         border-radius: 50%;
-        object-fit: contain;
+        object-fit: cover;
+        display: block;
+    }
+
+.details-participant-img {
+    border-radius: 50%;
+    background-color: white;
+    margin: 0px 3px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+    .details-participant-img img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
     }
 
 .participate-btn {

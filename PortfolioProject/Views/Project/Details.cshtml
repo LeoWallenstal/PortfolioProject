@@ -1,8 +1,5 @@
 ﻿@using System.Security.Claims
 @model ProjectViewModel
-@{
-	ViewData["Title"] = @Model.Project.Title;
-}
 
 <section class="search-section d-flex align-items-center position-relative my-2">
 	<a asp-controller="Project" asp-action="Projects" class="btn btn-outline-secondary btn-sm position-absolute start-0 ms-4 project-btn" style="text-decoration: none">
@@ -35,12 +32,12 @@
 					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
 					@if (!Model.IsOwnerHidden)
 					{
-						
+
 						<div class="d-flex align-items-center mb-2">
 							<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="text-black text-decoration-none">
-								<img src="@Model.OwnerImageUrl"
-									 class="rounded-circle me-2"
-									 style="width:40px; height:40px;" />
+								<div class="details-participant-img">
+									<img src="@Model.OwnerImageUrl"/>
+								</div>
 								<span class="ms-1">@Model.OwnerText</span>
 								<span class="badge owner-badge ms-2">Ägare</span>
 							</a>
@@ -49,33 +46,34 @@
 					else
 					{
 						<div class="d-flex align-items-center text-muted">
-							<img src="@Model.OwnerImageUrl"
-								 class="rounded-circle me-2"
-								 style="width:40px; height:40px;" />
+							<div class="details-participant-img">
+								<img src="@Model.OwnerImageUrl" />
+							</div>
 							<span class="ms-1 @(Model.IsOwnerHidden ? "fst-italic" : "")">@Model.OwnerText</span>
 							<span class="badge owner-badge ms-2">Ägare</span>
 						</div>
 					}
-						
+
 
 					@if (Model.Participants != null)
 					{
 						<div class="list-group">
 							@foreach (var user in Model.Participants)
-							{								
-								<div class="d-flex align-items-center mb-2">
-									<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
-										<div>
-											<img src="@user.ProfileImageUrl"
-													class="rounded-circle me-2"
-													style="width:40px; height:40px;"/>
+							{
+								<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
+									@if (user.IsActive)
+									{
+										<div class="d-flex align-items-center mb-2">
+											<div class="details-participant-img">
+												<img src="@user.ProfileImageUrl" />
+											</div>
+
+											<span class="ms-1">
+												@user.FirstName @user.LastName
+											</span>
 										</div>
-							
-										<span class="ms-1">
-											@user.FirstName @user.LastName
-										</span>
-									</a>
-								</div>
+									}
+								</a>
 							}
 						</div>
 					}
@@ -109,7 +107,7 @@
 						</div>
 					}
 				}
-				
+
 			}
 		</div>
 	</div>
