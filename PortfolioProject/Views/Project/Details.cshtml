@@ -30,21 +30,38 @@
 				<div class="card-body details-card">
 
 					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
-
+					@if (!Model.IsOwnerHidden)
+					{
+						
 						<div class="d-flex align-items-center mb-2">
+							<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="text-black text-decoration-none">
+								<img src="@Model.OwnerImageUrl"
+									 class="rounded-circle me-2"
+									 style="width:40px; height:40px;" />
+								<span class="ms-1">@Model.OwnerText</span>
+								<span class="badge owner-badge ms-2">Ägare</span>
+							</a>
+						</div>
+					}
+					else
+					{
+						<div class="d-flex align-items-center text-muted">
 							<img src="@Model.OwnerImageUrl"
-								class="rounded-circle me-2"
-								style="width:40px; height:40px;" />
-							<span class="ms-1 @(Model.OwnerTextIsSpecial ? "fst-italic" : "")">@Model.OwnerText</span>
+								 class="rounded-circle me-2"
+								 style="width:40px; height:40px;" />
+							<span class="ms-1 @(Model.IsOwnerHidden ? "fst-italic" : "")">@Model.OwnerText</span>
 							<span class="badge owner-badge ms-2">Ägare</span>
 						</div>
+					}
+						
 
 					@if (Model.Participants != null)
 					{
 						<div class="list-group">
 							@foreach (var user in Model.Participants)
 							{
-								if(user.IsActive)
+								<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
+								@if(user.IsActive)
 								{
 									<div class="d-flex align-items-center mb-2">
 										<div>
@@ -58,6 +75,7 @@
 										</span>
 									</div>
 								}
+								</a>
 							}
 						</div>
 					}
