@@ -34,13 +34,13 @@
 					{
 
 						<div class="d-flex align-items-center mb-2">
-							<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="text-black text-decoration-none">
+							<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="d-flex align-items-center text-black text-decoration-none">
 								<div class="details-participant-img">
-									<img src="@Model.OwnerImageUrl"/>
+									<img src="@Model.OwnerImageUrl" />
 								</div>
 								<span class="ms-1">@Model.OwnerText</span>
-								<span class="badge owner-badge ms-2">Ägare</span>
 							</a>
+							<span class="badge owner-badge ms-2">Ägare</span>
 						</div>
 					}
 					else
@@ -72,6 +72,7 @@
 												@user.FirstName @user.LastName
 											</span>
 										</div>
+									
 									}
 								</a>
 							}
