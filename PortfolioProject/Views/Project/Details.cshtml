@@ -30,17 +30,16 @@
 				<div class="card-body details-card">
 
 					<p><strong>Deltagare (@Model.Project.Users.Count(u => u.IsActive)):</strong></p>
-					@if (!Model.IsOwnerHidden)
+					@if (!Model.IsOwnerHidden && Model.Project.Owner?.Cv != null)
 					{
-
 						<div class="d-flex align-items-center mb-2">
-							<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="d-flex align-items-center text-black text-decoration-none">
-								<div class="details-participant-img">
-									<img src="@Model.OwnerImageUrl" />
-								</div>
-								<span class="ms-1">@Model.OwnerText</span>
-							</a>
-							<span class="badge owner-badge ms-2">Ägare</span>
+								<a asp-controller="Cv" asp-action="Details" asp-route-username="@Model.Project.Owner.UserName" class="d-flex align-items-center text-black text-decoration-none">
+									<div class="details-participant-img">
+										<img src="@Model.OwnerImageUrl" />
+									</div>
+									<span class="ms-1">@Model.OwnerText</span>
+								</a>
+								<span class="badge owner-badge ms-2">Ägare</span>
 						</div>
 					}
 					else
@@ -60,9 +59,9 @@
 						<div class="list-group">
 							@foreach (var user in Model.Participants)
 							{
-								<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
-									@if (user.IsActive)
-									{
+								if (user.Cv != null)
+								{
+									<a asp-controller="Cv" asp-action="Details" asp-route-username="@user.UserName" class="text-black text-decoration-none">
 										<div class="d-flex align-items-center mb-2">
 											<div class="details-participant-img">
 												<img src="@user.ProfileImageUrl" />
@@ -72,9 +71,21 @@
 												@user.FirstName @user.LastName
 											</span>
 										</div>
-									
-									}
-								</a>
+									</a>
+								}
+								else
+								{
+									<div class="d-flex align-items-center mb-2 text-muted">
+										<div class="details-participant-img">
+											<img src="@user.ProfileImageUrl" />
+										</div>
+
+										<span class="ms-1">
+											@user.FirstName @user.LastName
+										</span>
+									</div>
+								}
+								
 							}
 						</div>
 					}

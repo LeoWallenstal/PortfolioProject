@@ -194,6 +194,11 @@ namespace PortfolioProject.Controllers
             if (!User.HasClaim("IsActive", "true"))
                 return Forbid();
 
+            ModelState.Remove("Project.OwnerId");
+
+            if (!ModelState.IsValid)
+                return View(projectVM);
+
             var userId = _userManager.GetUserId(User);
 
             var project = await _context.Projects
