@@ -33,7 +33,9 @@ namespace PortfolioProject.Controllers
             if (user == null)
                 return NotFound();
 
-            user.Cv.ViewCount = await _dbContext.CvVisits.Where(v => v.CvId == user.Cv.Id).CountAsync();
+            if (user.Cv != null) { 
+                user.Cv.ViewCount = await _dbContext.CvVisits.Where(v => v.CvId == user.Cv.Id).CountAsync();
+            }
 
             return View(new UserViewModel(user));
         }

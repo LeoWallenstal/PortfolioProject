@@ -4,7 +4,6 @@
 
         const addSkillBtn = section.querySelector(".btn-add-skill");
         const skillTitleInput = section.querySelector(".input-skill-name");
-        const skillImgUrl = section.querySelector(".skill-img-url");
         const skillPlaqueSection = section.querySelector(".skill-plaque-section");
 
         const resetError = () => {
@@ -50,23 +49,15 @@
             const title = document.createElement("p");
             title.innerText = skillTitleInput.value.trim();
 
-            const img = document.createElement("img");
-            img.className = "thumbnail";
-            img.src = skillImgUrl.value.trim() || "../images/default-img.png";
-            img.onerror = () => img.src = "../images/default-img.png";
-
             plaque.append(
                 removeBtn,
-                img,
                 title,
-                createHidden("Skills", index, "Name", skillTitleInput.value),
-                createHidden("Skills", index, "ImageUrl", skillImgUrl.value)
+                createHidden("Skills", index, "Name", skillTitleInput.value)
             );
 
             skillPlaqueSection.appendChild(plaque);
 
             skillTitleInput.value = "";
-            skillImgUrl.value = "";
             addSkillBtn.disabled = true;
         });
 
@@ -80,7 +71,6 @@
     function reindexSkills(container) {
         container.querySelectorAll(".plaque").forEach((plaque, index) => {
             plaque.querySelector('input[name$=".Name"]').name = `Skills[${index}].Name`;
-            plaque.querySelector('input[name$=".ImageUrl"]').name = `Skills[${index}].ImageUrl`;
         });
     }
 
