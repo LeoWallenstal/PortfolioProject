@@ -174,7 +174,7 @@
                         <p>@project.Description</p>
 
                         <div class="d-flex justify-content-center mt2">
-                            @if (project.Owner == null || !project.Owner.IsActive)
+                            @if (project.Owner == null || !project.Owner.IsActive || (!User.Identity.IsAuthenticated && project.Owner.IsPrivate))
                             {
                                 <div class="participant-img col-4 col-sm-3 col-md-2 col-lg-1">
                                     <img src="/images/default-profile2.png" />
